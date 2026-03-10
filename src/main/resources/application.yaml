@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: cinema-booking-system
+
+  profiles:
+    active: dev
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: ${APP_PORT}
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
