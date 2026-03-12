@@ -1,14 +1,14 @@
 package org.example.cinemaBooking.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
+import org.example.cinemaBooking.Shared.utils.Gender;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,11 +19,29 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class UserEntity extends SoftDeletableEntity {
+    @Column(nullable = false, unique = true)
     String username;
+
     String password;
+
     String fullName;
+
+    @Column(unique = true)
     String email;
+
+    @Column(length = 20)
     String phone;
+
+    String avatarUrl = "https://th.bing.com/th/id/OIP.g-FcRsj_DrnzN7sIDOrsEwHaHa?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3";
+
+    LocalDate dob;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Gender gender;
+
+    @Column(nullable = false)
+    private boolean status = true;
 
     @ManyToMany
     @JoinTable(
@@ -33,6 +51,7 @@ public class UserEntity extends SoftDeletableEntity {
     )
     Set<RoleEntity> roles;
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Notification> notifications;
 
 }

@@ -29,6 +29,7 @@ public class ApplicationInitConfig {
     @NonFinal
     static final String ADMIN_USER_NAME = "admin";
 
+
     @NonFinal
     static final String ADMIN_PASSWORD = "admin";
 

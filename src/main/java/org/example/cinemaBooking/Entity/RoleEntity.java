@@ -3,13 +3,14 @@ package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 
 import java.util.Set;
 
-@Entity
+@Entity(name = "Role")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @RequiredArgsConstructor
