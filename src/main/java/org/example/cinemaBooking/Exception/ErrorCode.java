@@ -27,6 +27,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(1013, "Product not found", HttpStatus.NOT_FOUND),
     TABLE_NOT_FOUND(1014, "Table not found", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND(1015, "Order not found", HttpStatus.NOT_FOUND),
+    PASSWORD_CONFIRM_NOT_MATCH(1016, "Password confirm not match", HttpStatus.BAD_REQUEST)
     ;
 
 

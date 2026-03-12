@@ -5,7 +5,11 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password: your_password  # bỏ comment nếu Redis có password
   jpa:
     hibernate:
       ddl-auto: update   # dev thì update
@@ -15,5 +19,8 @@ spring:
         format_sql: true
 jwt:
   SignerKey: "YvaC4YtaTbPJ9kjAPkauqZ1HlkaqvAkz5jVeaxTGUTpm9YoNVGTU2c98XnWsQo6BLQ9h5n4HcySt0UcvmbBXiL0PpCedzXBxAn3+5FD83H4="
+  valid-duration: 3600        # 1 giờ (giây)
+  refreshable-duration: 86400 # 24 giờ (giây)
+
 server:
   port: 8081

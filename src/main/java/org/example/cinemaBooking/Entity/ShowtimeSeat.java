@@ -32,10 +32,10 @@ public class ShowtimeSeat extends SoftDeletableEntity {
 
     private Long lockedByUser;           // FK user đang giữ (không hard FK để tránh deadlock)
 
-    // ── Optimistic Locking ────────────────────────────────────────────
-    // Dùng để ngăn 2 user cùng LOCK 1 ghế đồng thời
-    @Version
-    private Long version;
+//    // ── Optimistic Locking ────────────────────────────────────────────
+//    // Dùng để ngăn 2 user cùng LOCK 1 ghế đồng thời
+//    @Version
+//    private Long version;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
