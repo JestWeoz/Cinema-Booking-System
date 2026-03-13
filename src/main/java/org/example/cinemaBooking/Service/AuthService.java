@@ -18,6 +18,7 @@ import org.example.cinemaBooking.Model.Request.RefreshRequest;
 import org.example.cinemaBooking.Model.Request.RegisterRequest;
 import org.example.cinemaBooking.Model.Response.AuthResponse;
 import org.example.cinemaBooking.Model.Response.LoginResponse;
+import org.example.cinemaBooking.Model.Response.RefreshResponse;
 import org.example.cinemaBooking.Model.Response.RegisterResponse;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.IntrospectResponse;
@@ -87,7 +88,7 @@ public class AuthService {
 
         return LoginResponse.builder()
                 .success(true)
-                .token(generateToken(userEntity))
+                .AccessToken(generateToken(userEntity))
                 .userInfoResponse(userMapper.toUserInfoResponse(userEntity))
                 .build();
     }
@@ -114,7 +115,7 @@ public class AuthService {
     // =========================================================
     // REFRESH TOKEN
     // =========================================================
-    public AuthResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+    public RefreshResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         // Verify với refreshable duration (dài hơn valid duration)
         SignedJWT signedJWT = verifyToken(request.getToken(), true);
 
@@ -129,8 +130,9 @@ public class AuthService {
         UserEntity userEntity = userRepo.findUserEntityByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        return AuthResponse.builder()
-                .token(generateToken(userEntity))
+        return RefreshResponse.builder()
+                .success(true)
+                .accessToken(generateToken(userEntity))
                 .build();
     }
 
