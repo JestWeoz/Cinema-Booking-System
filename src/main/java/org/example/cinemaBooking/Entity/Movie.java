@@ -36,6 +36,7 @@ public class Movie extends SoftDeletableEntity {
 
     LocalDate releaseDate;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     AgeRating ageRating = AgeRating.P;
@@ -44,11 +45,12 @@ public class Movie extends SoftDeletableEntity {
     String language;
 
     @Column(nullable = false, length = 500)
-   String posterUrl;
+    String posterUrl;
 
     @Column(nullable = false)
     String trailerUrl;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     MovieStatus status = MovieStatus.COMING_SOON;

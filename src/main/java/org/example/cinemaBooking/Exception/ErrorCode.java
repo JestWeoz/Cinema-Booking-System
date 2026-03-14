@@ -37,8 +37,9 @@ public enum ErrorCode {
     USERNAME_REQUIRED(1023, "Username is required", HttpStatus.BAD_REQUEST),
     FULLNAME_REQUIRED(1024, "Full name is required", HttpStatus.BAD_REQUEST),
     PHONE_REQUIRED(1025, "Phone number is required", HttpStatus.BAD_REQUEST),
-    PASSWORD_TOO_SHORT(1026, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST)
-
+    PASSWORD_TOO_SHORT(1026, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
+    OLD_PASSWORD_REQUIRED(1027, "Old password is required", HttpStatus.BAD_REQUEST),
+    NEW_PASSWORD_REQUIRED(1028, "New password is required", HttpStatus.BAD_REQUEST)
     ;
 
 

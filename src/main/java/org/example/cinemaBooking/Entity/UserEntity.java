@@ -32,7 +32,8 @@ public class UserEntity extends SoftDeletableEntity {
     @Column(length = 20)
     String phone;
 
-    String avatarUrl = "https://th.bing.com/th/id/OIP.g-FcRsj_DrnzN7sIDOrsEwHaHa?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3";
+    @Builder.Default
+    String avatarUrl = "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/18/457/avatar-mac-dinh-11.jpg";
 
     LocalDate dob;
 
@@ -40,6 +41,7 @@ public class UserEntity extends SoftDeletableEntity {
     @Column(length = 20)
     private Gender gender;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean status = true;
 

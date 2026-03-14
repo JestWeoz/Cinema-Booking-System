@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Promotion extends SoftDeletableEntity {
     @Column(nullable = false, unique = true, length = 50)
@@ -35,6 +36,7 @@ public class Promotion extends SoftDeletableEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     BigDecimal discountValue;
 
+    @Builder.Default
     @Column(precision = 10, scale = 2)
     private BigDecimal minOrderValue = BigDecimal.ZERO;
 
@@ -47,8 +49,14 @@ public class Promotion extends SoftDeletableEntity {
     @Column(nullable = false)
     private Integer usedQuantity = 0; // đã dùng
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     private Status status = Status.ACTIVE;
 
+    @Column(nullable = false)
     LocalDate startDate;
+
+    @Column(nullable = false)
     LocalDate endDate;
 }

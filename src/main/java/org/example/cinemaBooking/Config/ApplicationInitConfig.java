@@ -38,7 +38,7 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {
-            if (userRepository.findUserEntityByUsername(ADMIN_USER_NAME) == null) {
+            if (userRepository.findUserEntityByUsername(ADMIN_USER_NAME).isEmpty()) {
 
 
                 roleRepository.save(RoleEntity.builder()
@@ -49,6 +49,10 @@ public class ApplicationInitConfig {
                 roleRepository.save(RoleEntity.builder()
                         .name(PredefinedRole.MANAGER_ROLE)
                         .description("Manager role")
+                        .build());
+                roleRepository.save(RoleEntity.builder()
+                        .name(PredefinedRole.CUSTOMER_ROLE)
+                        .description("Customer role")
                         .build());
                 RoleEntity adminRole = roleRepository.save(RoleEntity.builder()
                         .name(PredefinedRole.ADMIN_ROLE)

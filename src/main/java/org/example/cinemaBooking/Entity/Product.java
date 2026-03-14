@@ -26,6 +26,7 @@ public class Product extends SoftDeletableEntity {
     @Column(length = 500)
     private String image;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
 }

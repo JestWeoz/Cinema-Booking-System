@@ -10,6 +10,7 @@ import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Review extends SoftDeletableEntity {
     @Column(columnDefinition = "TEXT")
@@ -18,6 +19,7 @@ public class Review extends SoftDeletableEntity {
     @Column(nullable = false)
     int rating; // 1-> 10
 
+    @Builder.Default
     boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -17,6 +17,7 @@ public class MoviePeople extends SoftDeletableEntity {
     @Column(length = 100)
     String characterName;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     MovieRole movieRole = MovieRole.ACTOR;

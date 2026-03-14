@@ -33,6 +33,7 @@ public class Combo extends SoftDeletableEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
 
