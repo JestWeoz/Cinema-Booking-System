@@ -23,9 +23,12 @@ public class SecurityConfig {
             "/api/v1/auth/introspect",
             "/api/v1/auth/logout",
             "/api/v1/auth/refresh",
+            "/api/v1/auth/forgot-password",    // ← thêm
+            "/api/v1/auth/reset-password",
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
+            "/api/v1/auth/reset-password/validate",
             "/movies",       // xem phim không cần đăng nhập
             "/movies/{id}",
     };

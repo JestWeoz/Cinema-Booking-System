@@ -2,8 +2,7 @@ package org.example.cinemaBooking.Config;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
-import lombok.RequiredArgsConstructor;
-import org.example.cinemaBooking.Model.Request.IntrospectReq;
+
 import org.example.cinemaBooking.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;

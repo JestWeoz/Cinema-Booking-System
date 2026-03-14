@@ -5,6 +5,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
   data:
     redis:
       host: localhost
@@ -17,10 +20,27 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 jwt:
-  SignerKey: "YvaC4YtaTbPJ9kjAPkauqZ1HlkaqvAkz5jVeaxTGUTpm9YoNVGTU2c98XnWsQo6BLQ9h5n4HcySt0UcvmbBXiL0PpCedzXBxAn3+5FD83H4="
+  signerKey: "YvaC4YtaTbPJ9kjAPkauqZ1HlkaqvAkz5jVeaxTGUTpm9YoNVGTU2c98XnWsQo6BLQ9h5n4HcySt0UcvmbBXiL0PpCedzXBxAn3+5FD83H4="
   valid-duration: 3600        # 1 giờ (giây)
   refreshable-duration: 86400 # 24 giờ (giây)
 
 server:
   port: 8081
+app:
+  frontend-url: http://localhost:3000

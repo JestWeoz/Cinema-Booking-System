@@ -27,7 +27,18 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(1013, "Product not found", HttpStatus.NOT_FOUND),
     TABLE_NOT_FOUND(1014, "Table not found", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND(1015, "Order not found", HttpStatus.NOT_FOUND),
-    PASSWORD_CONFIRM_NOT_MATCH(1016, "Password confirm not match", HttpStatus.BAD_REQUEST)
+    PASSWORD_CONFIRM_NOT_MATCH(1016, "Password confirm not match", HttpStatus.BAD_REQUEST),
+    PASSWORD_SAME_AS_OLD(1017, "New password must be different from old password", HttpStatus.BAD_REQUEST),
+    INVALID_RESET_TOKEN(1018, "Invalid or expired reset token", HttpStatus.BAD_REQUEST),
+    EMAIL_REQUIRED(1019, "Email is required", HttpStatus.BAD_REQUEST),
+    TOKEN_REQUIRED(1020, "Reset token is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_REQUIRED(1021, "New password is required", HttpStatus.BAD_REQUEST),
+    CONFIRM_PASSWORD_REQUIRED(1022, "Confirm password is required", HttpStatus.BAD_REQUEST),
+    USERNAME_REQUIRED(1023, "Username is required", HttpStatus.BAD_REQUEST),
+    FULLNAME_REQUIRED(1024, "Full name is required", HttpStatus.BAD_REQUEST),
+    PHONE_REQUIRED(1025, "Phone number is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_TOO_SHORT(1026, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST)
+
     ;
 
 

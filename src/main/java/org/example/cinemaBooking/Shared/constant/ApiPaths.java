@@ -11,6 +11,9 @@ public final class ApiPaths {
         public static final String REGISTER = "/register";
         public static final String LOGOUT = "/logout";
         public static final String REFRESH = "/refresh";
+        public static final String INTROSPECT = "/introspect";
+        public static final String FORGOT_PASSWORD = "/forgot-password";
+        public static final String RESET_PASSWORD = "/reset-password";
     }
 
     public static final class User {

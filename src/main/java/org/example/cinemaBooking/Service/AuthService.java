@@ -20,6 +20,7 @@ import org.example.cinemaBooking.Model.Response.AuthResponse;
 import org.example.cinemaBooking.Model.Response.LoginResponse;
 import org.example.cinemaBooking.Model.Response.RegisterResponse;
 import org.example.cinemaBooking.Repository.UserRepository;
+import org.example.cinemaBooking.Service.redis.TokenBlacklistService;
 import org.example.cinemaBooking.Shared.response.IntrospectResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +45,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenBlacklistService tokenBlacklistService;
 
-    @Value("${jwt.SignerKey}")
+    @Value("${jwt.signerKey}")
     String signerKey;
 
     @Value("${jwt.valid-duration:3600}")        // mặc định 1 giờ
