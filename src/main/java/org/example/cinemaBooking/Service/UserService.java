@@ -4,14 +4,17 @@ package org.example.cinemaBooking.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.UserMapper;
 import org.example.cinemaBooking.Model.Request.ChangeAvatarRequest;
 import org.example.cinemaBooking.Model.Request.ChangePasswordRequest;
+import org.example.cinemaBooking.Model.Request.CreateUserRequest;
 import org.example.cinemaBooking.Model.Request.UpdateProfileRequest;
 import org.example.cinemaBooking.Model.Response.UserResponse;
+import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +39,7 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public UserResponse getMyInfo(){
         var userName = SecurityContextHolder
@@ -103,8 +109,7 @@ public class UserService {
 
         user.setAvatarUrl(request.getAvatarUrl());
         userRepository.save(user);
-        log.info("[USE" +
-                "R SERVICE] Change avatar for user: {}", userName);
+        log.info("[USER SERVICE] Change avatar for user: {}", userName);
         return userMapper.toUserResponse(user);
     }
 
@@ -115,7 +120,7 @@ public class UserService {
         user.setStatus(false);
         userRepository.save(user);
         log.info("[USER SERVICE] Lock user: {}", user.getId());
-        userMapper.toUserResponse(user);
+
     }
 
     public void unlockUser(String userId) {
@@ -125,7 +130,7 @@ public class UserService {
         user.setStatus(true);
         userRepository.save(user);
         log.info("[USER SERVICE] Unlock user: {}", user.getId());
-        userMapper.toUserResponse(user);
+
     }
 
     public UserResponse getUserById(String userId) {
@@ -151,7 +156,7 @@ public class UserService {
         }
         Pageable pageable = PageRequest.of(pageNumber, size);
         Page<UserEntity> userPage  = userRepository.searchUsers(key, pageable);
-        List<UserResponse> userResponses = userPage.stream()
+        List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
 
@@ -163,5 +168,36 @@ public class UserService {
                 .totalElements(userPage.getTotalElements())
                 .totalPages(userPage.getTotalPages())
                 .build();
+    }
+
+    public UserResponse createUser(CreateUserRequest request){
+
+        if(userRepository.existsByUsername(request.getUsername())){
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+
+        UserEntity user = new UserEntity();
+
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setStatus(true);
+
+        Set<RoleEntity> roles = request.getRoles().stream()
+                .map(roleName -> roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXIST)))
+                .collect(Collectors.toSet());
+
+        user.setRoles(roles);
+
+        userRepository.save(user);
+
+        log.info("[USER SERVICE] Admin created user: {}", user.getUsername());
+
+        return userMapper.toUserResponse(user);
     }
 }

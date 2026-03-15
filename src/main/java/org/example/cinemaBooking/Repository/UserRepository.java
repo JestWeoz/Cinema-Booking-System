@@ -23,12 +23,12 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     boolean existsByEmail(String email);
 
     @Query("""
-SELECT u FROM UserEntity u
-WHERE (:key IS NULL OR
+SELECT DISTINCT u FROM UserEntity u
+JOIN u.roles r
+WHERE r.name = 'USER'
+AND (:key IS NULL OR
        LOWER(u.username) LIKE LOWER(CONCAT('%', :key, '%')) OR
-       LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')) 
-       )
-       AND u.roles = 'USER'
+       LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')))
 """)
     Page<UserEntity> searchUsers(String key, Pageable pageable);
 }

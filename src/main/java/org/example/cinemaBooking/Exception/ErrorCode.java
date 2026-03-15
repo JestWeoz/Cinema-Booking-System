@@ -40,7 +40,20 @@ public enum ErrorCode {
     PASSWORD_TOO_SHORT(1026, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     OLD_PASSWORD_REQUIRED(1027, "Old password is required", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_REQUIRED(1028, "New password is required", HttpStatus.BAD_REQUEST),
-    IMAGE_URL_NOT_BLANK(1029, "Image URL must not be blank", HttpStatus.BAD_REQUEST)
+    IMAGE_URL_NOT_BLANK(1029, "Image URL must not be blank", HttpStatus.BAD_REQUEST),
+    ROLE_REQUIRED(1030, "Role is required", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXIST(1031, "Role does not exist", HttpStatus.BAD_REQUEST),
+    INVALID_AGE_RATING(1032, "ageRating must in P|C13|C16|C18", HttpStatus.BAD_REQUEST),
+    TITLE_REQUIRED(1033, "Title is required", HttpStatus.BAD_REQUEST),
+    SLUG_REQUIRED(1034, "Slug is required", HttpStatus.BAD_REQUEST),
+    DURATION_REQUIRED(1035, "Duration is required", HttpStatus.BAD_REQUEST),
+    RELEASE_DATE_REQUIRED(1036, "Release date is required", HttpStatus.BAD_REQUEST),
+    LANGUAGE_REQUIRED(1037, "Language is required", HttpStatus.BAD_REQUEST),
+    POSTER_URL_REQUIRED(1038, "Poster URL is required", HttpStatus.BAD_REQUEST),
+    TRAILER_URL_REQUIRED(1039, "Trailer URL is required", HttpStatus.BAD_REQUEST),
+    CATEGORIES_REQUIRED(1040, "Categories is required", HttpStatus.BAD_REQUEST),
+    MOVIE_NOT_FOUND(1042, "Movie not found", HttpStatus.NOT_FOUND),
+    MOVIE_STATUS_INVALID(1043, "Movie status must in COMING_SOON|NOW_SHOWING|ENDED", HttpStatus.BAD_REQUEST)
     ;
 
 

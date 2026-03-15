@@ -3,6 +3,7 @@ package org.example.cinemaBooking.Exception;
 
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +52,7 @@ public class GlobalExceptionHandle {
 
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
     }
+
 
 
 

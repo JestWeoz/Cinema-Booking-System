@@ -24,6 +24,10 @@ public final class ApiPaths {
         public static final String LOCK = "/lock";
         public static final String UNLOCK = "/unlock";
     }
+    public static final class Movie {
+        public static final String BASE = "/movies";
+
+    }
 
     public static final class Booking {
         public static final String BASE = "/bookings";

@@ -2,6 +2,7 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
+import org.example.cinemaBooking.Model.Request.CreateUserRequest;
 import org.example.cinemaBooking.Model.Request.RegisterRequest;
 import org.example.cinemaBooking.Model.Request.UpdateProfileRequest;
 import org.example.cinemaBooking.Model.Response.UserInfoResponse;

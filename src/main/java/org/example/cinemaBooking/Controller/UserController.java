@@ -8,12 +8,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Model.Request.ChangeAvatarRequest;
 import org.example.cinemaBooking.Model.Request.ChangePasswordRequest;
+import org.example.cinemaBooking.Model.Request.CreateUserRequest;
 import org.example.cinemaBooking.Model.Request.UpdateProfileRequest;
 import org.example.cinemaBooking.Model.Response.UserResponse;
 import org.example.cinemaBooking.Service.UserService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,6 +69,7 @@ public class UserController {
     }
 
     @PutMapping(ApiPaths.User.LOCK + "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> lockUser(@PathVariable String id) {
         userService.lockUser(id);
         log.info("[USER CONTROLLER] Lock user with id: {}", id);
@@ -76,6 +79,7 @@ public class UserController {
     }
 
     @PutMapping(ApiPaths.User.UNLOCK + "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> unlockUser(@PathVariable String id) {
         userService.unlockUser(id);
         log.info("[USER CONTROLLER] Unlock user");
@@ -86,6 +90,7 @@ public class UserController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUserById(@PathVariable String id) {
         UserResponse userResponse = userService.getUserById(id);
         log.info("[USER CONTROLLER] Get user info for user with id: {}", id);
@@ -96,6 +101,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUserByUsername(@PathVariable String username) {
         UserResponse userResponse = userService.getUserByUsername(username);
         log.info("[USER CONTROLLER] Get user info for user with username: {}", username);
@@ -105,7 +111,9 @@ public class UserController {
                 .build();
     }
 
+
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<PageResponse<UserResponse>> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "10") int size,
                                                                @RequestParam(required = false) String key) {
@@ -114,6 +122,17 @@ public class UserController {
         return ApiResponse.<PageResponse<UserResponse>>builder()
                 .success(true)
                 .data(pageResponse)
+                .build();
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid CreateUserRequest request) {
+        UserResponse userResponse = userService.createUser(request);
+        log.info("[USER CONTROLLER] Create user with username: {}", userResponse.getUsername());
+        return ApiResponse.<UserResponse>builder()
+                .success(true)
+                .data(userResponse)
                 .build();
     }
 }
