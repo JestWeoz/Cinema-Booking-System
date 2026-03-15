@@ -1,6 +1,5 @@
 package org.example.cinemaBooking.Service;
 
-import com.cloudinary.api.exceptions.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -8,13 +7,11 @@ import org.example.cinemaBooking.Entity.Category;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
-import org.example.cinemaBooking.Mapper.CategoryMapper;
 import org.example.cinemaBooking.Mapper.MovieMapper;
 import org.example.cinemaBooking.Model.Request.CreateMovieRequest;
 import org.example.cinemaBooking.Model.Request.UpdateMovieRequest;
 import org.example.cinemaBooking.Model.Request.UpdateMovieStatusRequest;
 import org.example.cinemaBooking.Model.Response.MovieResponse;
-import org.example.cinemaBooking.Model.Response.UserResponse;
 import org.example.cinemaBooking.Repository.CategoryRepository;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.spefication.MovieSpecification;
@@ -40,6 +37,8 @@ public class MovieService {
     MovieRepository movieRepository;
     CategoryRepository categoryRepository;
     MovieMapper movieMapper;
+
+
 
     public MovieResponse creatMovie(CreateMovieRequest request) {
         Movie movie = movieMapper.toMovie(request);
@@ -88,6 +87,12 @@ public class MovieService {
         return movieMapper.toMovieResponse(movie);
     }
 
+    public MovieResponse getMovieBySlug(String slug) {
+        Movie movie = movieRepository.findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        return movieMapper.toMovieResponse(movie);
+    }
+
     public PageResponse<MovieResponse> getMovies(
             String keyword,
             MovieStatus status,
@@ -132,5 +137,67 @@ public class MovieService {
         return movieMapper.toMovieResponse(movie);
     }
 
+    public PageResponse<MovieResponse> getMoviesIsComingSoon(int page, int size) {
+        int pageNumber = 0;
+        if(page > 0) {
+            pageNumber = page - 1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
+
+        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.COMING_SOON, pageable);
+
+        List<MovieResponse> movieResponses = movies.getContent().stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+        return PageResponse.<MovieResponse>builder()
+                .page(page)
+                .size(size)
+                .totalElements(movies.getTotalElements())
+                .totalPages(movies.getTotalPages())
+                .items(movieResponses)
+                .build();
+    }
+
+    public PageResponse<MovieResponse> getMoviesIsNowShowing(int page, int size) {
+        int pageNumber = 0;
+        if(page > 0) {
+            pageNumber = page - 1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
+
+        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.NOW_SHOWING, pageable);
+
+        List<MovieResponse> movieResponses = movies.getContent().stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+        return PageResponse.<MovieResponse>builder()
+                .page(page)
+                .size(size)
+                .totalElements(movies.getTotalElements())
+                .totalPages(movies.getTotalPages())
+                .items(movieResponses)
+                .build();
+    }
+
+    public PageResponse<MovieResponse> searchMovie(int page, int size, String key) {
+        int pageNumber = 0;
+        if(page > 0) {
+            pageNumber = page - 1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
+
+        Page<Movie> movies = movieRepository.searchMovie(key, pageable);
+
+        List<MovieResponse> movieResponses = movies.getContent().stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+        return PageResponse.<MovieResponse>builder()
+                .page(page)
+                .size(size)
+                .totalElements(movies.getTotalElements())
+                .totalPages(movies.getTotalPages())
+                .items(movieResponses)
+                .build();
+    }
 
 }

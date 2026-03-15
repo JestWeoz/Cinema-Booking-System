@@ -26,7 +26,10 @@ public final class ApiPaths {
     }
     public static final class Movie {
         public static final String BASE = "/movies";
-
+        public static final String NOW_SHOWING = "/now-showing";
+        public static final String COMING_SOON = "/coming-soon";
+        public static final String SEARCH = "/search";
+        public static final String RECOMMENDED = "/recommended";
     }
 
     public static final class Booking {

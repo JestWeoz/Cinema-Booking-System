@@ -15,6 +15,7 @@ import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.AgeRating;
 import org.example.cinemaBooking.Shared.utils.MovieStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,7 @@ public class MovieController {
     MovieService movieService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> createMovie(@RequestBody @Valid CreateMovieRequest request) {
         MovieResponse movieResponse = movieService.creatMovie(request);
         log.info("[MOVIE CONTROLLER] Movie {} has been created", movieResponse.getId());
@@ -36,6 +38,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> updateMovie(@PathVariable String id, @RequestBody @Valid UpdateMovieRequest request) {
         MovieResponse movieResponse = movieService.updateMovie(id, request);
         log.info("[MOVIE CONTROLLER] Movie {} has been updated", movieResponse.getId());
@@ -46,6 +49,7 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteMovie(@PathVariable String id) {
         movieService.deleteMovie(id);
         log.info("[MOVIE CONTROLLER] Movie {} has been deleted", id);
@@ -56,6 +60,7 @@ public class MovieController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> updateMovieStatus(@PathVariable String id, @RequestBody @Valid UpdateMovieStatusRequest request) {
         MovieResponse movieResponse = movieService.updateMovieStatus(id, request);
         log.info("[MOVIE CONTROLLER] Movie {} status has been updated to");
@@ -65,7 +70,9 @@ public class MovieController {
                 .build();
     }
 
+
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<PageResponse<MovieResponse>> getMovies(
 
             @RequestParam(required = false) String keyword,
@@ -89,6 +96,60 @@ public class MovieController {
                 sortDir
         );
 
+        return ApiResponse.<PageResponse<MovieResponse>>builder()
+                .success(true)
+                .data(movies)
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<MovieResponse> getMovieDetailById(@PathVariable String id) {
+        MovieResponse movieResponse = movieService.getMovieById(id);
+        log.info("[MOVIE CONTROLLER] Get movie detail for movie with id: {}", id);
+        return ApiResponse.<MovieResponse>builder()
+                .success(true)
+                .data(movieResponse)
+                .build();
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ApiResponse<MovieResponse> getMovieDetailBySlug(@PathVariable String slug) {
+        MovieResponse movieResponse = movieService.getMovieBySlug(slug);
+        log.info("[MOVIE CONTROLLER] Get movie detail for movie with slug: {}", slug);
+        return ApiResponse.<MovieResponse>builder()
+                .success(true)
+                .data(movieResponse)
+                .build();
+    }
+
+    @GetMapping(ApiPaths.Movie.NOW_SHOWING)
+    public ApiResponse<PageResponse<MovieResponse>> getNowShowingMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        PageResponse<MovieResponse> movies = movieService.getMoviesIsNowShowing(page, size);
+        return ApiResponse.<PageResponse<MovieResponse>>builder()
+                .success(true)
+                .data(movies)
+                .build();
+    }
+
+    @GetMapping(ApiPaths.Movie.COMING_SOON)
+    public ApiResponse<PageResponse<MovieResponse>> getComingSoonMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageResponse<MovieResponse> movies = movieService.getMoviesIsComingSoon(page, size);
+        return ApiResponse.<PageResponse<MovieResponse>>builder()
+                .success(true)
+                .data(movies)
+                .build();
+    }
+
+    @GetMapping(ApiPaths.Movie.SEARCH + "/{keyword}")
+    public ApiResponse<PageResponse<MovieResponse>> searchMovies(
+            @PathVariable String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageResponse<MovieResponse> movies = movieService.searchMovie(page, size, keyword);
         return ApiResponse.<PageResponse<MovieResponse>>builder()
                 .success(true)
                 .data(movies)
