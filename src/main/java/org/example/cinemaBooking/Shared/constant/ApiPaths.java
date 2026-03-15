@@ -20,6 +20,9 @@ public final class ApiPaths {
         public static final String BASE = "/users";
         public static final String ME = "/me";
         public static final String CHANGE_PASSWORD = "/change-password";
+        public static final String CHANGE_AVATAR = "/change-avatar" ;
+        public static final String LOCK = "/lock";
+        public static final String UNLOCK = "/unlock";
     }
 
     public static final class Booking {
