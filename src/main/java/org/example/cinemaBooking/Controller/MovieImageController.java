@@ -5,15 +5,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Model.Request.CreateMovieImageRequest;
-import org.example.cinemaBooking.Model.Response.MovieImageResponse;
-import org.example.cinemaBooking.Model.Response.MovieResponse;
+import org.example.cinemaBooking.Dto.Request.CreateMovieImageRequest;
+import org.example.cinemaBooking.Dto.Response.MovieImageResponse;
 import org.example.cinemaBooking.Service.MovieImageService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

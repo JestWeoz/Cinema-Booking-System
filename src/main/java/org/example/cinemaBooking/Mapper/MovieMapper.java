@@ -2,10 +2,10 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Entity.Category;
-import org.example.cinemaBooking.Model.Request.CreateMovieRequest;
-import org.example.cinemaBooking.Model.Request.UpdateMovieRequest;
-import org.example.cinemaBooking.Model.Response.MovieResponse;
-import org.example.cinemaBooking.Model.Response.CategoryResponse;
+import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateMovieRequest;
+import org.example.cinemaBooking.Dto.Response.MovieResponse;
+import org.example.cinemaBooking.Dto.Response.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

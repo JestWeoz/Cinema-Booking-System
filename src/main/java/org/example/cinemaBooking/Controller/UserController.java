@@ -1,24 +1,21 @@
 package org.example.cinemaBooking.Controller;
 
-import com.cloudinary.Api;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Model.Request.ChangeAvatarRequest;
-import org.example.cinemaBooking.Model.Request.ChangePasswordRequest;
-import org.example.cinemaBooking.Model.Request.CreateUserRequest;
-import org.example.cinemaBooking.Model.Request.UpdateProfileRequest;
-import org.example.cinemaBooking.Model.Response.UserResponse;
+import org.example.cinemaBooking.Dto.Request.ChangeAvatarRequest;
+import org.example.cinemaBooking.Dto.Request.ChangePasswordRequest;
+import org.example.cinemaBooking.Dto.Request.CreateUserRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateProfileRequest;
+import org.example.cinemaBooking.Dto.Response.UserResponse;
 import org.example.cinemaBooking.Service.UserService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Slf4j
