@@ -8,5 +8,5 @@ import lombok.*;
 @Setter
 @Builder
 public class RefreshRequest {
-    String token;
+    String accessToken;
 }

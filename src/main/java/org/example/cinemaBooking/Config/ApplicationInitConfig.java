@@ -38,7 +38,7 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {
-            if (userRepository.findUserEntityByUsername(ADMIN_USER_NAME) == null) {
+            if (userRepository.findUserEntityByUsername(ADMIN_USER_NAME).isEmpty()) {
 
 
                 roleRepository.save(RoleEntity.builder()

@@ -45,7 +45,6 @@ public class AuthenticationController {
                     .data(authService.refreshToken(refreshRequest))
                     .build();
     }
-
     //API Logout
     @PostMapping(ApiPaths.Auth.LOGOUT)
     public ApiResponse<String> logoutUser(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {

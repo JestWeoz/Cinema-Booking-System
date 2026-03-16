@@ -117,7 +117,7 @@ public class AuthService {
     // =========================================================
     public RefreshResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         // Verify với refreshable duration (dài hơn valid duration)
-        SignedJWT signedJWT = verifyToken(request.getToken(), true);
+        SignedJWT signedJWT = verifyToken(request.getAccessToken(), true);
 
         String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
