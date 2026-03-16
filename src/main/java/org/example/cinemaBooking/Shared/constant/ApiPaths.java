@@ -30,6 +30,7 @@ public final class ApiPaths {
         public static final String COMING_SOON = "/coming-soon";
         public static final String SEARCH = "/search";
         public static final String RECOMMENDED = "/recommended";
+        public static final String IMAGE = "/images";
     }
 
     public static final class Booking {

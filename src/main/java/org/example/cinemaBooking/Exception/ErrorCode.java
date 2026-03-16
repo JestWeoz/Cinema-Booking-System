@@ -53,7 +53,8 @@ public enum ErrorCode {
     TRAILER_URL_REQUIRED(1039, "Trailer URL is required", HttpStatus.BAD_REQUEST),
     CATEGORIES_REQUIRED(1040, "Categories is required", HttpStatus.BAD_REQUEST),
     MOVIE_NOT_FOUND(1042, "Movie not found", HttpStatus.NOT_FOUND),
-    MOVIE_STATUS_INVALID(1043, "Movie status must in COMING_SOON|NOW_SHOWING|ENDED", HttpStatus.BAD_REQUEST)
+    MOVIE_STATUS_INVALID(1043, "Movie status must in COMING_SOON|NOW_SHOWING|ENDED", HttpStatus.BAD_REQUEST),
+    MOVIE_IMAGE_NOT_FOUND(1044, "Movie image not found", HttpStatus.NOT_FOUND)
     ;
 
 

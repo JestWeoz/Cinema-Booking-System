@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Model.Request.CreateMovieRequest;
 import org.example.cinemaBooking.Model.Request.UpdateMovieRequest;
 import org.example.cinemaBooking.Model.Request.UpdateMovieStatusRequest;

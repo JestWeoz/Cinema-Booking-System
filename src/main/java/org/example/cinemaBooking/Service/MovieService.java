@@ -144,7 +144,7 @@ public class MovieService {
         }
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
 
-        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.COMING_SOON, pageable);
+        Page<Movie> movies = movieRepository.findByStatus(MovieStatus.COMING_SOON, pageable);
 
         List<MovieResponse> movieResponses = movies.getContent().stream()
                 .map(movieMapper::toMovieResponse)
@@ -165,7 +165,7 @@ public class MovieService {
         }
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
 
-        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.NOW_SHOWING, pageable);
+        Page<Movie> movies = movieRepository.findByStatus(MovieStatus.NOW_SHOWING, pageable);
 
         List<MovieResponse> movieResponses = movies.getContent().stream()
                 .map(movieMapper::toMovieResponse)

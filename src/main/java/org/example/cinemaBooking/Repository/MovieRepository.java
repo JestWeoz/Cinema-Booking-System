@@ -24,7 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie, String>,
     Optional<Movie> findBySlug(String slug);
 
     @EntityGraph(attributePaths = {"categories"})
-    Page<Movie> findBYStatus(MovieStatus movieStatus, Pageable pageable);
+    Page<Movie> findByStatus(MovieStatus movieStatus, Pageable pageable);
 
     @EntityGraph(attributePaths = {"categories"})
     @Query("""
