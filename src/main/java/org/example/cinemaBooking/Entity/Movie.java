@@ -9,6 +9,7 @@ import org.example.cinemaBooking.Shared.utils.MovieStatus;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,7 @@ public class Movie extends SoftDeletableEntity {
 
     LocalDate releaseDate;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     AgeRating ageRating = AgeRating.P;
@@ -44,11 +46,12 @@ public class Movie extends SoftDeletableEntity {
     String language;
 
     @Column(nullable = false, length = 500)
-   String posterUrl;
+    String posterUrl;
 
     @Column(nullable = false)
     String trailerUrl;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     MovieStatus status = MovieStatus.COMING_SOON;
@@ -63,15 +66,19 @@ public class Movie extends SoftDeletableEntity {
     @Builder.Default
     Set<Category> categories = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MovieImage> images;
+    List<MovieImage> images = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MoviePeople> moviePeoples;
+    List<MoviePeople> moviePeoples = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "movie")
-    List<Review> reviews;
+    List<Review> reviews = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "movie")
-    List<Showtime> showtimes;
+    List<Showtime> showtimes = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package org.example.cinemaBooking.Model.Request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 @Data
@@ -8,5 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IntrospectReq {
+    @NotBlank(message = "TOKEN_REQUIRED")
     String token;
 }

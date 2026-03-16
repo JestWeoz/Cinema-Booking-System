@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShowtimeSeat extends SoftDeletableEntity {
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     SeatStatus status = SeatStatus.AVAILABLE;   // trạng thái ghế: AVAILABLE, BOOKED, LOCKED

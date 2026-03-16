@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

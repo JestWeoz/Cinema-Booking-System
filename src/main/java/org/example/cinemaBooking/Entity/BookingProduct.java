@@ -36,6 +36,7 @@ public class BookingProduct extends SoftDeletableEntity {
     private BigDecimal itemPrice; // đơn giá lúc đặt
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer quantity = 1;
 
 //    @Column(nullable = false, precision = 10, scale = 2)

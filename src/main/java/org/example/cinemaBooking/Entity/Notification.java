@@ -11,13 +11,17 @@ import org.example.cinemaBooking.Shared.utils.Type;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Notification extends SoftDeletableEntity {
     @Column(nullable = false)
     String title;
     @Column(columnDefinition = "TEXT")
     String body;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     Type type = Type.BOOKING;
 
     @ManyToOne(fetch = FetchType.LAZY)

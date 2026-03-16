@@ -37,6 +37,7 @@ public class Booking extends SoftDeletableEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
+    @Builder.Default
     @Column(precision = 10, scale = 2)
     private BigDecimal discountAmount = BigDecimal.ZERO;
 

@@ -20,10 +20,12 @@ public class Payment extends SoftDeletableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private PaymentMethod paymentMethod = PaymentMethod.VNPAY;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(unique = true, length = 255)

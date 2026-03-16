@@ -1,10 +1,7 @@
 package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 import org.example.cinemaBooking.Shared.utils.RoomType;
@@ -18,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Room extends SoftDeletableEntity {
     @Column(nullable = false, unique = true)
@@ -26,6 +24,7 @@ public class Room extends SoftDeletableEntity {
     @Column(nullable = false)
     String totalSeats;
 
+    @Builder.Default
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     RoomType roomType = RoomType.TWO_D;

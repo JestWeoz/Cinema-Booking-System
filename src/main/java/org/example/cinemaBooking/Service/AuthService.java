@@ -7,6 +7,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -20,7 +21,10 @@ import org.example.cinemaBooking.Model.Response.AuthResponse;
 import org.example.cinemaBooking.Model.Response.LoginResponse;
 import org.example.cinemaBooking.Model.Response.RefreshResponse;
 import org.example.cinemaBooking.Model.Response.RegisterResponse;
+import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
+import org.example.cinemaBooking.Service.redis.TokenBlacklistService;
+import org.example.cinemaBooking.Shared.constant.PredefinedRole;
 import org.example.cinemaBooking.Shared.response.IntrospectResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,10 +34,7 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -44,8 +45,8 @@ public class AuthService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
     private final TokenBlacklistService tokenBlacklistService;
-
-    @Value("${jwt.SignerKey}")
+    private final RoleRepository roleRepository;
+    @Value("${jwt.signerKey}")
     String signerKey;
 
     @Value("${jwt.valid-duration:3600}")        // mặc định 1 giờ
@@ -67,6 +68,11 @@ public class AuthService {
         }
         UserEntity userEntity = userMapper.toUserEntity(registerRequest);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        RoleEntity role = roleRepository
+                .findByName(PredefinedRole.CUSTOMER_ROLE)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        userEntity.setRoles(Set.of(role));
         userRepo.save(userEntity);
 
         return RegisterResponse.builder()
@@ -188,7 +194,6 @@ public class AuthService {
                 .issuer("Cinema Booking Service")
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(now.plus(validDuration, ChronoUnit.SECONDS)))
-                // ✅ jwtID để định danh token — cần cho blacklist
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();

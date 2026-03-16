@@ -27,6 +27,7 @@ public class Showtime extends SoftDeletableEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal basePrice;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     Language language = Language.SUBTITLED;
@@ -34,6 +35,7 @@ public class Showtime extends SoftDeletableEntity {
     @Column(nullable = false)
     private Integer availableSeats = 0; // cache
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     ShowTimeStatus status = ShowTimeStatus.SCHEDULED;

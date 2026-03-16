@@ -1,10 +1,7 @@
 package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 
@@ -13,6 +10,7 @@ import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Seat extends SoftDeletableEntity {
     @Column(nullable = false, length = 2)
@@ -21,7 +19,7 @@ public class Seat extends SoftDeletableEntity {
     @Column(nullable = false, length = 2)
     Integer seatNumber; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
-
+    @Builder.Default
     @Column(nullable = false)
     boolean isActive = true;
 

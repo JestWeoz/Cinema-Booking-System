@@ -11,10 +11,25 @@ public final class ApiPaths {
         public static final String REGISTER = "/register";
         public static final String LOGOUT = "/logout";
         public static final String REFRESH = "/refresh";
+        public static final String INTROSPECT = "/introspect";
+        public static final String FORGOT_PASSWORD = "/forgot-password";
+        public static final String RESET_PASSWORD = "/reset-password";
     }
 
     public static final class User {
         public static final String BASE = "/users";
+        public static final String ME = "/me";
+        public static final String CHANGE_PASSWORD = "/change-password";
+        public static final String CHANGE_AVATAR = "/change-avatar" ;
+        public static final String LOCK = "/lock";
+        public static final String UNLOCK = "/unlock";
+    }
+    public static final class Movie {
+        public static final String BASE = "/movies";
+        public static final String NOW_SHOWING = "/now-showing";
+        public static final String COMING_SOON = "/coming-soon";
+        public static final String SEARCH = "/search";
+        public static final String RECOMMENDED = "/recommended";
     }
 
     public static final class Booking {

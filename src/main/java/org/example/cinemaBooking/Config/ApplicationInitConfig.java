@@ -50,6 +50,10 @@ public class ApplicationInitConfig {
                         .name(PredefinedRole.MANAGER_ROLE)
                         .description("Manager role")
                         .build());
+                roleRepository.save(RoleEntity.builder()
+                        .name(PredefinedRole.CUSTOMER_ROLE)
+                        .description("Customer role")
+                        .build());
                 RoleEntity adminRole = roleRepository.save(RoleEntity.builder()
                         .name(PredefinedRole.ADMIN_ROLE)
                         .description("Admin role")
