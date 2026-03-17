@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CreateMovieImageRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateMovieImageRequest;
 import org.example.cinemaBooking.Dto.Response.MovieImageResponse;
 import org.example.cinemaBooking.Service.MovieImageService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
@@ -22,9 +23,9 @@ import java.util.List;
 public class MovieImageController {
     MovieImageService movieImageService;
 
-    @PostMapping( ApiPaths.Movie.IMAGE)
-    ApiResponse<List<MovieImageResponse>> createMovieImage(@RequestBody @Valid CreateMovieImageRequest request) {
-        List<MovieImageResponse> movieResponseList = movieImageService.createMovieImage(request);
+    @PostMapping( "/{movieId}" + ApiPaths.Movie.IMAGE)
+    ApiResponse<List<MovieImageResponse>> createMovieImage(@PathVariable String movieId, @RequestBody @Valid CreateMovieImageRequest request) {
+        List<MovieImageResponse> movieResponseList = movieImageService.createMovieImage(movieId, request);
         log.info("[MOVIE_IMAGE_CONTROLLER] Movie image created successfully");
         return ApiResponse.<List<MovieImageResponse>>builder()
                 .success(true)
@@ -33,13 +34,12 @@ public class MovieImageController {
                 .build();
     }
     @PutMapping("/{movieId}" + ApiPaths.Movie.IMAGE)
-     ApiResponse<Void> updateMovieImage(@PathVariable String movieId, @RequestBody List<String> imageUrls) {
-        movieImageService.updateMovieImage(movieId, imageUrls);
+     ApiResponse<Void> updateMovieImage(@PathVariable String movieId, @RequestBody @Valid UpdateMovieImageRequest request) {
+        movieImageService.updateMovieImage(movieId, request);
         log.info("[MOVIE_IMAGE_CONTROLLER] Movie image updated successfully");
         return ApiResponse.<Void>builder()
                 .success(true)
                 .message("Movie image updated successfully")
-                .data(null)
                 .build();
      }
 

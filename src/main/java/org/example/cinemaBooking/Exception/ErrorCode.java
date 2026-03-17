@@ -56,7 +56,10 @@ public enum ErrorCode {
     MOVIE_STATUS_INVALID(1043, "Movie status must in COMING_SOON|NOW_SHOWING|ENDED", HttpStatus.BAD_REQUEST),
     MOVIE_IMAGE_NOT_FOUND(1044, "Movie image not found", HttpStatus.NOT_FOUND),
     PEOPLE_NOT_FOUND(1045, "People not found", HttpStatus.NOT_FOUND),
-    PEOPLE_IS_IN_MOVIE(1046, "People is in movie", HttpStatus.BAD_REQUEST)
+    PEOPLE_IS_IN_MOVIE(1046, "People is in movie", HttpStatus.BAD_REQUEST),
+    MOVIE_PEOPLE_NOT_FOUND(1047, "Movie people not found", HttpStatus.NOT_FOUND),
+    IMAGE_URL_REQUIRED(1048, "Image URL is required", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_LIST_REQUIRED(1049, "Image URL list is required", HttpStatus.BAD_REQUEST)
     ;
 
 

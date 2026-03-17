@@ -1,5 +1,6 @@
 package org.example.cinemaBooking.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +23,7 @@ import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.PeopleRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.MovieRole;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,13 +57,12 @@ public class PeopleService {
         return peopleMapper.toResponse(updatedPeople);
     }
 
+    @Transactional
     public void deletePeople(String id){
         var people = peopleRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.PEOPLE_NOT_FOUND));
-        boolean exists = moviePeopleRepository.existsByPeopleId(people.getId());
-        if (exists) {
-            throw new AppException(ErrorCode.PEOPLE_IS_IN_MOVIE);
-        }
+        moviePeopleRepository.deleteByPeopleId(id);
+        // Xóa People
         peopleRepository.delete(people);
         log.info("[PEOPLE_SERVICE] - Delete people with id: {}", id);
     }
@@ -94,24 +95,36 @@ public class PeopleService {
 
     }
 
-    public void addPeopleToMovie(String movieId, AddPeopleToMovieRequest request) {
+    @Transactional
+    public void addPeopleToMovie(String movieId, String peopleId, AddPeopleToMovieRequest request) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(()
                 -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
 
-        People people = peopleRepository.findById(request.peopleId()).orElseThrow(()
+        People people = peopleRepository.findById(peopleId).orElseThrow(()
                 -> new AppException(ErrorCode.PEOPLE_NOT_FOUND));
 
-        boolean exists = moviePeopleRepository.existsByMovieIdAndPeopleId(movie.getId(), people.getId());
-        if(exists){
-            throw new AppException(ErrorCode.PEOPLE_IS_IN_MOVIE);
-        }
+
         MoviePeople moviePeople = MoviePeople.builder()
                 .movie(movie)
                 .people(people)
                 .movieRole(MovieRole.valueOf(request.role()))
                 .build();
-        moviePeopleRepository.save(moviePeople);
+
+        try {
+            moviePeopleRepository.save(moviePeople);
+        } catch (DataIntegrityViolationException e) {
+            // DB UNIQUE constraint đảm bảo không bị duplicate
+            throw new AppException(ErrorCode.PEOPLE_IS_IN_MOVIE);
+        }
         log.info("[PEOPLE_SERVICE] - Add people with id: {} to movie with id: {} with role: {}", people.getId(), movie.getId(), request.role());
+    }
+
+    @Transactional
+    public void removePeopleFromMovie(String movieId, String peopleId) {
+        MoviePeople moviePeople = moviePeopleRepository.findByMovieIdAndPeopleId(movieId, peopleId).orElseThrow(()
+                -> new AppException(ErrorCode.MOVIE_PEOPLE_NOT_FOUND));
+        moviePeopleRepository.delete(moviePeople);
+        log.info("[PEOPLE_SERVICE] - Remove people with id: {} from movie with id: {}", peopleId, movieId);
     }
 
     public  List<MoviePeopleResponse> getMovieByPeople(String peopleId) {
@@ -121,13 +134,10 @@ public class PeopleService {
         List<MoviePeople> moviePeoples = moviePeopleRepository.findByPeopleId(peopleId);
         log.info("[PEOPLE_SERVICE] - Get movies by people with id: {}", peopleId);
         return moviePeoples.stream()
-                .map(moviePeople -> new MoviePeopleResponse(
-                        moviePeople.getMovie().getId(),
-                        moviePeople.getMovie().getTitle(),
-                        moviePeople.getMovieRole()
-                ))
+                .map(moviePeopleMapper::toMoviePeopleResponse)
                 .toList();
     }
+
 
     public List<MovieCastResponse> getPeopleByMovie(String movieId) {
 
@@ -140,7 +150,7 @@ public class PeopleService {
         log.info("[PEOPLE_SERVICE] - Get peoples by movie with id: {}", movieId);
 
         return moviePeoples.stream()
-                .map(moviePeopleMapper::toResponse)
+                .map(moviePeopleMapper::toMovieCastResponse)
                 .toList();
     }
 }

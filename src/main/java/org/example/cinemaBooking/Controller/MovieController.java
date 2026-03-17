@@ -4,11 +4,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.Dto.Request.AddPeopleToMovieRequest;
 import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
 import org.example.cinemaBooking.Dto.Request.UpdateMovieRequest;
 import org.example.cinemaBooking.Dto.Request.UpdateMovieStatusRequest;
+import org.example.cinemaBooking.Dto.Response.MovieCastResponse;
 import org.example.cinemaBooking.Dto.Response.MovieResponse;
 import org.example.cinemaBooking.Service.MovieService;
+import org.example.cinemaBooking.Service.PeopleService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
@@ -17,6 +20,8 @@ import org.example.cinemaBooking.Shared.utils.MovieStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Movie.BASE)
 public class MovieController {
     MovieService movieService;
+    PeopleService peopleService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -154,4 +160,40 @@ public class MovieController {
                 .data(movies)
                 .build();
     }
+
+    //    Them nguoi vao phim
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{movieId}" + ApiPaths.People.BASE + "/{peopleId}")
+    public ApiResponse<Void> addPeopleToMovie(@PathVariable String peopleId,
+                                              @PathVariable String movieId,
+                                              @RequestBody @Valid AddPeopleToMovieRequest request) {
+        peopleService.addPeopleToMovie(movieId, peopleId, request);
+        log.info("[MOVIE_CONTROLLER] - Add people with id: {} to movie with id: {}", peopleId, movieId);
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .build();
+    }
+    //    xaa nguoi khoi phim
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{movieId}" + ApiPaths.People.BASE + "/{peopleId}")
+    public ApiResponse<Void> removePeopleFromMovie(@PathVariable String peopleId,
+                                                   @PathVariable String movieId) {
+        peopleService.removePeopleFromMovie(movieId, peopleId);
+        log.info("[MOVIE_CONTROLLER] - Remove people with id: {} from movie with id: {}", peopleId, movieId);
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .build();
+    }
+
+    //    Lay cast cua phim
+    @GetMapping("/{movieId}" + ApiPaths.People.BASE)
+    public ApiResponse<List<MovieCastResponse>> getMovieCast(@PathVariable String movieId){
+        var response = peopleService.getPeopleByMovie(movieId);
+        log.info("[MOVIE_CONTROLLER] - Get cast of movie with id: {}, total: {}", movieId, response.size());
+        return ApiResponse.<List<MovieCastResponse>>builder()
+                .success(true)
+                .data(response)
+                .build();
+    }
+
 }
