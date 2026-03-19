@@ -159,9 +159,8 @@ public class UserService {
         List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
-
+        log.info("[USER SERVICE] Get all users with key: {}, page: {}, size: {}", key, page, size);
         return PageResponse.<UserResponse>builder()
-                .success(true)
                 .items(userResponses)
                 .page(page)
                 .size(size)

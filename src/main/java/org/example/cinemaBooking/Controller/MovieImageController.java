@@ -11,6 +11,7 @@ import org.example.cinemaBooking.Dto.Response.MovieImageResponse;
 import org.example.cinemaBooking.Service.MovieImageService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +24,9 @@ import java.util.List;
 public class MovieImageController {
     MovieImageService movieImageService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping( "/{movieId}" + ApiPaths.Movie.IMAGE)
-    ApiResponse<List<MovieImageResponse>> createMovieImage(@PathVariable String movieId, @RequestBody @Valid CreateMovieImageRequest request) {
+    public ApiResponse<List<MovieImageResponse>> createMovieImage(@PathVariable String movieId, @RequestBody @Valid CreateMovieImageRequest request) {
         List<MovieImageResponse> movieResponseList = movieImageService.createMovieImage(movieId, request);
         log.info("[MOVIE_IMAGE_CONTROLLER] Movie image created successfully");
         return ApiResponse.<List<MovieImageResponse>>builder()
@@ -33,8 +35,10 @@ public class MovieImageController {
                 .data(movieResponseList)
                 .build();
     }
-    @PutMapping("/{movieId}" + ApiPaths.Movie.IMAGE)
-     ApiResponse<Void> updateMovieImage(@PathVariable String movieId, @RequestBody @Valid UpdateMovieImageRequest request) {
+
+     @PreAuthorize("hasRole('ADMIN')")
+     @PutMapping("/{movieId}" + ApiPaths.Movie.IMAGE)
+     public ApiResponse<Void> updateMovieImage(@PathVariable String movieId, @RequestBody @Valid UpdateMovieImageRequest request) {
         movieImageService.updateMovieImage(movieId, request);
         log.info("[MOVIE_IMAGE_CONTROLLER] Movie image updated successfully");
         return ApiResponse.<Void>builder()
@@ -43,8 +47,9 @@ public class MovieImageController {
                 .build();
      }
 
+     @PreAuthorize("hasRole('ADMIN')")
      @DeleteMapping("/{movieId}" + ApiPaths.Movie.IMAGE+ "/{imageId}")
-     ApiResponse<Void> deleteMovieImage(@PathVariable String movieId,
+     public ApiResponse<Void> deleteMovieImage(@PathVariable String movieId,
                                         @PathVariable String imageId) {
         movieImageService.deleteMovieImage(movieId, imageId);
         log.info("[MOVIE_IMAGE_CONTROLLER] Movie image deleted successfully");
@@ -54,14 +59,15 @@ public class MovieImageController {
                 .build();
      }
 
+
      @GetMapping("/{movieId}" + ApiPaths.Movie.IMAGE)
-        ApiResponse<List<MovieImageResponse>> getMovieImagesByMovieId(@PathVariable String movieId) {
-            List<MovieImageResponse> movieImageResponses = movieImageService.getMovieImageByMovieId(movieId);
-            log.info("[MOVIE_IMAGE_CONTROLLER] Movie images retrieved successfully for movieId: {}", movieId);
-            return ApiResponse.<List<MovieImageResponse>>builder()
-                    .success(true)
-                    .message("Movie images retrieved successfully")
-                    .data(movieImageResponses)
-                    .build();
+     public ApiResponse<List<MovieImageResponse>> getMovieImagesByMovieId(@PathVariable String movieId) {
+        List<MovieImageResponse> movieImageResponses = movieImageService.getMovieImageByMovieId(movieId);
+        log.info("[MOVIE_IMAGE_CONTROLLER] Movie images retrieved successfully for movieId: {}", movieId);
+        return ApiResponse.<List<MovieImageResponse>>builder()
+                .success(true)
+                .message("Movie images retrieved successfully")
+                .data(movieImageResponses)
+                .build();
         }
 }

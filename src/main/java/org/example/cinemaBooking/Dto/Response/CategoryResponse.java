@@ -1,17 +1,10 @@
 package org.example.cinemaBooking.Dto.Response;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
 
-@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
-
-    String id;
-
-    String name;
-
+public record CategoryResponse(
+        String id,
+        String name
+) {
 }

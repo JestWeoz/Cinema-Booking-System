@@ -52,6 +52,11 @@ public class MovieSpecification {
                 );
             }
 
+            predicates = cb.and(
+                    predicates,
+                    cb.isFalse(root.get("deleted"))
+            );
+
             return predicates;
         };
     }

@@ -7,12 +7,14 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends SoftDeletableEntity {
@@ -21,5 +23,6 @@ public class Category extends SoftDeletableEntity {
     String name;
 
     @ManyToMany(mappedBy = "categories")
-    private Set<Movie> movies;
+    @Builder.Default
+    private Set<Movie> movies = new HashSet<>();
 }

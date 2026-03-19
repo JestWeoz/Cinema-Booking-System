@@ -68,7 +68,7 @@ public class MovieController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> updateMovieStatus(@PathVariable String id, @RequestBody @Valid UpdateMovieStatusRequest request) {
         MovieResponse movieResponse = movieService.updateMovieStatus(id, request);
-        log.info("[MOVIE CONTROLLER] Movie {} status has been updated to");
+        log.info("[MOVIE CONTROLLER] Movie {} status has been updated to {}", movieResponse.getId(), movieResponse.getStatus());
         return ApiResponse.<MovieResponse>builder()
                 .success(true)
                 .data(movieResponse)
@@ -84,7 +84,7 @@ public class MovieController {
             @RequestParam(required = false) MovieStatus status,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) AgeRating ageRating,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "releaseDate") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir
@@ -100,7 +100,8 @@ public class MovieController {
                 sortBy,
                 sortDir
         );
-
+        log.info("[MOVIE CONTROLLER] Get movies with keyword: {}, status: {}, categoryId: {}, ageRating: {}, page: {}, size: {}, sortBy: {}, sortDir: {}",
+                keyword, status, categoryId, ageRating, page, size, sortBy, sortDir);
         return ApiResponse.<PageResponse<MovieResponse>>builder()
                 .success(true)
                 .data(movies)
@@ -129,7 +130,7 @@ public class MovieController {
 
     @GetMapping(ApiPaths.Movie.NOW_SHOWING)
     public ApiResponse<PageResponse<MovieResponse>> getNowShowingMovies(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size){
         PageResponse<MovieResponse> movies = movieService.getMoviesIsNowShowing(page, size);
         return ApiResponse.<PageResponse<MovieResponse>>builder()
@@ -140,7 +141,7 @@ public class MovieController {
 
     @GetMapping(ApiPaths.Movie.COMING_SOON)
     public ApiResponse<PageResponse<MovieResponse>> getComingSoonMovies(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         PageResponse<MovieResponse> movies = movieService.getMoviesIsComingSoon(page, size);
         return ApiResponse.<PageResponse<MovieResponse>>builder()

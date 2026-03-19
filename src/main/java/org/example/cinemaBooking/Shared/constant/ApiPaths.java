@@ -33,6 +33,13 @@ public final class ApiPaths {
         public static final String IMAGE = "/images";
     }
 
+    public static final class Review {
+        public static final String BASE = "/reviews";
+        public static final String AVERAGE_RATING = "/average-rating";
+    }
+    public static final class Category {
+        public static final String BASE = "/categories";
+    }
     public static final class People {
          public static final String BASE = "/people";
     }

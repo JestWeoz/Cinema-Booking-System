@@ -59,8 +59,12 @@ public enum ErrorCode {
     PEOPLE_IS_IN_MOVIE(1046, "People is in movie", HttpStatus.BAD_REQUEST),
     MOVIE_PEOPLE_NOT_FOUND(1047, "Movie people not found", HttpStatus.NOT_FOUND),
     IMAGE_URL_REQUIRED(1048, "Image URL is required", HttpStatus.BAD_REQUEST),
-    IMAGE_URL_LIST_REQUIRED(1049, "Image URL list is required", HttpStatus.BAD_REQUEST)
-    ;
+    IMAGE_URL_LIST_REQUIRED(1049, "Image URL list is required", HttpStatus.BAD_REQUEST),
+    REVIEW_ALREADY_EXISTS(1050, "Review already exists for this user and movie", HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_FOUND(1051, "Review not found", HttpStatus.NOT_FOUND),
+    CONCURRENT_UPDATE(1052,"concurrent update",HttpStatus.BAD_REQUEST ),
+    CATEGORY_ALREADY_EXISTS(1053,"category already exists" , HttpStatus.BAD_REQUEST ),
+    MOVIE_SLUG_ALREADY_EXISTS(1054, "movie slug exists", HttpStatus.BAD_REQUEST),;
 
 
      int code;
