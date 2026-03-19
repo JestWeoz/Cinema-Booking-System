@@ -7,6 +7,6 @@ public record ReviewSummaryResponse(
         Integer rating,
         String commentTruncated,    // cắt ngắn nếu dài
         String username,
-        LocalDateTime createdAt,
-        Double averageRating        // optional: nếu tính trung bình ở service
+        LocalDateTime createdAt
+//        Double averageRating        // optional: nếu tính trung bình ở service
 ) {}

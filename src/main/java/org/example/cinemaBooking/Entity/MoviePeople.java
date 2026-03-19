@@ -5,7 +5,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 import org.example.cinemaBooking.Shared.utils.MovieRole;
-
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_movie_people",  // Tên constraint
+                columnNames = {"movie_id", "people_id"}  // Không cho trùng cặp này
+        )
+})
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

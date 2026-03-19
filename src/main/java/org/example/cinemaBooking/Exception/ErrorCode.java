@@ -64,7 +64,12 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(1051, "Review not found", HttpStatus.NOT_FOUND),
     CONCURRENT_UPDATE(1052,"concurrent update",HttpStatus.BAD_REQUEST ),
     CATEGORY_ALREADY_EXISTS(1053,"category already exists" , HttpStatus.BAD_REQUEST ),
-    MOVIE_SLUG_ALREADY_EXISTS(1054, "movie slug exists", HttpStatus.BAD_REQUEST),;
+    MOVIE_SLUG_ALREADY_EXISTS(1054, "movie slug exists", HttpStatus.BAD_REQUEST),
+    INVALID_REQUEST(1055, "Invalid request", HttpStatus.BAD_REQUEST),
+    MOVIE_CANNOT_HAVE_MULTIPLE_DIRECTORS(1056, "Movie cannot have multiple directors", HttpStatus.BAD_REQUEST),
+    MOVIE_ALREADY_HAS_DIRECTOR(1057,"Movie has already a director" , HttpStatus.BAD_REQUEST ),
+    INVALID_MOVIE_ROLE(1058, "movie role invalid", HttpStatus.BAD_REQUEST ),
+    DUPLICATE_PEOPLE_IN_REQUEST(1059, "duplicate people in request" , HttpStatus.BAD_REQUEST );
 
 
      int code;

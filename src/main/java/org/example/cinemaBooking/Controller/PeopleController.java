@@ -88,7 +88,7 @@ public class PeopleController {
 //    Lay danh sach phim nguoi tham gia
     @GetMapping("/{peopleId}" + ApiPaths.Movie.BASE)
     public ApiResponse<List<MoviePeopleResponse>> getMoviesByPeopleId(@PathVariable String peopleId){
-        var response = peopleService.getMovieByPeople(peopleId);
+        var response = peopleService.getMoviesByPeople(peopleId);
         log.info("[PEOPLE_CONTROLLER] - Get movies by people id: {}, total: {}", peopleId, response.size());
         return ApiResponse.<List<MoviePeopleResponse>>builder()
                 .success(true)

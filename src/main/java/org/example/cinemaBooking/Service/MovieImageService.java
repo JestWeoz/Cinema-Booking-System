@@ -36,22 +36,51 @@ public class MovieImageService {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
 
-        // tranh duplicate anh
-        Set<String> uniqueUrls = new HashSet<>(request.getImageUrls());
+        // Lấy danh sách URLs đã tồn tại trong DB
+        List<MovieImage> existingImages = movieImageRepository.findByMovieId(movieId);
+        Set<String> existingUrls = existingImages.stream()
+                .map(MovieImage::getImageUrl)
+                .collect(Collectors.toSet());
 
-        List<MovieImage> movieImages = uniqueUrls.stream()
+        // Lọc URLs mới (không tồn tại trong DB)
+        Set<String> uniqueNewUrls = new HashSet<>(request.getImageUrls());
+        List<String> newUrls = uniqueNewUrls.stream()
+                .filter(url -> !existingUrls.contains(url))
+                .toList();
+
+
+        log.info("Request URLs: {}", request.getImageUrls());
+        log.info("Existing URLs: {}", existingUrls);
+        log.info("New URLs to add: {}", newUrls);
+
+        // Nếu không có ảnh mới, trả về danh sách ảnh hiện tại
+        if (newUrls.isEmpty()) {
+            log.info("No new images to add for movieId: {}", movieId);
+            return existingImages.stream()
+                    .map(movieImageMapper::toResponse)
+                    .toList();
+        }
+
+        // Chỉ tạo ảnh cho URLs mới
+        List<MovieImage> movieImages = newUrls.stream()
                 .map(url -> MovieImage.builder()
                         .imageUrl(url)
                         .movie(movie)
                         .build())
                 .toList();
 
-        movieImageRepository.saveAll(movieImages);
+        List<MovieImage> savedImages = movieImageRepository.saveAll(movieImages);
+        movieImageRepository.flush();
 
-        log.info("[MOVIE_IMAGE_SERVICE] action=create movieId={} count={}",
-                movieId, movieImages.size());
+        // Kết hợp ảnh cũ và ảnh mới
+        List<MovieImage> allImages = new ArrayList<>();
+        allImages.addAll(existingImages);
+        allImages.addAll(savedImages);
 
-        return movieImages.stream()
+        log.info("[MOVIE_IMAGE_SERVICE] action=create movieId={} new={} total={}",
+                movieId, savedImages.size(), allImages.size());
+
+        return allImages.stream()
                 .map(movieImageMapper::toResponse)
                 .toList();
     }

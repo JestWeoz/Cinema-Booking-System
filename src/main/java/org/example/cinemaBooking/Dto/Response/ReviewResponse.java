@@ -1,8 +1,6 @@
 package org.example.cinemaBooking.Dto.Response;
 
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ReviewResponse(String id,
@@ -13,6 +11,6 @@ public record ReviewResponse(String id,
                              String comment,
                              String username,
                              LocalDateTime createdAt,
-                             LocalDateTime updateAt,
+                             LocalDateTime updatedAt,
                              boolean deleted) {
 }

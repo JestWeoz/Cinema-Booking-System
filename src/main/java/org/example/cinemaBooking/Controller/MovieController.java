@@ -162,39 +162,6 @@ public class MovieController {
                 .build();
     }
 
-    //    Them nguoi vao phim
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{movieId}" + ApiPaths.People.BASE + "/{peopleId}")
-    public ApiResponse<Void> addPeopleToMovie(@PathVariable String peopleId,
-                                              @PathVariable String movieId,
-                                              @RequestBody @Valid AddPeopleToMovieRequest request) {
-        peopleService.addPeopleToMovie(movieId, peopleId, request);
-        log.info("[MOVIE_CONTROLLER] - Add people with id: {} to movie with id: {}", peopleId, movieId);
-        return ApiResponse.<Void>builder()
-                .success(true)
-                .build();
-    }
-    //    xaa nguoi khoi phim
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{movieId}" + ApiPaths.People.BASE + "/{peopleId}")
-    public ApiResponse<Void> removePeopleFromMovie(@PathVariable String peopleId,
-                                                   @PathVariable String movieId) {
-        peopleService.removePeopleFromMovie(movieId, peopleId);
-        log.info("[MOVIE_CONTROLLER] - Remove people with id: {} from movie with id: {}", peopleId, movieId);
-        return ApiResponse.<Void>builder()
-                .success(true)
-                .build();
-    }
 
-    //    Lay cast cua phim
-    @GetMapping("/{movieId}" + ApiPaths.People.BASE)
-    public ApiResponse<List<MovieCastResponse>> getMovieCast(@PathVariable String movieId){
-        var response = peopleService.getPeopleByMovie(movieId);
-        log.info("[MOVIE_CONTROLLER] - Get cast of movie with id: {}, total: {}", movieId, response.size());
-        return ApiResponse.<List<MovieCastResponse>>builder()
-                .success(true)
-                .data(response)
-                .build();
-    }
 
 }

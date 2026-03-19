@@ -124,19 +124,19 @@ public class ReviewService {
     }
 
 
-    public PageResponse<ReviewSummaryResponse> getReviewsByMovie(String movieId, int page, int size, int minimumRating) {
+    public PageResponse<ReviewSummaryResponse> getReviewsByMovie(String movieId, int page, int size, Integer minimumRating) {
 
         int pageNumber = Math.max(page - 1, 0);
 
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
 
-        if (minimumRating > 0) {
+        if (minimumRating != null && minimumRating > 0) {
             sort = Sort.by(Sort.Direction.DESC, "rating").and(sort);
         }
 
         Pageable pageable = PageRequest.of(pageNumber, size, sort);
 
-        Page<Review> reviews = (minimumRating > 0)
+        Page<Review> reviews = (minimumRating != null && minimumRating > 0)
                 ? reviewRepository.findByMovieIdAndRatingGreaterThanEqualAndDeletedFalse(movieId, minimumRating, pageable)
                 : reviewRepository.findByMovieIdAndDeletedFalse(movieId, pageable);
 

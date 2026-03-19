@@ -15,6 +15,10 @@ public interface MoviePeopleMapper {
 
     @Mapping(source = "movie.id", target = "movieId")
     @Mapping(source = "movie.title", target = "movieTitle")
+    @Mapping(source = "people.id", target = "peopleId")
+    @Mapping(source = "people.name", target = "peopleName")
+    @Mapping(source = "people.avatarUrl", target = "peopleAvatar")
+    @Mapping(source = "movieRole", target = "role")
     MoviePeopleResponse toMoviePeopleResponse(MoviePeople moviePeople);
 
 }

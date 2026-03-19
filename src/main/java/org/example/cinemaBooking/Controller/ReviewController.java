@@ -26,7 +26,7 @@ public class ReviewController {
         ReviewResponse reviewResponse = reviewService.createReview(reviewRequest);
         log.info("[ReviewController] createReview - reviewId: {}", reviewResponse.id());
         return ApiResponse.<ReviewResponse>builder()
-                . success(true)
+                .success(true)
                 .data(reviewResponse)
                 .build();
     }
