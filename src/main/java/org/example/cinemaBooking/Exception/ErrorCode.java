@@ -73,8 +73,14 @@ public enum ErrorCode {
     NAME_REQUIRED(1060, "Name is required", HttpStatus.BAD_REQUEST),
     PRICE_REQUIRED(1061, "Price is required", HttpStatus.BAD_REQUEST),
     PRICE_INVALID(1062, "Price must be greater than 0", HttpStatus.BAD_REQUEST),
-    PRODUCT_ALREADY_EXISTS(1063, "Product already exists", HttpStatus.BAD_REQUEST)
-    ;
+    PRODUCT_ALREADY_EXISTS(1063, "Product already exists", HttpStatus.BAD_REQUEST),
+    QUANTITY_MIN_VALUE(1064, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
+    PRODUCT_ID_REQUIRED(1065, "Product ID is required", HttpStatus.BAD_REQUEST),
+    ITEMS_REQUIRED(1066, "Items is required", HttpStatus.BAD_REQUEST),
+    COMBO_ALREADY_EXISTS(1067, "Combo already exists", HttpStatus.BAD_REQUEST),
+    COMBO_NOT_FOUND(1068, "Combo not found", HttpStatus.NOT_FOUND),
+    DUPLICATE_PRODUCT_IN_COMBO(1069, "Duplicate product in combo", HttpStatus.BAD_REQUEST),
+    PRICE_INVALID_FORMAT(1070, "Price must be a valid number", HttpStatus.BAD_REQUEST);
 
 
      int code;

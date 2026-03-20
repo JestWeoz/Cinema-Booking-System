@@ -11,7 +11,7 @@ public record CreateProductRequest(
 
         @NotNull(message = "PRICE_REQUIRED")
         @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID")
-        @Digits(integer = 8, fraction = 2)
+        @Digits(integer = 8, fraction = 2, message = "PRICE_INVALID_FORMAT")
         BigDecimal price,
 
         @Size(max = 1000)

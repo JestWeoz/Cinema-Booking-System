@@ -43,6 +43,9 @@ public final class ApiPaths {
     public static final class Product {
         public static final String BASE = "/products";
     }
+    public static final class Combo {
+        public static final String BASE = "/combos";
+    }
     public static final class People {
          public static final String BASE = "/people";
     }

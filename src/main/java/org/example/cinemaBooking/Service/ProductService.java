@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -126,6 +127,33 @@ public class ProductService {
                         .stream()
                         .map(productMapper::toResponse)
                         .toList())
+                .build();
+    }
+
+    public PageResponse<ProductResponse> getProductActive(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        int pageNumber = page > 0 ? page -1 : 0;
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("asc")
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sortDirection, sortBy));
+        Page<Product> productPage = productRepository.findByActiveTrueAndDeletedFalse(pageable);
+
+        List<ProductResponse> productResponses = productPage.getContent()
+                .stream()
+                .map(productMapper::toResponse)
+                .toList();
+
+        return PageResponse.<ProductResponse>builder()
+                .page(page)
+                .size(size)
+                .totalElements(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .items(productResponses)
                 .build();
     }
 }
