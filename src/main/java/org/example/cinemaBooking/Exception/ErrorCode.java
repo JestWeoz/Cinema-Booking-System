@@ -69,7 +69,12 @@ public enum ErrorCode {
     MOVIE_CANNOT_HAVE_MULTIPLE_DIRECTORS(1056, "Movie cannot have multiple directors", HttpStatus.BAD_REQUEST),
     MOVIE_ALREADY_HAS_DIRECTOR(1057,"Movie has already a director" , HttpStatus.BAD_REQUEST ),
     INVALID_MOVIE_ROLE(1058, "movie role invalid", HttpStatus.BAD_REQUEST ),
-    DUPLICATE_PEOPLE_IN_REQUEST(1059, "duplicate people in request" , HttpStatus.BAD_REQUEST );
+    DUPLICATE_PEOPLE_IN_REQUEST(1059, "duplicate people in request" , HttpStatus.BAD_REQUEST ),
+    NAME_REQUIRED(1060, "Name is required", HttpStatus.BAD_REQUEST),
+    PRICE_REQUIRED(1061, "Price is required", HttpStatus.BAD_REQUEST),
+    PRICE_INVALID(1062, "Price must be greater than 0", HttpStatus.BAD_REQUEST),
+    PRODUCT_ALREADY_EXISTS(1063, "Product already exists", HttpStatus.BAD_REQUEST)
+    ;
 
 
      int code;

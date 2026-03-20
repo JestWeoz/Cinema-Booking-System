@@ -1,0 +1,21 @@
+package org.example.cinemaBooking.Dto.Request;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
+
+public record UpdateProductRequest(
+        @Size(max = 255)
+        String name,
+
+        @DecimalMin(value = "0.0", inclusive = false)
+        @Digits(integer = 8, fraction = 2, message = "PRICE_INVALID")
+        BigDecimal price,
+
+        @Size(max = 1000)
+        String image,
+
+        Boolean active
+) {}

@@ -28,5 +28,5 @@ public class Product extends SoftDeletableEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean active = true;
 }

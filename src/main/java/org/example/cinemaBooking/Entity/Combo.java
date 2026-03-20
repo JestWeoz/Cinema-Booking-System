@@ -40,4 +40,50 @@ public class Combo extends SoftDeletableEntity {
     @OneToMany(mappedBy = "combo", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ComboItem> items = new ArrayList<>();
+
+
+    /**
+     * Thêm item vào combo
+     */
+    public void addItem(ComboItem item) {
+        items.add(item);
+        item.setCombo(this);
+    }
+
+    /**
+     * Xóa item khỏi combo
+     */
+    public void removeItem(ComboItem item) {
+        items.remove(item);
+        item.setCombo(null);
+    }
+    /**
+     * Tính tổng giá trị các items trong combo
+     */
+    public BigDecimal calculateItemsTotal() {
+        return items.stream()
+                .map(item -> item.getProduct().getPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * Kiểm tra combo có lợi hơn mua lẻ không
+     */
+    public boolean isDiscounted() {
+        return price.compareTo(calculateItemsTotal()) < 0;
+    }
+
+    /**
+     * Tính phần trăm giảm giá
+     */
+    public BigDecimal getDiscountPercentage() {
+        BigDecimal total = calculateItemsTotal();
+        if (total.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        return total.subtract(price)
+                .divide(total, 2, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+    }
 }
