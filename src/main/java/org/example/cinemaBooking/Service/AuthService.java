@@ -19,7 +19,6 @@ import org.example.cinemaBooking.Model.Request.RefreshRequest;
 import org.example.cinemaBooking.Model.Request.RegisterRequest;
 import org.example.cinemaBooking.Model.Response.AuthResponse;
 import org.example.cinemaBooking.Model.Response.LoginResponse;
-import org.example.cinemaBooking.Model.Response.RefreshResponse;
 import org.example.cinemaBooking.Model.Response.RegisterResponse;
 import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
@@ -94,7 +93,7 @@ public class AuthService {
 
         return LoginResponse.builder()
                 .success(true)
-                .AccessToken(generateToken(userEntity))
+                .token(generateToken(userEntity))
                 .userInfoResponse(userMapper.toUserInfoResponse(userEntity))
                 .build();
     }
@@ -121,9 +120,9 @@ public class AuthService {
     // =========================================================
     // REFRESH TOKEN
     // =========================================================
-    public RefreshResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+    public AuthResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         // Verify với refreshable duration (dài hơn valid duration)
-        SignedJWT signedJWT = verifyToken(request.getAccessToken(), true);
+        SignedJWT signedJWT = verifyToken(request.getToken(), true);
 
         String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -136,9 +135,8 @@ public class AuthService {
         UserEntity userEntity = userRepo.findUserEntityByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        return RefreshResponse.builder()
-                .success(true)
-                .accessToken(generateToken(userEntity))
+        return AuthResponse.builder()
+                .token(generateToken(userEntity))
                 .build();
     }
 

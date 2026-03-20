@@ -8,10 +8,10 @@ import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.MovieMapper;
-import org.example.cinemaBooking.Model.Request.CreateMovieRequest;
-import org.example.cinemaBooking.Model.Request.UpdateMovieRequest;
-import org.example.cinemaBooking.Model.Request.UpdateMovieStatusRequest;
-import org.example.cinemaBooking.Model.Response.MovieResponse;
+import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateMovieStatusRequest;
+import org.example.cinemaBooking.Dto.Response.MovieResponse;
 import org.example.cinemaBooking.Repository.CategoryRepository;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.spefication.MovieSpecification;
@@ -27,12 +27,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
+
 public class MovieService {
     MovieRepository movieRepository;
     CategoryRepository categoryRepository;
@@ -41,28 +43,52 @@ public class MovieService {
 
 
     public MovieResponse creatMovie(CreateMovieRequest request) {
+
+        Optional<Movie> existingMovie = movieRepository.findBySlug(request.getSlug());
+
+        if(existingMovie.isPresent()){
+            throw new AppException(ErrorCode.MOVIE_SLUG_ALREADY_EXISTS);
+        }
+
         Movie movie = movieMapper.toMovie(request);
         movie.setAgeRating(AgeRating.valueOf(request.getAgeRating()));
 
         Set<Category> categories =
                 new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
+
+        if (categories.size() != request.getCategoryIds().size()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
         movie.setCategories(categories);
-        movieRepository.save(movie);
-        log.info("[MOVIE SERVICE] Movie {} has been created", movie.getId());
-        return movieMapper.toMovieResponse(movie);
+        Movie savedMovie =  movieRepository.save(movie);
+        log.info("[MOVIE SERVICE] Movie {} has been created", savedMovie.getId());
+        return movieMapper.toMovieResponse(savedMovie);
     }
 
 
     public MovieResponse updateMovie(String id, UpdateMovieRequest request) {
-        Movie movie = movieRepository.findById(id)
+        Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        if (request.getSlug() != null) {
+            Optional<Movie> existing = movieRepository.findBySlug(request.getSlug());
+
+            if (existing.isPresent() && !existing.get().getId().equals(id)) {
+                // 👉 nếu movie khác có cùng slug
+                throw new AppException(ErrorCode.MOVIE_SLUG_ALREADY_EXISTS);
+            }
+        }
+
+
         movieMapper.updateMovie(movie, request);
+
         if (request.getAgeRating() != null) {
             movie.setAgeRating(AgeRating.valueOf(request.getAgeRating()));
         }
         if (request.getCategoryIds() != null) {
             Set<Category> categories =
                     new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
+
             movie.setCategories(categories);
             if (categories.size() != request.getCategoryIds().size()) {
                 throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
@@ -73,22 +99,22 @@ public class MovieService {
         return movieMapper.toMovieResponse(movie);
     }
 
-    public void deleteMovie(String id) {
-        Movie movie = movieRepository.findById(id)
+    public void deleteMovie(String id){
+        Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
-        movie.setDeleted(true);
+        movie.softDelete();
         movieRepository.save(movie);
         log.info("[MOVIE SERVICE] Movie {} has been deleted", movie.getId());
     }
 
     public MovieResponse getMovieById(String id) {
-        Movie movie = movieRepository.findById(id)
+        Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
         return movieMapper.toMovieResponse(movie);
     }
 
     public MovieResponse getMovieBySlug(String slug) {
-        Movie movie = movieRepository.findBySlug(slug)
+        Movie movie = movieRepository.findBySlugAndDeletedFalse(slug)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
         return movieMapper.toMovieResponse(movie);
     }
@@ -103,12 +129,12 @@ public class MovieService {
             String sortBy,
             String sortDir
     ) {
-
+        int pageNumber = page > 0 ? page - 1 : 0;
         Sort sort = sortDir.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(pageNumber, size, sort);
 
         Specification<Movie> spec =
                 MovieSpecification.filterMovie(keyword, status, categoryId, ageRating);
@@ -129,7 +155,7 @@ public class MovieService {
 
     public MovieResponse updateMovieStatus(String id, UpdateMovieStatusRequest request) {
         MovieStatus status = MovieStatus.valueOf(request.getStatus());
-        Movie movie = movieRepository.findById(id)
+        Movie movie = movieRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
         movie.setStatus(status);
         movieRepository.save(movie);
@@ -144,7 +170,7 @@ public class MovieService {
         }
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
 
-        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.COMING_SOON, pageable);
+        Page<Movie> movies = movieRepository.findByStatusAndDeletedFalse(MovieStatus.COMING_SOON, pageable);
 
         List<MovieResponse> movieResponses = movies.getContent().stream()
                 .map(movieMapper::toMovieResponse)
@@ -165,7 +191,7 @@ public class MovieService {
         }
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("releaseDate").descending());
 
-        Page<Movie> movies = movieRepository.findBYStatus(MovieStatus.NOW_SHOWING, pageable);
+        Page<Movie> movies = movieRepository.findByStatusAndDeletedFalse(MovieStatus.NOW_SHOWING, pageable);
 
         List<MovieResponse> movieResponses = movies.getContent().stream()
                 .map(movieMapper::toMovieResponse)

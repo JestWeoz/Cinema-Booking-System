@@ -1,5 +1,6 @@
 package org.example.cinemaBooking.Repository;
 
+import jakarta.validation.constraints.NotBlank;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Shared.utils.MovieStatus;
 import org.springframework.data.domain.Page;
@@ -21,16 +22,25 @@ public interface MovieRepository extends JpaRepository<Movie, String>,
     @EntityGraph(attributePaths = {"categories"})
     Page<Movie> findAll(Specification<Movie> spec, Pageable pageable);
 
-    Optional<Movie> findBySlug(String slug);
+    @EntityGraph(attributePaths = {"categories"})
+    Optional<Movie> findByIdAndDeletedFalse(String id);
 
     @EntityGraph(attributePaths = {"categories"})
-    Page<Movie> findBYStatus(MovieStatus movieStatus, Pageable pageable);
+    Optional<Movie> findBySlugAndDeletedFalse(String slug);
+
+    @EntityGraph(attributePaths = {"categories"})
+    Page<Movie> findByStatusAndDeletedFalse(MovieStatus movieStatus, Pageable pageable);
 
     @EntityGraph(attributePaths = {"categories"})
     @Query("""
 SELECT DISTINCT m FROM Movie m
-WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :key, '%'))
-AND m.status IN ('COMING_SOON', 'NOW_SHOWING')
+WHERE (:key IS NULL OR LOWER(m.title) LIKE LOWER(CONCAT('%', :key, '%')))
+AND m.status IN ('COMING_SOON', 'NOW_SHOWING') 
+AND m.deleted = false
 """)
     Page<Movie> searchMovie(String key, Pageable pageable);
+
+    Optional<Movie> findBySlug(@NotBlank(message = "SLUG_REQUIRED") String slug);
+
+    boolean existsBySlug(String slug);
 }

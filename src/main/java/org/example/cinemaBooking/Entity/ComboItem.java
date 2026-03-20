@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-
+@Table(
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_combo_product",
+                columnNames = {"combo_id", "product_id"}
+        )
+)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

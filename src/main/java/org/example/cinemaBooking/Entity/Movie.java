@@ -21,6 +21,7 @@ import java.util.Set;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+//@Where(clause = "deleted = false")
 public class Movie extends SoftDeletableEntity {
 
     @Column (nullable = false)

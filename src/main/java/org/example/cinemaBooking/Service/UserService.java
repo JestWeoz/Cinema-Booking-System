@@ -9,11 +9,11 @@ import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.UserMapper;
-import org.example.cinemaBooking.Model.Request.ChangeAvatarRequest;
-import org.example.cinemaBooking.Model.Request.ChangePasswordRequest;
-import org.example.cinemaBooking.Model.Request.CreateUserRequest;
-import org.example.cinemaBooking.Model.Request.UpdateProfileRequest;
-import org.example.cinemaBooking.Model.Response.UserResponse;
+import org.example.cinemaBooking.Dto.Request.ChangeAvatarRequest;
+import org.example.cinemaBooking.Dto.Request.ChangePasswordRequest;
+import org.example.cinemaBooking.Dto.Request.CreateUserRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateProfileRequest;
+import org.example.cinemaBooking.Dto.Response.UserResponse;
 import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
@@ -159,9 +159,8 @@ public class UserService {
         List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
-
+        log.info("[USER SERVICE] Get all users with key: {}, page: {}, size: {}", key, page, size);
         return PageResponse.<UserResponse>builder()
-                .success(true)
                 .items(userResponses)
                 .page(page)
                 .size(size)

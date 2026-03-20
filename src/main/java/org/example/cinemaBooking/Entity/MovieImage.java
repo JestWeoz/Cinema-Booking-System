@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-
+@Table(name = "movie_images",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"movie_id", "image_url"}))
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

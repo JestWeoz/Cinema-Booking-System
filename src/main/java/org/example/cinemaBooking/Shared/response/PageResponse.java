@@ -13,7 +13,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageResponse<T> {
-    boolean success;
     List<T> items;
     int page;
     int size;
