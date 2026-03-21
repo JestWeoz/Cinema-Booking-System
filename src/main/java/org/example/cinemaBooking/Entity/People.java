@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Entity;
+package org.example.cinemaBooking.Entity.Movie;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

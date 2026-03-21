@@ -1,9 +1,8 @@
-package org.example.cinemaBooking.Entity;
+package org.example.cinemaBooking.Entity.User;
 
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;

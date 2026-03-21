@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CreateMovieImageRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateMovieImageRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieImageRequest;
 import org.example.cinemaBooking.Dto.Response.MovieImageResponse;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Entity.MovieImage;

@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CreateRoomRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateRoomRequest;
+import org.example.cinemaBooking.Dto.Request.Room.UpdateRoomRequest;
 import org.example.cinemaBooking.Dto.Response.RoomResponse;
-import org.example.cinemaBooking.Entity.Cinema;
-import org.example.cinemaBooking.Entity.Product;
 import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

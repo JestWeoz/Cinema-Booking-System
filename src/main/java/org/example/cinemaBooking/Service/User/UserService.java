@@ -12,7 +12,7 @@ import org.example.cinemaBooking.Mapper.UserMapper;
 import org.example.cinemaBooking.Dto.Request.ChangeAvatarRequest;
 import org.example.cinemaBooking.Dto.Request.ChangePasswordRequest;
 import org.example.cinemaBooking.Dto.Request.CreateUserRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateProfileRequest;
+import org.example.cinemaBooking.Dto.Request.User.UpdateProfileRequest;
 import org.example.cinemaBooking.Dto.Response.UserResponse;
 import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;

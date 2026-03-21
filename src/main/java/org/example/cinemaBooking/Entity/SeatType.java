@@ -1,11 +1,10 @@
-package org.example.cinemaBooking.Entity;
+package org.example.cinemaBooking.Entity.Seat;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 import org.example.cinemaBooking.Shared.utils.SeatTypeEnum;
-import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
 
