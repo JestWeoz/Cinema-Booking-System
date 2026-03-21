@@ -5,5 +5,8 @@ public enum RoomType {
     THREE_D,
     FOUR_D,
     IMAX,
-    SWEETBOX
+    SWEETBOX;
+
+
+
 }

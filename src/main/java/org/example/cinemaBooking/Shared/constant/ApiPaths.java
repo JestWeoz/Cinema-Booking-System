@@ -32,7 +32,15 @@ public final class ApiPaths {
         public static final String RECOMMENDED = "/recommended";
         public static final String IMAGE = "/images";
     }
-
+    public static final class Cinema {
+        public static final String BASE = "/cinema";
+    }
+    public static final class Room {
+        public static final String BASE = "/rooms";
+    }
+    public static final class Seat {
+        public static final String BASE = "/seats";
+    }
     public static final class Review {
         public static final String BASE = "/reviews";
         public static final String AVERAGE_RATING = "/average-rating";

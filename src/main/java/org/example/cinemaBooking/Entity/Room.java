@@ -22,7 +22,7 @@ public class Room extends SoftDeletableEntity {
     String name;
 
     @Column(nullable = false)
-    String totalSeats;
+    Integer totalSeats;
 
     @Builder.Default
     @Column(nullable = false)
