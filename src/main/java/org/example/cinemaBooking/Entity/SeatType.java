@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Entity.Seat;
+package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;

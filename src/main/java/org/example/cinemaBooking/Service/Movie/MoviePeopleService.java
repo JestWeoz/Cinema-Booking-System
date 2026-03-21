@@ -1,14 +1,14 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Movie;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.AddPeopleToMovieRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.AddPeopleToMovieRequest;
 import org.example.cinemaBooking.Dto.Request.Movie.PeopleRoleRequest;
 import org.example.cinemaBooking.Dto.Request.Movie.UpdateMoviePeopleRequest;
-import org.example.cinemaBooking.Dto.Response.MovieCastResponse;
-import org.example.cinemaBooking.Dto.Response.MoviePeopleResponse;
+import org.example.cinemaBooking.Dto.Response.Movie.MovieCastResponse;
+import org.example.cinemaBooking.Dto.Response.Movie.MoviePeopleResponse;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Entity.MoviePeople;
 import org.example.cinemaBooking.Entity.People;

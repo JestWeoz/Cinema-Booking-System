@@ -1,13 +1,13 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Product;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.ComboItemRequest;
-import org.example.cinemaBooking.Dto.Request.CreateComboRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateComboRequest;
-import org.example.cinemaBooking.Dto.Response.ComboResponse;
+import org.example.cinemaBooking.Dto.Request.Combo.ComboItemRequest;
+import org.example.cinemaBooking.Dto.Request.Combo.CreateComboRequest;
+import org.example.cinemaBooking.Dto.Request.Combo.UpdateComboRequest;
+import org.example.cinemaBooking.Dto.Response.Combo.ComboResponse;
 import org.example.cinemaBooking.Entity.Combo;
 import org.example.cinemaBooking.Entity.ComboItem;
 import org.example.cinemaBooking.Entity.Product;

@@ -1,12 +1,12 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Promotion;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreatePromotionRequest;
-import org.example.cinemaBooking.Dto.Request.PromotionFilterRequest;
-import org.example.cinemaBooking.Dto.Request.UpdatePromotionRequest;
-import org.example.cinemaBooking.Dto.Response.PromotionResponse;
+import org.example.cinemaBooking.Dto.Request.Promotion.CreatePromotionRequest;
+import org.example.cinemaBooking.Dto.Request.Promotion.PromotionFilterRequest;
+import org.example.cinemaBooking.Dto.Request.Promotion.UpdatePromotionRequest;
+import org.example.cinemaBooking.Dto.Response.Promotion.PromotionResponse;
 import org.example.cinemaBooking.Dto.Response.ValidationResultResponse;
 import org.example.cinemaBooking.Entity.Promotion;
 import org.example.cinemaBooking.Entity.UsedPromotion;

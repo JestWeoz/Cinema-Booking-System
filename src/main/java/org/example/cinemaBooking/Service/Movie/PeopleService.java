@@ -1,15 +1,15 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Movie;
 
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.*;
-import org.example.cinemaBooking.Dto.Response.MovieCastResponse;
-import org.example.cinemaBooking.Dto.Response.MoviePeopleResponse;
-import org.example.cinemaBooking.Dto.Response.PeopleResponse;
-import org.example.cinemaBooking.Entity.Movie;
+import org.example.cinemaBooking.Dto.Request.Movie.CreatePeopleRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdatePeopleRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.MoviePeopleResponse;
+import org.example.cinemaBooking.Dto.Response.Movie.PeopleResponse;
+
 import org.example.cinemaBooking.Entity.MoviePeople;
 import org.example.cinemaBooking.Entity.People;
 import org.example.cinemaBooking.Exception.AppException;
@@ -20,8 +20,6 @@ import org.example.cinemaBooking.Repository.MoviePeopleRepository;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.PeopleRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.example.cinemaBooking.Shared.utils.MovieRole;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +27,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

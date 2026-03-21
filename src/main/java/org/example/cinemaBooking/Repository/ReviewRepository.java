@@ -1,8 +1,9 @@
 package org.example.cinemaBooking.Repository;
 
+import org.example.cinemaBooking.Entity.Review;
 import org.springframework.data.repository.query.Param;
 import org.example.cinemaBooking.Entity.Movie;
-import org.example.cinemaBooking.Entity.Review;
+
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

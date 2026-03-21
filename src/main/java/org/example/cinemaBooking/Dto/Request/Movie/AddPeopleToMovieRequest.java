@@ -1,7 +1,5 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Movie;
 
-
-import org.example.cinemaBooking.Dto.Request.Movie.PeopleRoleRequest;
 
 import java.util.List;
 

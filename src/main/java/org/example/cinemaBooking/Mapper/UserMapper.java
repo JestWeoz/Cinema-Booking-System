@@ -2,10 +2,10 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
-import org.example.cinemaBooking.Dto.Request.RegisterRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateProfileRequest;
-import org.example.cinemaBooking.Dto.Response.UserInfoResponse;
-import org.example.cinemaBooking.Dto.Response.UserResponse;
+import org.example.cinemaBooking.Dto.Request.User.RegisterRequest;
+import org.example.cinemaBooking.Dto.Request.User.UpdateProfileRequest;
+import org.example.cinemaBooking.Dto.Response.User.UserInfoResponse;
+import org.example.cinemaBooking.Dto.Response.User.UserResponse;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

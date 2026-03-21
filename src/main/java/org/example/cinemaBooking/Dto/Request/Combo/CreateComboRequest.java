@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Combo;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;

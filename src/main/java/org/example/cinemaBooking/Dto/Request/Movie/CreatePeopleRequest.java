@@ -1,13 +1,13 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Movie;
 
 import jakarta.validation.constraints.NotBlank;
-import org.example.cinemaBooking.Entity.People;
+
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * DTO for {@link People}
+ * DTO for {@link org.example.cinemaBooking.Entity.Movie.People}
  */
 public record CreatePeopleRequest(@NotBlank(message = "NAME_REQUIRED") String name,
                                   @NotBlank(message = "NATION_REQUIRED") String nation,

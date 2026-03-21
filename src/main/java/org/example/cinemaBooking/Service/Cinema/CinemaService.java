@@ -1,11 +1,11 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Cinema;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreateCinemaRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateCinemaRequest;
-import org.example.cinemaBooking.Dto.Response.CinemaResponse;
+import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
+import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
+import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
 import org.example.cinemaBooking.Entity.Cinema;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -15,8 +15,6 @@ import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.Status;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

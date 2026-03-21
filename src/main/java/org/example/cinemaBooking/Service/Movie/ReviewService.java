@@ -1,13 +1,13 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Movie;
 
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.ReviewRequest;
-import org.example.cinemaBooking.Dto.Response.ReviewResponse;
-import org.example.cinemaBooking.Dto.Response.ReviewSummaryResponse;
+import org.example.cinemaBooking.Dto.Request.Movie.ReviewRequest;
+import org.example.cinemaBooking.Dto.Response.Review.ReviewResponse;
+import org.example.cinemaBooking.Dto.Response.Review.ReviewSummaryResponse;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Entity.Review;
 import org.example.cinemaBooking.Entity.UserEntity;

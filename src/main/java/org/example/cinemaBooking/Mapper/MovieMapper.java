@@ -2,9 +2,9 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Entity.Category;
-import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateMovieRequest;
-import org.example.cinemaBooking.Dto.Response.MovieResponse;
+import org.example.cinemaBooking.Dto.Request.Movie.CreateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.MovieResponse;
 import org.example.cinemaBooking.Dto.Response.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

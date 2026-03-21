@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Response.ComboItemResponse;
+import org.example.cinemaBooking.Dto.Response.Combo.ComboItemResponse;
 import org.example.cinemaBooking.Entity.ComboItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

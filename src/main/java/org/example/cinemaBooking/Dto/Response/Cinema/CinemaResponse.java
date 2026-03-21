@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.Cinema;
 
 import org.example.cinemaBooking.Shared.utils.Status;
 

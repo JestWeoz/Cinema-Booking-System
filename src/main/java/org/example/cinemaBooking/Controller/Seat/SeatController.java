@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Controller;
+package org.example.cinemaBooking.Controller.Seat;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

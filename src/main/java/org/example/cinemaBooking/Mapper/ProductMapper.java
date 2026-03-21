@@ -1,8 +1,8 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.CreateProductRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateProductRequest;
-import org.example.cinemaBooking.Dto.Response.ProductResponse;
+import org.example.cinemaBooking.Dto.Request.Product.CreateProductRequest;
+import org.example.cinemaBooking.Dto.Request.Product.UpdateProductRequest;
+import org.example.cinemaBooking.Dto.Response.Product.ProductResponse;
 import org.example.cinemaBooking.Entity.Product;
 import org.mapstruct.*;
 

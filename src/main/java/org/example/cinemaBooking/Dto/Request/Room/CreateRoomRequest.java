@@ -1,10 +1,9 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Room;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.example.cinemaBooking.Entity.Cinema;
 import org.example.cinemaBooking.Shared.utils.RoomType;
-import org.example.cinemaBooking.Shared.utils.Status;
+
 public record CreateRoomRequest(
 
         @NotBlank(message = "Room name is required")

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.Movie;
 
 import org.example.cinemaBooking.Shared.utils.MovieRole;
 

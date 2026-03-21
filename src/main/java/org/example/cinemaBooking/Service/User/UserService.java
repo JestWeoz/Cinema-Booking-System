@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.User;
 
 
 import lombok.RequiredArgsConstructor;
@@ -9,11 +9,11 @@ import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.UserMapper;
-import org.example.cinemaBooking.Dto.Request.ChangeAvatarRequest;
-import org.example.cinemaBooking.Dto.Request.ChangePasswordRequest;
-import org.example.cinemaBooking.Dto.Request.CreateUserRequest;
+import org.example.cinemaBooking.Dto.Request.User.ChangeAvatarRequest;
+import org.example.cinemaBooking.Dto.Request.User.ChangePasswordRequest;
+import org.example.cinemaBooking.Dto.Request.User.CreateUserRequest;
 import org.example.cinemaBooking.Dto.Request.User.UpdateProfileRequest;
-import org.example.cinemaBooking.Dto.Response.UserResponse;
+import org.example.cinemaBooking.Dto.Response.User.UserResponse;
 import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;

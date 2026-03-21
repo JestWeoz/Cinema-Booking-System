@@ -1,17 +1,15 @@
-package org.example.cinemaBooking.Controller;
+package org.example.cinemaBooking.Controller.Movie;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.AddPeopleToMovieRequest;
-import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateMovieRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateMovieStatusRequest;
-import org.example.cinemaBooking.Dto.Response.MovieCastResponse;
-import org.example.cinemaBooking.Dto.Response.MovieResponse;
-import org.example.cinemaBooking.Service.MovieService;
-import org.example.cinemaBooking.Service.PeopleService;
+import org.example.cinemaBooking.Dto.Request.Movie.CreateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieStatusRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.MovieResponse;
+import org.example.cinemaBooking.Service.Movie.MovieService;
+import org.example.cinemaBooking.Service.Movie.PeopleService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
@@ -19,8 +17,6 @@ import org.example.cinemaBooking.Shared.utils.AgeRating;
 import org.example.cinemaBooking.Shared.utils.MovieStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Slf4j

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.Auth;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

@@ -1,11 +1,11 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.ReviewRequest;
-import org.example.cinemaBooking.Dto.Response.ReviewResponse;
-import org.example.cinemaBooking.Dto.Response.ReviewSummaryResponse;
+import org.example.cinemaBooking.Dto.Request.Movie.ReviewRequest;
+import org.example.cinemaBooking.Dto.Response.Review.ReviewResponse;
+import org.example.cinemaBooking.Dto.Response.Review.ReviewSummaryResponse;
+
 import org.example.cinemaBooking.Entity.Review;
 import org.mapstruct.*;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {

@@ -1,7 +1,8 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.Movie;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.cinemaBooking.Dto.Response.CategoryResponse;
 import org.example.cinemaBooking.Shared.utils.AgeRating;
 import org.example.cinemaBooking.Shared.utils.MovieStatus;
 

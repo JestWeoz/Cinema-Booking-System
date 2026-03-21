@@ -1,17 +1,18 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Movie;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Entity.Category;
+
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.MovieMapper;
-import org.example.cinemaBooking.Dto.Request.CreateMovieRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.CreateMovieRequest;
 import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieRequest;
 import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieStatusRequest;
-import org.example.cinemaBooking.Dto.Response.MovieResponse;
+import org.example.cinemaBooking.Dto.Response.Movie.MovieResponse;
 import org.example.cinemaBooking.Repository.CategoryRepository;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.spefication.MovieSpecification;

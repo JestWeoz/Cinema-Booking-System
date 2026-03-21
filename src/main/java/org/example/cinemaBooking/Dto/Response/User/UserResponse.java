@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.User;
 
 import lombok.*;
 import org.example.cinemaBooking.Shared.utils.Gender;

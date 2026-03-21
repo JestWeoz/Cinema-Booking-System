@@ -1,11 +1,11 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
-import org.example.cinemaBooking.Dto.Request.ForgotPasswordRequest;
-import org.example.cinemaBooking.Dto.Request.ResetPasswordRequest;
+import org.example.cinemaBooking.Dto.Request.User.ForgotPasswordRequest;
+import org.example.cinemaBooking.Dto.Request.Auth.ResetPasswordRequest;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Service.redis.PasswordResetTokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;

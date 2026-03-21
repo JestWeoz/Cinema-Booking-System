@@ -1,14 +1,13 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Product;
 
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreateProductRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateProductRequest;
-import org.example.cinemaBooking.Dto.Response.PeopleResponse;
-import org.example.cinemaBooking.Dto.Response.ProductResponse;
+import org.example.cinemaBooking.Dto.Request.Product.CreateProductRequest;
+import org.example.cinemaBooking.Dto.Request.Product.UpdateProductRequest;
+import org.example.cinemaBooking.Dto.Response.Product.ProductResponse;
 import org.example.cinemaBooking.Entity.Product;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;

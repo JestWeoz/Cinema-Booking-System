@@ -1,8 +1,7 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Combo;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record ComboItemRequest(
         @NotBlank(message = "PRODUCT_ID_REQUIRED") String productId,

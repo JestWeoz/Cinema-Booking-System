@@ -3,6 +3,9 @@ package org.example.cinemaBooking.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+
+import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 import org.example.cinemaBooking.Shared.utils.Language;
 import org.example.cinemaBooking.Shared.utils.ShowTimeStatus;

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Auth;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

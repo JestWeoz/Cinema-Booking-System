@@ -1,9 +1,10 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.UpdatePeopleRequest;
-import org.example.cinemaBooking.Dto.Response.PeopleResponse;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdatePeopleRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.PeopleResponse;
+
+import org.example.cinemaBooking.Dto.Request.Movie.CreatePeopleRequest;
 import org.example.cinemaBooking.Entity.People;
-import org.example.cinemaBooking.Dto.Request.CreatePeopleRequest;
 import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)

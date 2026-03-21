@@ -1,8 +1,6 @@
 package org.example.cinemaBooking.Repository;
 
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

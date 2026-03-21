@@ -1,9 +1,8 @@
-package org.example.cinemaBooking.Entity.Promotion;
+package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 
 @Entity

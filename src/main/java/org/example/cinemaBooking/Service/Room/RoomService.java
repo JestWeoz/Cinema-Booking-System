@@ -1,11 +1,12 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Room;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreateRoomRequest;
+import org.example.cinemaBooking.Dto.Request.Room.CreateRoomRequest;
 import org.example.cinemaBooking.Dto.Request.Room.UpdateRoomRequest;
-import org.example.cinemaBooking.Dto.Response.RoomResponse;
+import org.example.cinemaBooking.Dto.Response.Room.RoomResponse;
+
 import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;

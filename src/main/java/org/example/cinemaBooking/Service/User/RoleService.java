@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.User;
 
 import org.springframework.stereotype.Service;
 

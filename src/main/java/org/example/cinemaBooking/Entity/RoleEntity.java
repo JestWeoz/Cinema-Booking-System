@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Entity.User;
+package org.example.cinemaBooking.Entity;
 
 
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response;
+package org.example.cinemaBooking.Dto.Response.Combo;
 
 import java.math.BigDecimal;
 import java.util.List;

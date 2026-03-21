@@ -1,15 +1,15 @@
-package org.example.cinemaBooking.Controller;
+package org.example.cinemaBooking.Controller.Movie;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreatePeopleRequest;
-import org.example.cinemaBooking.Dto.Request.UpdatePeopleRequest;
-import org.example.cinemaBooking.Dto.Response.MoviePeopleResponse;
-import org.example.cinemaBooking.Dto.Response.PeopleResponse;
-import org.example.cinemaBooking.Service.PeopleService;
+import org.example.cinemaBooking.Dto.Request.Movie.CreatePeopleRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdatePeopleRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.MoviePeopleResponse;
+import org.example.cinemaBooking.Dto.Response.Movie.PeopleResponse;
+import org.example.cinemaBooking.Service.Movie.PeopleService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;

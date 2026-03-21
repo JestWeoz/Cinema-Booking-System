@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request;
+package org.example.cinemaBooking.Dto.Request.Promotion;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

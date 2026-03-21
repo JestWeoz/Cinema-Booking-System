@@ -1,8 +1,8 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.CreatePromotionRequest;
-import org.example.cinemaBooking.Dto.Request.UpdatePromotionRequest;
-import org.example.cinemaBooking.Dto.Response.PromotionResponse;
+import org.example.cinemaBooking.Dto.Request.Promotion.CreatePromotionRequest;
+import org.example.cinemaBooking.Dto.Request.Promotion.UpdatePromotionRequest;
+import org.example.cinemaBooking.Dto.Response.Promotion.PromotionResponse;
 import org.example.cinemaBooking.Entity.Promotion;
 
 

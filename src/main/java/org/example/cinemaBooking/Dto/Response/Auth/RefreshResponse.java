@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Model.Response;
+package org.example.cinemaBooking.Dto.Response.Auth;
 
 import lombok.Builder;
 import lombok.Data;

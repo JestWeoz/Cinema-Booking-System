@@ -1,10 +1,9 @@
-package org.example.cinemaBooking.Entity.User;
+package org.example.cinemaBooking.Entity;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Entity.Notification;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
 import org.example.cinemaBooking.Shared.utils.Gender;
 

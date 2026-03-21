@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Service;
+package org.example.cinemaBooking.Service.Auth;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -7,10 +7,11 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.*;
-import org.example.cinemaBooking.Dto.Response.AuthResponse;
-import org.example.cinemaBooking.Dto.Response.LoginResponse;
-import org.example.cinemaBooking.Dto.Response.RegisterResponse;
+import org.example.cinemaBooking.Dto.Request.Auth.*;
+import org.example.cinemaBooking.Dto.Request.User.RegisterRequest;
+import org.example.cinemaBooking.Dto.Response.Auth.AuthResponse;
+import org.example.cinemaBooking.Dto.Response.Auth.LoginResponse;
+import org.example.cinemaBooking.Dto.Response.User.RegisterResponse;
 import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;

@@ -1,14 +1,14 @@
-package org.example.cinemaBooking.Controller;
+package org.example.cinemaBooking.Controller.Movie;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.CreateMovieImageRequest;
-import org.example.cinemaBooking.Dto.Request.UpdateMovieImageRequest;
-import org.example.cinemaBooking.Dto.Response.MovieImageResponse;
-import org.example.cinemaBooking.Service.MovieImageService;
+import org.example.cinemaBooking.Dto.Request.Movie.CreateMovieImageRequest;
+import org.example.cinemaBooking.Dto.Request.Movie.UpdateMovieImageRequest;
+import org.example.cinemaBooking.Dto.Response.Movie.MovieImageResponse;
+import org.example.cinemaBooking.Service.Movie.MovieImageService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
