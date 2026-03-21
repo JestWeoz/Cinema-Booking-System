@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     Page<Product> findByNameContainingIgnoreCaseAndDeletedFalse(String keyword, Pageable pageable);
 
     Page<Product> findAllByDeletedFalse(Pageable pageable);
+
+
+    Page<Product> findByActiveTrueAndDeletedFalse(Pageable pageable);
 }

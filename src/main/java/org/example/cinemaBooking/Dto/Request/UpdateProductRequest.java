@@ -10,8 +10,8 @@ public record UpdateProductRequest(
         @Size(max = 255)
         String name,
 
-        @DecimalMin(value = "0.0", inclusive = false)
-        @Digits(integer = 8, fraction = 2, message = "PRICE_INVALID")
+        @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_INVALID")
+        @Digits(integer = 8, fraction = 2, message = "PRICE_INVALID_FORMAT")
         BigDecimal price,
 
         @Size(max = 1000)

@@ -35,7 +35,7 @@ public class Combo extends SoftDeletableEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean active = true;
 
     @OneToMany(mappedBy = "combo", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
