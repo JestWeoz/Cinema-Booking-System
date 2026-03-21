@@ -1,18 +1,11 @@
 package org.example.cinemaBooking.Dto.Request;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Shared.utils.Status;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateCinemaRequest {
-    String name;
-    String address;
-    String phone;
-    String hotline;
-    String logoUrl;
-
-}
+public record CreateCinemaRequest(
+        @NotBlank String name,
+        String address,
+        String phone,
+        String hotline,
+        String logoUrl
+) {}

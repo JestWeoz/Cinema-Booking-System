@@ -84,6 +84,8 @@ public enum ErrorCode {
     ROOM_ALREADY_INACTIVE(1072, "Room already inactive", HttpStatus.BAD_REQUEST),
     ROOM_ALREADY_DELETED(1073, "Room already deleted", HttpStatus.BAD_REQUEST),
     ROOM_HAS_SCHEDULE(1074, "Room has schedule and cannot be deleted", HttpStatus.BAD_REQUEST),
+    CINEMA_ALREADY_EXISTS(1075, "Cinema already exists", HttpStatus.BAD_REQUEST),
+    CINEMA_ALREADY_INACTIVE(1076, "Cinema already inactive", HttpStatus.BAD_REQUEST),
     ;
 
 

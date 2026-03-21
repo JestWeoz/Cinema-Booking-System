@@ -2,11 +2,12 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Dto.Request.CreateRoomRequest;
 import org.example.cinemaBooking.Dto.Request.RegisterRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateProfileRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateRoomRequest;
 import org.example.cinemaBooking.Dto.Response.RoomResponse;
 import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Entity.UserEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "Spring")
 public interface RoomMapper {
@@ -20,4 +21,8 @@ public interface RoomMapper {
     @Mapping(target = "cinema", ignore = true) // xử lý ở service
     @Mapping(target = "seats", ignore = true)
     Room toRoomEntity(CreateRoomRequest request);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateRoom(UpdateRoomRequest request, @MappingTarget Room room);
+
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CreateRoomRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateRoomRequest;
 import org.example.cinemaBooking.Dto.Response.RoomResponse;
 import org.example.cinemaBooking.Service.RoomService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
@@ -19,83 +20,47 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Room.BASE)
 public class RoomController {
-
     RoomService roomService;
 
-    // ✅ CREATE
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<RoomResponse> createRoom(@RequestBody @Valid CreateRoomRequest request){
+    public ApiResponse<RoomResponse> createRoom(@RequestBody @Valid CreateRoomRequest request) {
         RoomResponse response = roomService.createRoom(request);
         log.info("[ROOM_CONTROLLER] Created room with id: {}", response.id());
-        return ApiResponse.<RoomResponse>builder()
-                .success(true)
-                .message("Room created successfully")
-                .data(response)
-                .build();
+        return ApiResponse.<RoomResponse>builder().success(true).message("Room created successfully").data(response).build();
     }
 
-//    // ✅ UPDATE
-//    @PutMapping("/{id}")
-//    public ApiResponse<RoomResponse> updateRoom(@PathVariable String id,
-//                                                @RequestBody @Valid UpdateRoomRequest request) {
-//        RoomResponse response = roomService.updateRoom(id, request);
-//        log.info("[ROOM_CONTROLLER] Updated room with id: {}", response.id());
-//        return ApiResponse.<RoomResponse>builder()
-//                .success(true)
-//                .message("Room updated successfully")
-//                .data(response)
-//                .build();
-//    }
-//
-    // ✅ DELETE (soft delete nếu dùng SoftDeletableEntity)
+    @PutMapping("/{id}")
+    public ApiResponse<RoomResponse> updateRoom(@PathVariable String id, @RequestBody @Valid UpdateRoomRequest request) {
+        RoomResponse response = roomService.updateRoom(id, request);
+        log.info("[ROOM_CONTROLLER] Updated room with id: {}", response.id());
+        return ApiResponse.<RoomResponse>builder().success(true).message("Room updated successfully").data(response).build();
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteRoom(@PathVariable String id) {
         roomService.deleteRoomByID(id);
         log.info("[ROOM_CONTROLLER] Deleted room with id: {}", id);
-        return ApiResponse.<Void>builder()
-                .success(true)
-                .message("Room deleted successfully")
-                .build();
+        return ApiResponse.<Void>builder().success(true).message("Room deleted successfully").build();
     }
-//
-    // ✅ GET BY ID
+
     @GetMapping("/{id}")
     public ApiResponse<RoomResponse> getRoomById(@PathVariable String id) {
         RoomResponse response = roomService.getRoomByID(id);
         log.info("[ROOM_CONTROLLER] Retrieved room with id: {}", id);
-        return ApiResponse.<RoomResponse>builder()
-                .success(true)
-                .message("Room retrieved successfully")
-                .data(response)
-                .build();
+        return ApiResponse.<RoomResponse>builder().success(true).message("Room retrieved successfully").data(response).build();
     }
-//
-    // ✅ TOGGLE STATUS (ACTIVE / INACTIVE)
+
     @PatchMapping("/{id}/toggle-status")
     public ApiResponse<RoomResponse> toggleRoomStatus(@PathVariable String id) {
         roomService.toggleRoomStatus(id);
         log.info("[ROOM_CONTROLLER] Toggled status for room with id: {}", id);
-        return ApiResponse.<RoomResponse>builder()
-                .success(true)
-                .message("Room status toggled successfully")
-                .data(roomService.getRoomByID(id))
-                .build();
+        return ApiResponse.<RoomResponse>builder().success(true).message("Room status toggled successfully").data(roomService.getRoomByID(id)).build();
     }
 
-    // ✅ GET ALL + PAGINATION
     @GetMapping
-    public ApiResponse<PageResponse<RoomResponse>> getAllRooms(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction,
-            @RequestParam(required = false) String keyword
-    ) {
-        return ApiResponse.<PageResponse<RoomResponse>>builder()
-                .success(true)
-                .message("Rooms retrieved successfully")
-                .data(roomService.getAllRooms(page, size, sortBy))
-                .build();
+
+    public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) String keyword) {
+        return ApiResponse.<PageResponse<RoomResponse>>builder().success(true).message("Rooms retrieved successfully").data(roomService.getAllRooms(page, size, sortBy, direction, keyword)).build();
     }
 }

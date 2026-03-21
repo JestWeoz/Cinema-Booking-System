@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CreateRoomRequest;
+import org.example.cinemaBooking.Dto.Request.UpdateRoomRequest;
 import org.example.cinemaBooking.Dto.Response.RoomResponse;
 import org.example.cinemaBooking.Entity.Cinema;
+import org.example.cinemaBooking.Entity.Product;
 import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -14,53 +16,55 @@ import org.example.cinemaBooking.Repository.CinemaRepository;
 import org.example.cinemaBooking.Repository.RoomRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@FieldDefaults(
-        level = lombok.AccessLevel.PRIVATE,
-        makeFinal = true
-)
-public class RoomService
-{
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+public class RoomService {
     RoomMapper roomMapper;
     RoomRepository roomRepository;
     CinemaRepository cinemaRepository;
 
-    public RoomResponse createRoom(CreateRoomRequest request){
+    public RoomResponse createRoom(CreateRoomRequest request) {
         Room room = roomMapper.toRoomEntity(request);
         room.setCinema(cinemaRepository.findCinemaById(request.cinemaId()));
         room.setStatus(Status.INACTIVE);
         return roomMapper.toResponse(roomRepository.save(room));
     }
 
-    public void deleteRoomByID(String roomId){
+    public void deleteRoomByID(String roomId) {
         Optional<Room> exitingRoom = roomRepository.findById(roomId);
-        if(exitingRoom.isPresent()){
-            if(exitingRoom.get().getStatus() == Status.INACTIVE){
+        if (exitingRoom.isPresent()) {
+            if (exitingRoom.get().getStatus() == Status.INACTIVE) {
                 throw new AppException(ErrorCode.ROOM_ALREADY_INACTIVE);
             }
             roomRepository.delete(exitingRoom.get());
-        } else{
+        } else {
             throw new AppException(ErrorCode.ROOM_NOT_FOUND);
         }
     }
 
-    public RoomResponse getRoomByID(String roomId){
+    public RoomResponse getRoomByID(String roomId) {
         Optional<Room> exitingRoom = roomRepository.findById(roomId);
-        if(exitingRoom.isPresent()){
+        if (exitingRoom.isPresent()) {
             return roomMapper.toResponse(exitingRoom.get());
-        } else{
+        } else {
             throw new AppException(ErrorCode.ROOM_NOT_FOUND);
         }
     }
-    public void toggleRoomStatus(String roomId){
+
+    public void toggleRoomStatus(String roomId) {
         Optional<Room> exitingRoom = roomRepository.findById(roomId);
-        if(exitingRoom.isPresent()) {
+        if (exitingRoom.isPresent()) {
             if (exitingRoom.get().getStatus() == Status.ACTIVE) {
                 exitingRoom.get().setStatus(Status.INACTIVE);
             } else {
@@ -70,8 +74,28 @@ public class RoomService
             throw new AppException(ErrorCode.ROOM_NOT_FOUND);
         }
     }
-    public PageResponse<RoomResponse> getAllRooms(){
 
+    public PageResponse<RoomResponse> getAllRooms(int page, int size, String sortBy, String direction, String keyword) {
+        int pageNumber = page > 0 ? page - 1 : 0;
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, size, sort);
+        Page<Room> roomPage;
+        if (keyword != null && !keyword.isBlank()) {
+            roomPage = roomRepository.findByNameContainingIgnoreCaseAndDeletedFalse(keyword, pageable);
+        } else {
+            roomPage = roomRepository.findAllByDeletedFalse(pageable);
+        }
+        return PageResponse.<RoomResponse>builder().page(page).size(size).totalElements(roomPage.getTotalElements()).totalPages(roomPage.getTotalPages()).items(roomPage.getContent().stream().map(roomMapper::toResponse).toList()).build();
     }
 
+    public RoomResponse updateRoom(String id, UpdateRoomRequest request) {
+        Optional<Room> exitingRoom = roomRepository.findById(id);
+        if (exitingRoom.isPresent()) {
+            Room room = exitingRoom.get();
+            roomMapper.updateRoom(request, room);
+            return roomMapper.toResponse(roomRepository.save(room));
+        } else {
+            throw new AppException(ErrorCode.ROOM_NOT_FOUND);
+        }
+    }
 }

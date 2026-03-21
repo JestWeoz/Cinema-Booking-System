@@ -7,19 +7,16 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.Dto.Request.*;
+import org.example.cinemaBooking.Dto.Response.AuthResponse;
+import org.example.cinemaBooking.Dto.Response.LoginResponse;
+import org.example.cinemaBooking.Dto.Response.RegisterResponse;
 import org.example.cinemaBooking.Entity.RoleEntity;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.UserMapper;
-import org.example.cinemaBooking.Model.Request.IntrospectReq;
-import org.example.cinemaBooking.Model.Request.LoginRequest;
-import org.example.cinemaBooking.Model.Request.LogoutRequest;
-import org.example.cinemaBooking.Model.Request.RefreshRequest;
-import org.example.cinemaBooking.Model.Request.RegisterRequest;
-import org.example.cinemaBooking.Model.Response.AuthResponse;
-import org.example.cinemaBooking.Model.Response.LoginResponse;
-import org.example.cinemaBooking.Model.Response.RegisterResponse;
+
 import org.example.cinemaBooking.Repository.RoleRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Service.redis.TokenBlacklistService;
@@ -93,7 +90,7 @@ public class AuthService {
 
         return LoginResponse.builder()
                 .success(true)
-                .token(generateToken(userEntity))
+                .AccessToken(generateToken(userEntity))
                 .userInfoResponse(userMapper.toUserInfoResponse(userEntity))
                 .build();
     }
