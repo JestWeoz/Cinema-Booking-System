@@ -1,0 +1,24 @@
+
+package org.example.cinemaBooking.Dto.Response;
+
+import org.example.cinemaBooking.Shared.utils.DiscountType;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public record PromotionResponse(
+        String id,
+        String code,
+        String name,
+        String description,
+        DiscountType discountType,
+        BigDecimal discountValue,
+        BigDecimal minOrderValue,
+        BigDecimal maxDiscount,
+        Integer quantity,
+        Integer usedQuantity,
+        LocalDate startDate,
+        LocalDate endDate,
+        Integer maxUsagePerUser,
+        boolean active
+) {}
