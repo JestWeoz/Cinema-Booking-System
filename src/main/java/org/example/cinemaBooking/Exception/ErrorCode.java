@@ -80,8 +80,7 @@ public enum ErrorCode {
     COMBO_ALREADY_EXISTS(1067, "Combo already exists", HttpStatus.BAD_REQUEST),
     COMBO_NOT_FOUND(1068, "Combo not found", HttpStatus.NOT_FOUND),
     DUPLICATE_PRODUCT_IN_COMBO(1069, "Duplicate product in combo", HttpStatus.BAD_REQUEST),
-    PRICE_INVALID_FORMAT(1070, "Price must be a valid number", HttpStatus.BAD_REQUEST);
-    PRODUCT_ALREADY_EXISTS(1063, "Product already exists", HttpStatus.BAD_REQUEST),
+    PRICE_INVALID_FORMAT(1070, "Price must be a valid number", HttpStatus.BAD_REQUEST),
     ROOM_NOT_FOUND(1065, "Room not found", HttpStatus.NOT_FOUND),
     ROOM_ALREADY_EXISTS(1066, "Room already exists", HttpStatus.BAD_REQUEST),
     ROOM_NAME_REQUIRED(1067, "Room name is required", HttpStatus.BAD_REQUEST),
