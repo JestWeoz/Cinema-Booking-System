@@ -81,6 +81,20 @@ public enum ErrorCode {
     COMBO_NOT_FOUND(1068, "Combo not found", HttpStatus.NOT_FOUND),
     DUPLICATE_PRODUCT_IN_COMBO(1069, "Duplicate product in combo", HttpStatus.BAD_REQUEST),
     PRICE_INVALID_FORMAT(1070, "Price must be a valid number", HttpStatus.BAD_REQUEST);
+    PRODUCT_ALREADY_EXISTS(1063, "Product already exists", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_FOUND(1065, "Room not found", HttpStatus.NOT_FOUND),
+    ROOM_ALREADY_EXISTS(1066, "Room already exists", HttpStatus.BAD_REQUEST),
+    ROOM_NAME_REQUIRED(1067, "Room name is required", HttpStatus.BAD_REQUEST),
+    TOTAL_SEATS_REQUIRED(1068, "Total seats is required", HttpStatus.BAD_REQUEST),
+    TOTAL_SEATS_INVALID(1069, "Total seats must be greater than 0", HttpStatus.BAD_REQUEST),
+    ROOM_TYPE_INVALID(1070, "Room type is invalid", HttpStatus.BAD_REQUEST),
+    CINEMA_NOT_FOUND(1071, "Cinema not found", HttpStatus.NOT_FOUND),
+    ROOM_ALREADY_INACTIVE(1072, "Room already inactive", HttpStatus.BAD_REQUEST),
+    ROOM_ALREADY_DELETED(1073, "Room already deleted", HttpStatus.BAD_REQUEST),
+    ROOM_HAS_SCHEDULE(1074, "Room has schedule and cannot be deleted", HttpStatus.BAD_REQUEST),
+    CINEMA_ALREADY_EXISTS(1075, "Cinema already exists", HttpStatus.BAD_REQUEST),
+    CINEMA_ALREADY_INACTIVE(1076, "Cinema already inactive", HttpStatus.BAD_REQUEST),
+    ;
 
 
      int code;

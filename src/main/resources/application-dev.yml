@@ -15,7 +15,7 @@ spring:
       # password: your_password  # bỏ comment nếu Redis có password
   jpa:
     hibernate:
-      ddl-auto: update   # dev thì update
+      ddl-auto: none   # dev thì update
     show-sql: true
     properties:
       hibernate:
