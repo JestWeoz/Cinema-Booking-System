@@ -60,6 +60,9 @@ public final class ApiPaths {
     public static final class Promotion {
         public static final String BASE = "/promotions";
     }
+    public static final class Showtime {
+        public static final String BASE = "/showtimes";
+    }
     public static final class Booking {
         public static final String BASE = "/bookings";
     }

@@ -6,12 +6,18 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
 import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
+import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
 import org.example.cinemaBooking.Service.Cinema.CinemaService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class CinemaController {
     CinemaService cinemaService;
 
     // ✅ CREATE
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<CinemaResponse> createCinema(@RequestBody @Valid CreateCinemaRequest request){
         CinemaResponse response = cinemaService.createCinema(request);
@@ -34,6 +41,7 @@ public class CinemaController {
     }
 
     // ✏️ UPDATE
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<CinemaResponse> updateCinema(
             @PathVariable String id,
@@ -47,6 +55,7 @@ public class CinemaController {
     }
 
     // ❌ DELETE
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteCinema(@PathVariable String id){
         cinemaService.deleteCinemaById(id);
@@ -67,6 +76,7 @@ public class CinemaController {
     }
 
     // 🔄 TOGGLE STATUS
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/toggle-status")
     public ApiResponse<CinemaResponse> toggleStatus(@PathVariable String id){
         cinemaService.toggleCinemaStatus(id);
@@ -92,4 +102,19 @@ public class CinemaController {
                 .data(cinemaService.getAllCinemas(page, size, sortBy, direction, keyword))
                 .build();
     }
+
+    @GetMapping({"/{id}/movies"})
+    public ApiResponse<List<CinemaMovieResponse>> getMoviesByCinemaAndDate(
+            @PathVariable String id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        List<CinemaMovieResponse> movies = cinemaService.getMoviesByCinemaAndDate(id, date);
+        return ApiResponse.<List<CinemaMovieResponse>>builder()
+                .success(true)
+                .message("Movies retrieved successfully")
+                .data(movies)
+                .build();
+    }
+
+
 }
