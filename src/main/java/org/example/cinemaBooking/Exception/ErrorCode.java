@@ -124,6 +124,17 @@ public enum ErrorCode {
     PROMOTION_USAGE_LIMIT_EXCEEDED(1111, "Promotion usage limit exceeded", HttpStatus.BAD_REQUEST),
     QUANTITY_LESS_THAN_USED(1112, "Quantity must be greater than or equal to used quantity", HttpStatus.BAD_REQUEST),
     MAX_DISCOUNT_NOT_ALLOWED(1113, "Max discount is not allowed for fixed discount type", HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_FOUND(1114, "Showtime not found", HttpStatus.NOT_FOUND),
+    SHOWTIME_CONFLICT(1115, "Room already has a showtime overlapping", HttpStatus.BAD_REQUEST),
+    SHOWTIME_STATE_INVALID(1116, "Showtime status must be SCHEDULED to update", HttpStatus.BAD_REQUEST),
+    MOVIE_ID_REQUIRED(1117, "Movie ID is required", HttpStatus.BAD_REQUEST),
+    ROOM_ID_REQUIRED(1118, "Room ID is required", HttpStatus.BAD_REQUEST),
+    START_TIME_REQUIRED(1119, "Start time is required", HttpStatus.BAD_REQUEST),
+    BASE_PRICE_REQUIRED(1120, "Base price is required", HttpStatus.BAD_REQUEST),
+    START_TIME_MUST_BE_FUTURE(1121, "Start time must be in the future", HttpStatus.BAD_REQUEST),
+    BASE_PRICE_MUST_BE_POSITIVE(1122, "Base price must be greater than 0", HttpStatus.BAD_REQUEST),
+    BASE_PRICE_INVALID_FORMAT(1123, "Base price must be a valid number with up to 8 digits and 2 decimal places", HttpStatus.BAD_REQUEST),
+
     ;
 
 

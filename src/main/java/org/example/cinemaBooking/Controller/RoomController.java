@@ -30,6 +30,7 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room created successfully").data(response).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<RoomResponse> updateRoom(@PathVariable String id, @RequestBody @Valid UpdateRoomRequest request) {
         RoomResponse response = roomService.updateRoom(id, request);
@@ -37,6 +38,7 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room updated successfully").data(response).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteRoom(@PathVariable String id) {
         roomService.deleteRoomByID(id);
@@ -51,6 +53,7 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room retrieved successfully").data(response).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/toggle-status")
     public ApiResponse<RoomResponse> toggleRoomStatus(@PathVariable String id) {
         roomService.toggleRoomStatus(id);
@@ -59,7 +62,6 @@ public class RoomController {
     }
 
     @GetMapping
-
     public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) String keyword) {
         return ApiResponse.<PageResponse<RoomResponse>>builder().success(true).message("Rooms retrieved successfully").data(roomService.getAllRooms(page, size, sortBy, direction, keyword)).build();
     }

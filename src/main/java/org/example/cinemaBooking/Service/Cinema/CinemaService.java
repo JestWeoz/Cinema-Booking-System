@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
 import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
+import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
 import org.example.cinemaBooking.Entity.Cinema;
 import org.example.cinemaBooking.Exception.AppException;
@@ -15,6 +16,11 @@ import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.Status;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +117,14 @@ public class CinemaService {
         cinemaMapper.updateCinema(request, cinema);
 
         return cinemaMapper.toResponse(cinemaRepository.save(cinema));
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<CinemaMovieResponse> getMoviesByCinemaAndDate(String cinemaId, LocalDate date) {
+        LocalDateTime from = date.atStartOfDay();
+        LocalDateTime to   = from.plusDays(1);
+
+        return cinemaRepository.findMoviesByCinemaAndDate(cinemaId, from, to);
     }
 }
