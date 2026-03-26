@@ -24,6 +24,10 @@ public class Notification extends SoftDeletableEntity {
     @Builder.Default
     Type type = Type.BOOKING;
 
+    @Column(name = "is_read", nullable = false)
+    @Builder.Default
+    boolean read = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
