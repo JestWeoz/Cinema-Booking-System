@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+
 import java.util.Optional;
 
 @Repository
@@ -29,4 +30,6 @@ AND (:key IS NULL OR
        LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')))
 """)
     Page<UserEntity> searchUsers(String key, Pageable pageable);
+
+
 }

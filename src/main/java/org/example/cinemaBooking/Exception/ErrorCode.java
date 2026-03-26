@@ -134,8 +134,16 @@ public enum ErrorCode {
     START_TIME_MUST_BE_FUTURE(1121, "Start time must be in the future", HttpStatus.BAD_REQUEST),
     BASE_PRICE_MUST_BE_POSITIVE(1122, "Base price must be greater than 0", HttpStatus.BAD_REQUEST),
     BASE_PRICE_INVALID_FORMAT(1123, "Base price must be a valid number with up to 8 digits and 2 decimal places", HttpStatus.BAD_REQUEST),
-
-    ;
+    SEAT_NOT_FOUND(1124, "Seat not found", HttpStatus.NOT_FOUND),
+    SEAT_ALREADY_LOCKED(1125, "Seat already locked", HttpStatus.BAD_REQUEST),
+    SEAT_ALREADY_BOOKED(1126, "Seat already booked", HttpStatus.BAD_REQUEST),
+    SEAT_NOT_LOCKED(1127, "Seat not locked", HttpStatus.BAD_REQUEST),
+    SEAT_LOCK_FORBIDDEN(1128, "You can only release your own locked seats", HttpStatus.FORBIDDEN),
+    SEAT_LOCK_MISMATCH(1129, "Some seats are not locked by you", HttpStatus.BAD_REQUEST),
+    BOOKING_NOT_FOUND( 1130, "Booking not found", HttpStatus.NOT_FOUND),
+    BOOKING_STATUS_INVALID(1131, "Booking status must be PENDING, CONFIRMED, CANCELLED or EXPIRED", HttpStatus.BAD_REQUEST),
+    BOOKING_EXPIRED(1132, "Booking expired", HttpStatus.BAD_REQUEST),
+    BOOKING_ALREADY_CONFIRMED(1133, "Booking already confirmed", HttpStatus.BAD_REQUEST),;
 
 
      int code;
