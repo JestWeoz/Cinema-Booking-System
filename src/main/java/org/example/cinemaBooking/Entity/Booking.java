@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
+import org.example.cinemaBooking.Shared.utils.BookingStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,6 +37,11 @@ public class Booking extends SoftDeletableEntity {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private BookingStatus status = BookingStatus.PENDING;
 
     @Builder.Default
     @Column(precision = 10, scale = 2)

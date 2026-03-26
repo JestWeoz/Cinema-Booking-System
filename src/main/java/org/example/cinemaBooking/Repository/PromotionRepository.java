@@ -6,10 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -44,4 +46,17 @@ AND p.quantity > p.usedQuantity
     WHERE p.id = :id AND p.usedQuantity < p.quantity
 """)
     int increaseUsedQuantityIfAvailable(String id);
+
+    @Query("""
+        SELECT p FROM Promotion p
+        WHERE p.code       = :code
+          AND p.startDate  <= :today
+          AND p.endDate    >= :today
+          AND p.deletedAt  IS NULL
+        """)
+    Optional<Promotion> findActiveByCode(
+            @Param("code")  String code,
+            @Param("today") LocalDate today
+    );
+
 }
