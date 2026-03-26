@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.Showtime.CreateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.ShowtimeFilterRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.UpdateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeDetailResponse;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSummaryResponse;
+import org.example.cinemaBooking.DTO.Request.Showtime.CreateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.ShowtimeFilterRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.UpdateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Service.Showtime.ShowtimeService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
@@ -90,7 +90,7 @@ public class ShowtimeController {
     public ApiResponse<PageResponse<ShowtimeSummaryResponse>> getShowtimes(
             @Valid ShowtimeFilterRequest request
             ) {
-        var response = showtimeService.getShowtimes(request);
+        var response = showtimeService.getShowtime(request);
         log.info("[SHOWTIME_CONTROLLER] Retrieved showtimes with filters: cinemaId={}, movieId={}, date={}", request.cinemaId(), request.movieId(), request.date());
         return ApiResponse.<PageResponse<ShowtimeSummaryResponse>>builder()
                 .success(true)

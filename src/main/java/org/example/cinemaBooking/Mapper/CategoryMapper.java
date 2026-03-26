@@ -1,8 +1,8 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.CategoryRequest;
+import org.example.cinemaBooking.DTO.Request.CategoryRequest;
 import org.example.cinemaBooking.Entity.Category;
-import org.example.cinemaBooking.Dto.Response.CategoryResponse;
+import org.example.cinemaBooking.DTO.Response.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

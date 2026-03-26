@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(ApiPaths.API_V1 + ApiPaths.Showtime.BASE + "/{showtimeId}" + ApiPaths.Seat.BASE)
+@RequestMapping(ApiPaths.API_V1 + ApiPaths.Showtime.BASE + "/{showtimeId}" + ApiPaths.SEAT.BASE)
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class ShowtimeSeatController {
 

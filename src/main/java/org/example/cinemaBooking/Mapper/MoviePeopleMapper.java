@@ -1,7 +1,7 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Response.Movie.MovieCastResponse;
-import org.example.cinemaBooking.Dto.Response.Movie.MoviePeopleResponse;
+import org.example.cinemaBooking.DTO.Response.Movie.MovieCastResponse;
+import org.example.cinemaBooking.DTO.Response.Movie.MoviePeopleResponse;
 
 import org.example.cinemaBooking.Entity.MoviePeople;
 import org.mapstruct.Mapper;

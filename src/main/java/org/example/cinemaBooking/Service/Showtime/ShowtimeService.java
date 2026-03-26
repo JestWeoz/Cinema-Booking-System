@@ -3,12 +3,12 @@ package org.example.cinemaBooking.Service.Showtime;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.Showtime.CreateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.ShowtimeFilterRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.UpdateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeDetailResponse;
+import org.example.cinemaBooking.DTO.Request.Showtime.CreateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.ShowtimeFilterRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.UpdateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
 
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSummaryResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Entity.*;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -16,7 +16,6 @@ import org.example.cinemaBooking.Mapper.ShowtimeMapper;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.RoomRepository;
 import org.example.cinemaBooking.Repository.ShowtimeRepository;
-import org.example.cinemaBooking.Repository.ShowtimeSeatRepository;
 import org.example.cinemaBooking.Repository.spefication.ShowtimeSpecification;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.utils.SeatStatus;
@@ -91,7 +90,7 @@ public class ShowtimeService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ShowtimeSummaryResponse> getShowtimes(ShowtimeFilterRequest request){
+    public PageResponse<ShowtimeSummaryResponse> getShowtime(ShowtimeFilterRequest request){
         Pageable pageable = PageRequest.of(request.page(), request.size());
 
         Page<Showtime> showtimePage = showtimeRepository.findAll(ShowtimeSpecification.of(request), pageable);
