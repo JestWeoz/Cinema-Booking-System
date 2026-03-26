@@ -59,14 +59,14 @@ public class SeatTypeService {
     }
 
     // GET BY ID
-    public SeatTypeResponse getById(Long id) {
+    public SeatTypeResponse getById(String id) {
         SeatType seatType = repository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_FOUND));
         return mapper.toResponse(seatType);
     }
 
     // UPDATE
-    public SeatTypeResponse update(Long id, UpdateSeatTypeRequest request) {
+    public SeatTypeResponse update(String id, UpdateSeatTypeRequest request) {
         SeatType seatType = repository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_FOUND));
 
@@ -82,7 +82,7 @@ public class SeatTypeService {
 
     // DELETE
     @Transactional
-    public void delete(Long id) {
+    public void delete(String id) {
         SeatType seatType = repository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_FOUND));
         repository.delete(seatType);

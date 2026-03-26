@@ -53,7 +53,7 @@ public class SeatTypeController {
 
     // GET /api/v1/seat_type/{id}
     @GetMapping("/{id}")
-    public ApiResponse<SeatTypeResponse> getById(@PathVariable Long id) {
+    public ApiResponse<SeatTypeResponse> getById(@PathVariable String id) {
         SeatTypeResponse response = service.getById(id);
         log.info("[SEAT_TYPE_CONTROLLER] Retrieved seat type: {}", id);
         return ApiResponse.<SeatTypeResponse>builder()
@@ -66,7 +66,7 @@ public class SeatTypeController {
     // PUT /api/v1/seat_type/{id}
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<SeatTypeResponse> update(@PathVariable Long id,
+    public ApiResponse<SeatTypeResponse> update(@PathVariable String id,
                                                 @RequestBody @Valid UpdateSeatTypeRequest request) {
         SeatTypeResponse response = service.update(id, request);
         log.info("[SEAT_TYPE_CONTROLLER] Updated seat type: {}", id);
@@ -80,7 +80,7 @@ public class SeatTypeController {
     // DELETE /api/v1/seat_type/{id}
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> delete(@PathVariable Long id) {
+    public ApiResponse<Void> delete(@PathVariable String id) {
         service.delete(id);
         log.info("[SEAT_TYPE_CONTROLLER] Deleted seat type: {}", id);
         return ApiResponse.<Void>builder()
