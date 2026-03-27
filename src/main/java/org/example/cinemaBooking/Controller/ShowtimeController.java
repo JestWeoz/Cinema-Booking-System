@@ -90,7 +90,7 @@ public class ShowtimeController {
     public ApiResponse<PageResponse<ShowtimeSummaryResponse>> getShowtimes(
             @Valid ShowtimeFilterRequest request
             ) {
-        var response = showtimeService.getShowtimes(request);
+        var response = showtimeService.getShowtime(request);
         log.info("[SHOWTIME_CONTROLLER] Retrieved showtimes with filters: cinemaId={}, movieId={}, date={}", request.cinemaId(), request.movieId(), request.date());
         return ApiResponse.<PageResponse<ShowtimeSummaryResponse>>builder()
                 .success(true)

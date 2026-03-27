@@ -38,8 +38,9 @@ public final class ApiPaths {
     public static final class Room {
         public static final String BASE = "/rooms";
     }
-    public static final class Seat {
+    public static final class SEAT {
         public static final String BASE = "/seats";
+        public static final String SEAT_TYPE = "/seat_type";
     }
     public static final class Review {
         public static final String BASE = "/reviews";

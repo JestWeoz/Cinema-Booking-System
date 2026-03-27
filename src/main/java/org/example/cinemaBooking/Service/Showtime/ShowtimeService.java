@@ -90,7 +90,7 @@ public class ShowtimeService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ShowtimeSummaryResponse> getShowtimes(ShowtimeFilterRequest request){
+    public PageResponse<ShowtimeSummaryResponse> getShowtime(ShowtimeFilterRequest request){
         Pageable pageable = PageRequest.of(request.page(), request.size());
 
         Page<Showtime> showtimePage = showtimeRepository.findAll(ShowtimeSpecification.of(request), pageable);
