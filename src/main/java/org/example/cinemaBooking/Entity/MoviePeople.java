@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.MovieRole;
+import org.example.cinemaBooking.Shared.enums.MovieRole;
 @Table(uniqueConstraints = {
         @UniqueConstraint(
                 name = "uk_movie_people",  // Tên constraint

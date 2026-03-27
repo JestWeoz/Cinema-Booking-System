@@ -7,13 +7,17 @@ import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
 import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
+import org.example.cinemaBooking.Dto.Response.Room.RoomBasicResponse;
 import org.example.cinemaBooking.Entity.Cinema;
+import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.CinemaMapper;
+import org.example.cinemaBooking.Mapper.RoomMapper;
 import org.example.cinemaBooking.Repository.CinemaRepository;
+import org.example.cinemaBooking.Repository.RoomRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.example.cinemaBooking.Shared.utils.Status;
+import org.example.cinemaBooking.Shared.enums.Status;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +34,12 @@ public class CinemaService {
 
     CinemaRepository cinemaRepository;
     CinemaMapper cinemaMapper;
-
+    RoomRepository roomRepository;
+    RoomMapper roomMapper;
     // ✅ CREATE
     public CinemaResponse createCinema(CreateCinemaRequest request){
         Cinema cinema = cinemaMapper.toCinema(request);
-        cinema.setStatus(Status.INACTIVE);
+        cinema.setStatus(Status.ACTIVE);
         return cinemaMapper.toResponse(cinemaRepository.save(cinema));
     }
 
@@ -121,10 +126,62 @@ public class CinemaService {
 
 
     @Transactional(readOnly = true)
-    public List<CinemaMovieResponse> getMoviesByCinemaAndDate(String cinemaId, LocalDate date) {
-        LocalDateTime from = date.atStartOfDay();
-        LocalDateTime to   = from.plusDays(1);
+    public PageResponse<CinemaMovieResponse> getMoviesByCinemaAndDate(
+            String cinemaId,
+            LocalDate date,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
-        return cinemaRepository.findMoviesByCinemaAndDate(cinemaId, from, to);
+        LocalDateTime from = date.atStartOfDay();
+        LocalDateTime to = from.plusDays(1);
+
+        // Tạo Pageable với sorting
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // Lấy Page từ repository
+        Page<CinemaMovieResponse> moviePage = cinemaRepository.findMoviesByCinemaAndDate(
+                cinemaId, from, to, pageable);
+
+        // Convert Page sang PageResponse
+        return PageResponse.<CinemaMovieResponse>builder()
+                .items(moviePage.getContent())
+                .page(moviePage.getNumber())
+                .size(moviePage.getSize())
+                .totalElements(moviePage.getTotalElements())
+                .totalPages(moviePage.getTotalPages())
+                .build();
     }
+
+
+    public PageResponse<RoomBasicResponse> getRoomsByCinema(
+            String cinemaId,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+        int pageNumber = page > 0 ? page - 1 : 0;
+
+        Sort.Direction sort = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort, sortBy));
+
+        Page<Room> roomPage = roomRepository.findByCinemaId(cinemaId, pageable);
+
+        List<RoomBasicResponse> roomResponses = roomPage.getContent()
+                .stream().map(roomMapper::toBasicResponse)
+                .toList();
+
+        return PageResponse.<RoomBasicResponse>builder()
+                .page(page)
+                .size(size)
+                .totalElements(roomPage.getTotalElements())
+                .totalPages(roomPage.getTotalPages())
+                .items(roomResponses)
+                .build();
+    }
+
+
 }

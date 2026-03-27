@@ -4,6 +4,9 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.Entity.Booking;
+import org.example.cinemaBooking.Service.Ticket.TicketService;
+import org.example.cinemaBooking.Shared.untils.EmailTemplateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final TicketService ticketService;
 
     @Value("${app.frontend-url}")
     private String frontendUrl;
@@ -76,5 +80,36 @@ public class EmailService {
                     </p>
                 </div>
                 """.formatted(resetLink, expiryMinutes);
+    }
+    @Async
+    public void sendBookingSuccessEmail(Booking booking) {
+        String qrBase64 = ticketService.getBookingQR(booking.getBookingCode());
+        String to      = booking.getUser().getEmail();
+        String subject = "🎬 Đặt vé thành công - " + booking.getBookingCode();
+        String html    = EmailTemplateUtil.buildBookingSuccessEmail(booking, qrBase64);
+        sendHtmlEmail(to, subject, html);
+    }
+
+    @Async
+    public void sendCancelledEmail(Booking booking) {
+        String to      = booking.getUser().getEmail();
+        String subject = "Thông báo huỷ vé - " + booking.getBookingCode();
+        String html    = EmailTemplateUtil.buildCancelledEmail(booking);
+        sendHtmlEmail(to, subject, html);
+    }
+
+    private void sendHtmlEmail(String to, String subject, String html) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(html, true);   // true = isHtml
+            mailSender.send(message);
+            log.info("Email sent to {}: {}", to, subject);
+        } catch (MessagingException e) {
+            // Không throw — email fail không được làm hỏng flow chính
+            log.error("Failed to send email to {}: {}", to, e.getMessage());
+        }
     }
 }

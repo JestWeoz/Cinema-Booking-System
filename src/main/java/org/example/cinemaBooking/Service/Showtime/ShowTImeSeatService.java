@@ -16,7 +16,7 @@ import org.example.cinemaBooking.Mapper.ShowtimeSeatMapper;
 import org.example.cinemaBooking.Repository.ShowtimeRepository;
 import org.example.cinemaBooking.Repository.ShowtimeSeatRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
-import org.example.cinemaBooking.Shared.utils.SeatStatus;
+import org.example.cinemaBooking.Shared.enums.SeatStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

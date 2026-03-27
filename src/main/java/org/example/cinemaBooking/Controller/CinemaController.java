@@ -8,6 +8,7 @@ import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
 import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
 import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
+import org.example.cinemaBooking.Dto.Response.Room.RoomBasicResponse;
 import org.example.cinemaBooking.Service.Cinema.CinemaService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
@@ -90,7 +91,7 @@ public class CinemaController {
     // 📄 GET ALL
     @GetMapping
     public ApiResponse<PageResponse<CinemaResponse>> getAllCinemas(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
@@ -103,18 +104,47 @@ public class CinemaController {
                 .build();
     }
 
-    @GetMapping({"/{id}/movies"})
-    public ApiResponse<List<CinemaMovieResponse>> getMoviesByCinemaAndDate(
-            @PathVariable String id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
-    ) {
-        List<CinemaMovieResponse> movies = cinemaService.getMoviesByCinemaAndDate(id, date);
-        return ApiResponse.<List<CinemaMovieResponse>>builder()
+    @GetMapping("/{cinemaId}/movies")
+    public ApiResponse<PageResponse<CinemaMovieResponse>> getMoviesByCinemaAndDate(
+            @PathVariable String cinemaId,
+            @RequestParam LocalDate date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        log.info("[CINEMA_CONTROLLER] Getting movies for cinema: {}, date: {}, page: {}",
+                cinemaId, date, page);
+
+        var movies = cinemaService.getMoviesByCinemaAndDate(
+                cinemaId, date, page, size, sortBy, direction);
+
+        return ApiResponse.<PageResponse<CinemaMovieResponse>>builder()
                 .success(true)
                 .message("Movies retrieved successfully")
                 .data(movies)
                 .build();
     }
 
+    @GetMapping("/{cinemaId}/rooms")
+    public ApiResponse<PageResponse<RoomBasicResponse>> getRoomsByCinemaId(
+            @PathVariable String cinemaId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        log.info("[ROOM_CONTROLLER] Getting rooms for cinema id: {} - page: {}, size: {}",
+                cinemaId, page, size);
+
+        PageResponse<RoomBasicResponse> response = cinemaService.getRoomsByCinema(
+                cinemaId, page, size, sortBy, direction);
+
+        return ApiResponse.<PageResponse<RoomBasicResponse>>builder()
+                .success(true)
+                .message("Rooms retrieved successfully")
+                .data(response)
+                .build();
+    }
 
 }

@@ -2,7 +2,7 @@
 package org.example.cinemaBooking.Repository;
 
 import org.example.cinemaBooking.Entity.ShowtimeSeat;
-import org.example.cinemaBooking.Shared.utils.SeatStatus;
+import org.example.cinemaBooking.Shared.enums.SeatStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -67,10 +67,10 @@ public interface ShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, Stri
     @Modifying
     @Query("""
             UPDATE ShowtimeSeat ss
-            SET ss.status       = org.example.cinemaBooking.Shared.utils.SeatStatus.AVAILABLE,
+            SET ss.status       = org.example.cinemaBooking.Shared.enums.SeatStatus.AVAILABLE,
                 ss.lockedUntil  = NULL,
                 ss.lockedByUser = NULL
-            WHERE ss.status      = org.example.cinemaBooking.Shared.utils.SeatStatus.LOCKED
+            WHERE ss.status      = org.example.cinemaBooking.Shared.enums.SeatStatus.LOCKED
               AND ss.lockedUntil < :now
               AND ss.deletedAt IS NULL
             """)
@@ -98,7 +98,7 @@ public interface ShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, Stri
             JOIN FETCH s.seatType
             WHERE ss.showtime.id  = :showtimeId
               AND ss.lockedByUser = :userId
-              AND ss.status       = org.example.cinemaBooking.Shared.utils.SeatStatus.LOCKED
+              AND ss.status       = org.example.cinemaBooking.Shared.enums.SeatStatus.LOCKED
               AND ss.deletedAt IS NULL
             """)
     List<ShowtimeSeat> findLockedByShowtimeAndUser(

@@ -12,9 +12,11 @@ import org.example.cinemaBooking.Service.Promotion.PromotionService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Promotion.BASE)
@@ -55,6 +57,18 @@ public class PromotionController {
                 .message("Promotion deleted successfully")
                 .build();
     }
+    @GetMapping("/active")
+    public ApiResponse<PageResponse<PromotionResponse>> getActivePromotion(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ) {
+        return ApiResponse.<PageResponse<PromotionResponse>>builder()
+                .success(true)
+                .data(promotionService.getActivePromotions(page, size, sortBy, sortDir))
+                .build();
+    }
 
     // GET BY ID
     @GetMapping("/{id}")
@@ -73,27 +87,28 @@ public class PromotionController {
                 .build();
     }
 
-    @GetMapping("/active")
-    public ApiResponse<PageResponse<PromotionResponse>> getActivePromotion(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt`") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDir
-    ) {
-        return ApiResponse.<PageResponse<PromotionResponse>>builder()
-                .success(true)
-                .data(promotionService.getActivePromotions(page, size, sortBy, sortDir))
-                .build();
-    }
+
     // FILTER
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<PageResponse<PromotionResponse>> getPromotions(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "`createdAt`") String sortBy,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir,
-            @RequestBody @Valid PromotionFilterRequest request) {
-        PageResponse<PromotionResponse> response = promotionService.getPromotions(page, size, sortBy, sortDir, request);
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) BigDecimal minOrderValue,
+            @RequestParam(required = false) BigDecimal maxOrderValue) {
+        PromotionFilterRequest filterRequest = new PromotionFilterRequest(
+                code, name, startDate, endDate, minOrderValue, maxOrderValue
+        );
+
+        PageResponse<PromotionResponse> response = promotionService.getPromotions(
+                page, size, sortBy, sortDir, filterRequest
+        );
 
         return ApiResponse.<PageResponse<PromotionResponse>>builder()
                 .success(true)

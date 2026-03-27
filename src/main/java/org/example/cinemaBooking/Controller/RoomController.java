@@ -35,7 +35,10 @@ public class RoomController {
     public ApiResponse<RoomResponse> updateRoom(@PathVariable String id, @RequestBody @Valid UpdateRoomRequest request) {
         RoomResponse response = roomService.updateRoom(id, request);
         log.info("[ROOM_CONTROLLER] Updated room with id: {}", response.id());
-        return ApiResponse.<RoomResponse>builder().success(true).message("Room updated successfully").data(response).build();
+        return ApiResponse.<RoomResponse>builder()
+                .success(true)
+                .message("Room updated successfully")
+                .data(response).build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,7 +65,13 @@ public class RoomController {
     }
 
     @GetMapping
-    public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) String keyword) {
-        return ApiResponse.<PageResponse<RoomResponse>>builder().success(true).message("Rooms retrieved successfully").data(roomService.getAllRooms(page, size, sortBy, direction, keyword)).build();
+    public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size,
+                                                               @RequestParam(defaultValue = "createdAt") String sortBy,
+                                                               @RequestParam(defaultValue = "desc") String direction,
+                                                               @RequestParam(required = false) String keyword) {
+        return ApiResponse.<PageResponse<RoomResponse>>builder().
+                success(true).message("Rooms retrieved successfully").
+                data(roomService.getAllRooms(page, size, sortBy, direction, keyword)).build();
     }
 }

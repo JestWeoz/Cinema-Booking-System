@@ -2,7 +2,7 @@ package org.example.cinemaBooking.Repository;
 
 import jakarta.validation.constraints.NotBlank;
 import org.example.cinemaBooking.Entity.Movie;
-import org.example.cinemaBooking.Shared.utils.MovieStatus;
+import org.example.cinemaBooking.Shared.enums.MovieStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

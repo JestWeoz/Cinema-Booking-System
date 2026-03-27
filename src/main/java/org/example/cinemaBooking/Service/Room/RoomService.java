@@ -14,7 +14,7 @@ import org.example.cinemaBooking.Mapper.RoomMapper;
 import org.example.cinemaBooking.Repository.CinemaRepository;
 import org.example.cinemaBooking.Repository.RoomRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.example.cinemaBooking.Shared.utils.Status;
+import org.example.cinemaBooking.Shared.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +35,7 @@ public class RoomService {
     public RoomResponse createRoom(CreateRoomRequest request) {
         Room room = roomMapper.toRoomEntity(request);
         room.setCinema(cinemaRepository.findCinemaById(request.cinemaId()));
-        room.setStatus(Status.INACTIVE);
+        room.setStatus(Status.ACTIVE);
         return roomMapper.toResponse(roomRepository.save(room));
     }
 

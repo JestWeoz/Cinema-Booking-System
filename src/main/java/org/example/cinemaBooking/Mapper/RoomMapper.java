@@ -2,6 +2,7 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Dto.Request.Room.CreateRoomRequest;
 import org.example.cinemaBooking.Dto.Request.Room.UpdateRoomRequest;
+import org.example.cinemaBooking.Dto.Response.Room.RoomBasicResponse;
 import org.example.cinemaBooking.Dto.Response.Room.RoomResponse;
 import org.example.cinemaBooking.Entity.Room;
 import org.mapstruct.*;
@@ -21,5 +22,7 @@ public interface RoomMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateRoom(UpdateRoomRequest request, @MappingTarget Room room);
+
+    RoomBasicResponse toBasicResponse(Room room);
 
 }

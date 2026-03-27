@@ -3,7 +3,7 @@ package org.example.cinemaBooking.Dto.Request.User;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Shared.utils.Gender;
+import org.example.cinemaBooking.Shared.enums.Gender;
 
 import java.time.LocalDate;
 

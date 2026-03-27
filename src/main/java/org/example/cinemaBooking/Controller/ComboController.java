@@ -12,6 +12,7 @@ import org.example.cinemaBooking.Service.Product.ComboService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class ComboController {
     ComboService comboService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<ComboResponse> createCombo(@RequestBody @Valid CreateComboRequest request) {
         var response = comboService.createCombo(request);
@@ -34,6 +36,7 @@ public class ComboController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<ComboResponse> updateCombo(@PathVariable String id, @RequestBody @Valid UpdateComboRequest request) {
         var response = comboService.updateCombo(id, request);
@@ -45,6 +48,7 @@ public class ComboController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteCombo(@PathVariable String id) {
         comboService.deleteCombo(id);
@@ -52,6 +56,21 @@ public class ComboController {
         return ApiResponse.<Void>builder()
                 .success(true)
                 .message("combo deleted")
+                .build();
+    }
+    @GetMapping("/active")
+    public ApiResponse<PageResponse<ComboResponse>> getActiveCombos(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "price") String sortBy
+    ) {
+        var response = comboService.getAllCombosActive(page, size, sortBy, direction);
+        log.info("[COMBO_CONTROLLER]_REST request to get active combos, page: {}, size: {}, sortBy: {}, direction: {}", page, size, sortBy, direction);
+        return ApiResponse.<PageResponse<ComboResponse>>builder()
+                .success(true)
+                .message("pages found")
+                .data(response)
                 .build();
     }
 
@@ -66,6 +85,7 @@ public class ComboController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<PageResponse<ComboResponse>> getCombos(
             @RequestParam(defaultValue = "1") int page,
@@ -82,21 +102,9 @@ public class ComboController {
     }
 
 
-    @GetMapping("/active")
-    public ApiResponse<PageResponse<ComboResponse>> getActiveCombos(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String direction,
-            @RequestParam(defaultValue = "price") String sortBy
-    ) {
-        return ApiResponse.<PageResponse<ComboResponse>>builder()
-                .success(true)
-                .message("pages found")
-                .data(comboService.getAllCombosActive(page, size, sortBy, direction))
-                .build();
-    }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{comboId}/toggle-active")
     public ApiResponse<Void> toggleActive(@PathVariable String comboId) {
         comboService.toggleActiveCombo(comboId);

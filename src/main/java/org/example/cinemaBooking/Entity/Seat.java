@@ -21,7 +21,7 @@ public class Seat extends SoftDeletableEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    boolean isActive = true;
+    boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)

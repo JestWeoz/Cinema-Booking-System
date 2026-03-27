@@ -3,7 +3,7 @@ package org.example.cinemaBooking.Dto.Request.Movie;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.contraints.EnumValidator;
-import org.example.cinemaBooking.Shared.utils.MovieStatus;
+import org.example.cinemaBooking.Shared.enums.MovieStatus;
 
 @Getter
 @Setter

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.Type;
+import org.example.cinemaBooking.Shared.enums.Type;
 
 @Entity
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class Notification extends SoftDeletableEntity {
     @Builder.Default
     Type type = Type.BOOKING;
 
-    @Column(name = "is_read", nullable = false)
+    @Column(nullable = false)
     @Builder.Default
     boolean read = false;
 

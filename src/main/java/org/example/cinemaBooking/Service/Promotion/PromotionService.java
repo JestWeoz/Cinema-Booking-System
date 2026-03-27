@@ -18,7 +18,7 @@ import org.example.cinemaBooking.Repository.PromotionRepository;
 import org.example.cinemaBooking.Repository.UsedPromotionRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.example.cinemaBooking.Shared.utils.DiscountType;
+import org.example.cinemaBooking.Shared.enums.DiscountType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -282,6 +282,7 @@ public class PromotionService {
         // 3. Update usage per user
         updateUsedPromotion(user, promotion);
     }
+
 
     private void updateUsedPromotion(UserEntity user, Promotion promotion) {
         try {

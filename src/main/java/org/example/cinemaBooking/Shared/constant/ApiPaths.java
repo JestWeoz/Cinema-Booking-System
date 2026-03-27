@@ -66,4 +66,16 @@ public final class ApiPaths {
     public static final class Booking {
         public static final String BASE = "/bookings";
     }
+    public static final class Payment {
+        public static final String BASE = "/payments";
+    }
+    public static final class Notification {
+        public static final String BASE = "/notifications";
+    }
+    public static final class Ticket {
+        public static final String BASE = "/tickets";
+    }
+    public static final class SeatType {
+        public static final String BASE = "/seat-types";
+    }
 }

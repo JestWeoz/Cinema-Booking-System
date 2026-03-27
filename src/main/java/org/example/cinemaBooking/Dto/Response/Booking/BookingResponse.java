@@ -1,9 +1,9 @@
 package org.example.cinemaBooking.Dto.Response.Booking;
 
-import org.example.cinemaBooking.Shared.utils.BookingStatus;
-import org.example.cinemaBooking.Shared.utils.ItemType;
-import org.example.cinemaBooking.Shared.utils.SeatTypeEnum;
-import org.example.cinemaBooking.Shared.utils.TicketStatus;
+import org.example.cinemaBooking.Shared.enums.BookingStatus;
+import org.example.cinemaBooking.Shared.enums.ItemType;
+import org.example.cinemaBooking.Shared.enums.SeatTypeEnum;
+import org.example.cinemaBooking.Shared.enums.TicketStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

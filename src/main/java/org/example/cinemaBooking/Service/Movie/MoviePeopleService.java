@@ -18,7 +18,7 @@ import org.example.cinemaBooking.Mapper.MoviePeopleMapper;
 import org.example.cinemaBooking.Repository.MoviePeopleRepository;
 import org.example.cinemaBooking.Repository.MovieRepository;
 import org.example.cinemaBooking.Repository.PeopleRepository;
-import org.example.cinemaBooking.Shared.utils.MovieRole;
+import org.example.cinemaBooking.Shared.enums.MovieRole;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

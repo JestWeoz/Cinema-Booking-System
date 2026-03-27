@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.BookingStatus;
+import org.example.cinemaBooking.Shared.enums.BookingStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -2,13 +2,13 @@ package org.example.cinemaBooking.Dto.Request.Booking;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import org.example.cinemaBooking.Shared.utils.ItemType;
+import org.example.cinemaBooking.Shared.enums.ItemType;
 
 
 import java.util.List;
 
 // CreateBookingRequest.java
-public record CreateBookingRequest<BookingProductItem>(
+public record CreateBookingRequest(
 
     @NotEmpty(message = "Phải chọn ít nhất 1 ghế")
     @Size(max = 10)

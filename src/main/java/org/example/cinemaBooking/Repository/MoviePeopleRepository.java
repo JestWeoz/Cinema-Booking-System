@@ -2,7 +2,7 @@ package org.example.cinemaBooking.Repository;
 
 
 import org.example.cinemaBooking.Entity.MoviePeople;
-import org.example.cinemaBooking.Shared.utils.MovieRole;
+import org.example.cinemaBooking.Shared.enums.MovieRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

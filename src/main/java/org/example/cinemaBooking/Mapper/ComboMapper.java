@@ -4,9 +4,7 @@ import org.example.cinemaBooking.Dto.Request.Combo.CreateComboRequest;
 import org.example.cinemaBooking.Dto.Request.Combo.UpdateComboRequest;
 import org.example.cinemaBooking.Dto.Response.Combo.ComboResponse;
 import org.example.cinemaBooking.Entity.Combo;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = ComboItemMapper.class)
 public interface ComboMapper {
@@ -17,6 +15,7 @@ public interface ComboMapper {
     @Mapping(target = "items", source = "items")
     ComboResponse toResponse(Combo combo);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "items", ignore = true)
     void updateCombo(UpdateComboRequest updateComboRequest, @MappingTarget Combo combo);
 }

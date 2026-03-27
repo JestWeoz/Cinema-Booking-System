@@ -23,14 +23,66 @@ public class SecurityConfig {
             "/api/v1/auth/introspect",
             "/api/v1/auth/logout",
             "/api/v1/auth/refresh",
-            "/api/v1/auth/forgot-password",    // ← thêm
+            "/api/v1/auth/forgot-password",
             "/api/v1/auth/reset-password",
+            // Payment gateway webhook (IPN) called by VNPay
+            "/api/v1/payments/vnpay/ipn",
+            // Promotion preview/apply endpoints (kept public if frontend needs them before auth)
+            "/api/v1/promotions/preview",
+            "/api/v1/promotions/apply",
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
+            // Auth
             "/api/v1/auth/reset-password/validate",
-            "/movies",       // xem phim không cần đăng nhập
-            "/movies/{id}",
+            // Movies - public browsing
+            "/api/v1/movies",
+            "/api/v1/movies/*/images",
+            "/api/v1/movies/slug/*",
+            "/api/v1/movies/now-showing",
+            "/api/v1/movies/coming-soon",
+            "/api/v1/movies/search/**",
+            "/api/v1/movies/*",
+            // Showtimes
+            "/api/v1/showtimes",
+            "/api/v1/showtimes/*",
+            "/api/v1/showtimes/by-movie/*",
+            "/api/v1/showtimes/by-cinema/*",
+            // Seat map (public) - exclude the "my-locked-seats" which requires auth
+            "/api/v1/showtimes/*/seats",
+            // Promotions
+            "/api/v1/promotions/active",
+            "/api/v1/promotions/*",
+            "/api/v1/promotions/code/*",
+            // Products
+            "/api/v1/products",
+            "/api/v1/products/active",
+            "/api/v1/products/*",
+            // Cinemas
+            "/api/v1/cinema",
+            "/api/v1/cinema/*",
+            "/api/v1/cinema/*/movies",
+            // Categories
+            "/api/v1/categories",
+            "/api/v1/categories/*",
+            // Rooms
+            "/api/v1/rooms",
+            "/api/v1/rooms/*",
+            // Reviews (read-only)
+            "/api/v1/reviews/*",
+            "/api/v1/reviews/movies/*",
+            "/api/v1/reviews/movies/*/average-rating",
+            // Payment return (gateway redirect)
+            "/api/v1/payments/vnpay/return",
+            //Seat
+            "/api/v1/seats/*",
+            "/api/v1/seat-types",
+            "/api/v1/seat-types/*",
+            "/api/v1/seats/rooms/*",
+            //combo
+            "/api/v1/combos/active",
+            "/api/v1/combos/*",
+
     };
 
     private final CustomJwtDecoder customJwtDecoder;

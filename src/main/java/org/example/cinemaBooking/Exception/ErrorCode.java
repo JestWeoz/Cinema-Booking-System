@@ -79,7 +79,7 @@ public enum ErrorCode {
     ROOM_NAME_REQUIRED(1066, "Room name is required", HttpStatus.BAD_REQUEST),
     TOTAL_SEATS_REQUIRED(1067, "Total seats is required", HttpStatus.BAD_REQUEST),
     TOTAL_SEATS_INVALID(1068, "Total seats must be greater than 0", HttpStatus.BAD_REQUEST),
-    ROOM_TYPE_INVALID(1069, "Room type is invalid", HttpStatus.BAD_REQUEST),
+    ROOM_TYPE_INVALID(1069, "Room type is in TWO_D, THREE_D, IMAX", HttpStatus.BAD_REQUEST),
     CINEMA_NOT_FOUND(1070, "Cinema not found", HttpStatus.NOT_FOUND),
     ROOM_ALREADY_INACTIVE(1071, "Room already inactive", HttpStatus.BAD_REQUEST),
     ROOM_ALREADY_DELETED(1072, "Room already deleted", HttpStatus.BAD_REQUEST),
@@ -143,7 +143,18 @@ public enum ErrorCode {
     BOOKING_NOT_FOUND( 1130, "Booking not found", HttpStatus.NOT_FOUND),
     BOOKING_STATUS_INVALID(1131, "Booking status must be PENDING, CONFIRMED, CANCELLED or EXPIRED", HttpStatus.BAD_REQUEST),
     BOOKING_EXPIRED(1132, "Booking expired", HttpStatus.BAD_REQUEST),
-    BOOKING_ALREADY_CONFIRMED(1133, "Booking already confirmed", HttpStatus.BAD_REQUEST),;
+    BOOKING_ALREADY_CONFIRMED(1133, "Booking already confirmed", HttpStatus.BAD_REQUEST),
+    PAYMENT_NOT_FOUND(1134, "Payment not found", HttpStatus.NOT_FOUND),
+    PAYMENT_STATE_INVALID(1135, "Payment is not in a valid state for this action", HttpStatus.BAD_REQUEST),
+    PAYMENT_INVALID_SIGNATURE(1136, "Payment signature is invalid", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NOT_FOUND(1137, "Notification not found", HttpStatus.NOT_FOUND),
+    TICKET_NOT_VALID(1138, "Ticket is not valid for check-in", HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_ONGOING(1139, "Showtime is not ongoing for check-in", HttpStatus.BAD_REQUEST),
+    TICKET_NOT_FOUND(1140, "Ticket not found", HttpStatus.NOT_FOUND),
+    SEAT_ALREADY_EXISTS(1141, "Seat already exists in the same room with the same row and number", HttpStatus.BAD_REQUEST),
+    SEAT_TYPE_NOT_FOUND(1142, "Seat type not found", HttpStatus.NOT_FOUND),
+    CINEMA_ID_REQUIRED(1143, "Cinema ID is required", HttpStatus.BAD_REQUEST),
+    BOOKING_CANCELLED(1144, "Booking is cancelled", HttpStatus.BAD_REQUEST),;
 
 
      int code;

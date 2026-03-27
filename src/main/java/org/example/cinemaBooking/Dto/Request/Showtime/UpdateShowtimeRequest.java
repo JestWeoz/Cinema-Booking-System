@@ -1,8 +1,8 @@
 package org.example.cinemaBooking.Dto.Request.Showtime;
 
 import jakarta.validation.constraints.*;
-import org.example.cinemaBooking.Shared.utils.Language;
-import org.example.cinemaBooking.Shared.utils.ShowTimeStatus;
+import org.example.cinemaBooking.Shared.enums.Language;
+import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

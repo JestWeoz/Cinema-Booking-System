@@ -2,6 +2,7 @@ package org.example.cinemaBooking.Mapper;
 
 import org.example.cinemaBooking.Dto.Request.Showtime.CreateShowtimeRequest;
 import org.example.cinemaBooking.Dto.Request.Showtime.UpdateShowtimeRequest;
+import org.example.cinemaBooking.Dto.Response.Booking.BookingResponse;
 import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeDetailResponse;
 import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Entity.Showtime;
@@ -65,4 +66,12 @@ public interface ShowtimeMapper {
     @Mapping(target = "showtimeSeats", ignore = true)
     @Mapping(target = "availableSeats",ignore = true)
     void updateEntityFromRequest(UpdateShowtimeRequest request, @MappingTarget Showtime showtime);
+
+
+    @Mapping(target = "showtimeId", source = "id")
+    @Mapping(target = "movieTitle", source = "movie.title")
+    @Mapping(target = "roomName", source = "room.name")
+    @Mapping(target = "cinemaName", source = "room.cinema.name")
+    @Mapping(target = "startTime", source = "startTime")
+    BookingResponse.ShowtimeInfo toShowtimeInfo(Showtime showtime);
 }

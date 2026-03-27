@@ -42,6 +42,7 @@ public class ComboService {
         combo.setDescription(request.description());
 
         combo.getItems().clear();
+        comboRepository.flush();
         addItemsToCombo(combo, request.items());
     }
 
@@ -105,7 +106,7 @@ public class ComboService {
 
     @Transactional
     public ComboResponse updateCombo(String comboId, UpdateComboRequest request) {
-        Combo combo = comboRepository.findById(comboId)
+        Combo combo = comboRepository.findByIdWithDetail(comboId)
                 .orElseThrow(() -> new AppException(ErrorCode.COMBO_NOT_FOUND));
 
         if(request.name() != null && !request.name().isEmpty()){
@@ -121,6 +122,7 @@ public class ComboService {
         if (request.items() != null) {
             validateNoDuplicateProducts(request.items());
             combo.getItems().clear();
+            comboRepository.flush();
             addItemsToCombo(combo, request.items());
         }
 
@@ -138,7 +140,7 @@ public class ComboService {
     }
 
     public ComboResponse getComboById(String comboId) {
-        Combo combo = comboRepository.findById(comboId)
+        Combo combo = comboRepository.findByIdWithDetail(comboId)
                 .orElseThrow(() -> new AppException(ErrorCode.COMBO_NOT_FOUND));
         return comboMapper.toResponse(combo);
     }

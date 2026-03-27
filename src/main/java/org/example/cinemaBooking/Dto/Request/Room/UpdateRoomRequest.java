@@ -1,4 +1,9 @@
 package org.example.cinemaBooking.Dto.Request.Room;
 
-public class UpdateRoomRequest {
+import org.example.cinemaBooking.Shared.enums.RoomType;
+
+public record UpdateRoomRequest(
+        String name,
+        RoomType roomType,
+        Integer totalSeats) {
 }

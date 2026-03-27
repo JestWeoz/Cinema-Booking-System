@@ -14,10 +14,10 @@ import org.example.cinemaBooking.Mapper.BookingMapper;
 import org.example.cinemaBooking.Repository.*;
 import org.example.cinemaBooking.Service.Promotion.PromotionService;
 import org.example.cinemaBooking.Service.Showtime.ShowTImeSeatService;
-import org.example.cinemaBooking.Shared.utils.BookingStatus;
-import org.example.cinemaBooking.Shared.utils.ItemType;
-import org.example.cinemaBooking.Shared.utils.SeatStatus;
-import org.example.cinemaBooking.Shared.utils.TicketStatus;
+import org.example.cinemaBooking.Shared.enums.BookingStatus;
+import org.example.cinemaBooking.Shared.enums.ItemType;
+import org.example.cinemaBooking.Shared.enums.SeatStatus;
+import org.example.cinemaBooking.Shared.enums.TicketStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class BookingService {
             if (ss.getStatus() != SeatStatus.LOCKED) {
                 throw new AppException(ErrorCode.SEAT_NOT_LOCKED);
             }
-            if (userId.equals(ss.getLockedByUser())) {
+            if (!userId.equals(ss.getLockedByUser())) {
                 throw new AppException(ErrorCode.SEAT_LOCK_FORBIDDEN);
             }
         });
@@ -141,9 +141,8 @@ public class BookingService {
                 saved.getBookingCode(), userId, request.showtimeId(),
                 request.seatIds().size(), finalPrice);
 
-        BookingResponse response = bookingMapper.toResponse(saved);
         // paymentUrl sẽ được PaymentService inject — trả về bookingId cho FE tạo payment
-        return response;
+        return bookingMapper.toResponse(saved);
     }
 
     @Transactional(readOnly = true)
@@ -185,6 +184,8 @@ public class BookingService {
                 booking.getUser().getId()
         );
 
+        booking.getTickets().forEach(t -> t.setStatus(TicketStatus.VALID));
+
         bookingRepository.save(booking);
         log.info("Booking confirmed: code={}", booking.getBookingCode());
     }
@@ -205,6 +206,7 @@ public class BookingService {
 
         booking.setStatus(BookingStatus.CANCELLED);
 
+        booking.getTickets().forEach(t -> t.setStatus(TicketStatus.CANCELLED));
         // Giải phóng ghế về AVAILABLE
         List<String> seatIds = booking.getTickets().stream()
                 .map(t -> t.getSeat().getId()).toList();
