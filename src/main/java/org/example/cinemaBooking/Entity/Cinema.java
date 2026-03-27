@@ -1,13 +1,10 @@
 package org.example.cinemaBooking.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.Status;
+import org.example.cinemaBooking.Shared.enums.Status;
 
 import java.util.Set;
 
@@ -16,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Cinema extends SoftDeletableEntity {
     @Column(nullable = false)
@@ -33,7 +31,9 @@ public class Cinema extends SoftDeletableEntity {
     String logoUrl;
 
     @Enumerated(EnumType.STRING)
-    Status status;
+    @Column(nullable = false)
+    @Builder.Default
+    Status status = Status.ACTIVE;
 
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Room> rooms;

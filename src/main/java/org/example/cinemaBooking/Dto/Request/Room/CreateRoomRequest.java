@@ -2,19 +2,21 @@ package org.example.cinemaBooking.Dto.Request.Room;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.example.cinemaBooking.Shared.utils.RoomType;
+import org.example.cinemaBooking.Shared.contraints.EnumValidator;
+import org.example.cinemaBooking.Shared.enums.RoomType;
 
 public record CreateRoomRequest(
 
-        @NotBlank(message = "Room name is required")
+        @NotBlank(message = "NAME_REQUIRED")
         String name,
 
-        @NotNull(message = "Total seats is required")
+        @NotNull(message = "TOTAL_SEATS_REQUIRED")
         Integer totalSeats,
 
-        RoomType roomType,
+        @EnumValidator(enumClass = RoomType.class, message = "ROOM_TYPE_INVALID")
+        String roomType,
 
-        @NotBlank(message = "CinemaID is required")
+        @NotBlank(message = "CINEMA_ID_REQUIRED")
         String cinemaId
 
 ) {}

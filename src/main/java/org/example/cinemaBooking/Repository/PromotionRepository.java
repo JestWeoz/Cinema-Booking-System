@@ -47,6 +47,14 @@ AND p.quantity > p.usedQuantity
 """)
     int increaseUsedQuantityIfAvailable(String id);
 
+    @Modifying
+    @Query("""
+    UPDATE Promotion p
+    SET p.usedQuantity = p.usedQuantity - 1
+    WHERE p.id = :id AND p.usedQuantity > 0
+""")
+    int decreaseUsedQuantityIfUsed(String id);
+
     @Query("""
         SELECT p FROM Promotion p
         WHERE p.code       = :code

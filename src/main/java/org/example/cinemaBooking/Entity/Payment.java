@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.PaymentMethod;
-import org.example.cinemaBooking.Shared.utils.PaymentStatus;
+import org.example.cinemaBooking.Shared.enums.PaymentMethod;
+import org.example.cinemaBooking.Shared.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 

@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Dto.Response.Cinema;
 
-import org.example.cinemaBooking.Shared.utils.Language;
+import org.example.cinemaBooking.Shared.enums.Language;
 
 public record CinemaMovieResponse(
         String movieId,

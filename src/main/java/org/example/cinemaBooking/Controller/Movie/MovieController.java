@@ -13,8 +13,8 @@ import org.example.cinemaBooking.Service.Movie.PeopleService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.example.cinemaBooking.Shared.utils.AgeRating;
-import org.example.cinemaBooking.Shared.utils.MovieStatus;
+import org.example.cinemaBooking.Shared.enums.AgeRating;
+import org.example.cinemaBooking.Shared.enums.MovieStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,7 @@
 
 package org.example.cinemaBooking.Dto.Response.Promotion;
 
-import org.example.cinemaBooking.Shared.utils.DiscountType;
+import org.example.cinemaBooking.Shared.enums.DiscountType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

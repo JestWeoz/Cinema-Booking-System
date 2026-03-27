@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Dto.Request.CategoryRequest;
 import org.example.cinemaBooking.Dto.Response.CategoryResponse;
-import org.example.cinemaBooking.Service.CategoryService;
+import org.example.cinemaBooking.Service.Movie.CategoryService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;

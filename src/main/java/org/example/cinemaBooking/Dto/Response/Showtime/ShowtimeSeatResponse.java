@@ -1,8 +1,8 @@
 // ShowtimeSeatResponse.java
 package org.example.cinemaBooking.Dto.Response.Showtime;
 
-import org.example.cinemaBooking.Shared.utils.SeatStatus;
-import org.example.cinemaBooking.Shared.utils.SeatTypeEnum;
+import org.example.cinemaBooking.Shared.enums.SeatStatus;
+import org.example.cinemaBooking.Shared.enums.SeatTypeEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

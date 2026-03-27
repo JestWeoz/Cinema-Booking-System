@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.SeatTypeEnum;
+import org.example.cinemaBooking.Shared.enums.SeatTypeEnum;
 
 import java.math.BigDecimal;
 

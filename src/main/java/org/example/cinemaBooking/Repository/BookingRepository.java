@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +15,12 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, String> {
 
     @Query("""
-        SELECT b FROM Booking b
+        SELECT DISTINCT b FROM Booking b
         JOIN FETCH b.user
         JOIN FETCH b.showtime st
         JOIN FETCH st.movie
-        JOIN FETCH st.room
+        JOIN FETCH st.room r
+        JOIN FETCH r.cinema
         WHERE b.id = :id AND b.deletedAt IS NULL
         """)
     Optional<Booking> findByIdWithDetails(@Param("id") String id);
@@ -35,7 +37,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     /** Tìm booking PENDING đã hết hạn — scheduled job gọi */
     @Query("""
         SELECT b FROM Booking b
-        WHERE b.status = org.example.cinemaBooking.Shared.utils.BookingStatus.PENDING
+        WHERE b.status = org.example.cinemaBooking.Shared.enums.BookingStatus.PENDING
           AND b.expiredAt < :now
           AND b.deletedAt IS NULL
         """)
@@ -43,4 +45,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     /** Kiểm tra bookingCode unique */
     boolean existsByBookingCode(String bookingCode);
+
+
+    Optional<Booking> findByBookingCode(String bookingCode);
 }

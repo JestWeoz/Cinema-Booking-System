@@ -5,10 +5,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
-import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.Language;
-import org.example.cinemaBooking.Shared.utils.ShowTimeStatus;
+import org.example.cinemaBooking.Shared.enums.Language;
+import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,6 +35,7 @@ public class Showtime extends SoftDeletableEntity {
     Language language = Language.SUBTITLED;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer availableSeats = 0; // cache
 
     @Builder.Default

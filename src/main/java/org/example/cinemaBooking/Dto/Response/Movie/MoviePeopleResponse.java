@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Dto.Response.Movie;
 
-import org.example.cinemaBooking.Shared.utils.MovieRole;
+import org.example.cinemaBooking.Shared.enums.MovieRole;
 
 public record MoviePeopleResponse(
         String id,

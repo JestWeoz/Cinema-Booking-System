@@ -15,7 +15,7 @@ spring:
       # password: your_password  # bỏ comment nếu Redis có password
   jpa:
     hibernate:
-      ddl-auto: none   # dev thì update
+      ddl-auto: update  # dev thì update
     show-sql: true
     properties:
       hibernate:
@@ -44,3 +44,14 @@ server:
   port: 8081
 app:
   frontend-url: http://localhost:3000
+
+vnpay:
+  tmn-code: YOUR_TMN_CODE
+  hash-secret: YOUR_HASH_SECRET
+  payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return-url: https://yourdomain.com/api/payments/vnpay/return
+  ipn-url: https://yourdomain.com/api/payments/vnpay/ipn
+  version: "2.1.0"
+  command: pay
+  currency-code: VND
+  locale: vn

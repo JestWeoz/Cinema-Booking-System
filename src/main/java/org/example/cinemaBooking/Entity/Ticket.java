@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.cinemaBooking.Shared.persistence.SoftDeletableEntity;
-import org.example.cinemaBooking.Shared.utils.TicketStatus;
+import org.example.cinemaBooking.Shared.enums.TicketStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,6 +25,7 @@ public class Ticket extends SoftDeletableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     TicketStatus status = TicketStatus.VALID;
 
     @ManyToOne(fetch = FetchType.LAZY)

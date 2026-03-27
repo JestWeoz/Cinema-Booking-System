@@ -1,7 +1,7 @@
 package org.example.cinemaBooking.Dto.Response.User;
 
 import lombok.*;
-import org.example.cinemaBooking.Shared.utils.Gender;
+import org.example.cinemaBooking.Shared.enums.Gender;
 
 import java.time.LocalDate;
 import java.util.Set;

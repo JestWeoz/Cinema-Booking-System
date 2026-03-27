@@ -1,7 +1,7 @@
 package org.example.cinemaBooking.Dto.Response.Room;
 
-import org.example.cinemaBooking.Shared.utils.RoomType;
-import org.example.cinemaBooking.Shared.utils.Status;
+import org.example.cinemaBooking.Shared.enums.RoomType;
+import org.example.cinemaBooking.Shared.enums.Status;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +9,7 @@ public record RoomResponse(
 
         String id,
         String name,
-        String totalSeats,
+        Integer totalSeats,
         RoomType roomType,
         Status status,
 

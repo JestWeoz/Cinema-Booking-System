@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Dto.Response.Cinema;
 
-import org.example.cinemaBooking.Shared.utils.Status;
+import org.example.cinemaBooking.Shared.enums.Status;
 
 public record CinemaResponse(
         String id,

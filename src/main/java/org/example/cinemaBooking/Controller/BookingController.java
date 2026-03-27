@@ -60,11 +60,12 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}/cancel")
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<Void> cancelBooking(@PathVariable String bookingId) {
-        bookingService.cancelBooking(bookingId);
+    public ApiResponse<BookingResponse> cancelBooking(@PathVariable String bookingId) {
+        var response = bookingService.cancelBooking(bookingId);
         log.info("[BookingController] cancelBooking - Canceled booking with ID: {}", bookingId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse.<BookingResponse>builder()
                 .success(true)
+                .data(response)
                 .message("Booking canceled successfully")
                 .build();
     }

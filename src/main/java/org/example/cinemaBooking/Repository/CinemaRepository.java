@@ -38,9 +38,10 @@ public interface CinemaRepository extends JpaRepository<Cinema, String> {
           AND s.status <> 'CANCELLED'
           AND s.deletedAt IS NULL
     """)
-    List<CinemaMovieResponse> findMoviesByCinemaAndDate(
+    Page<CinemaMovieResponse> findMoviesByCinemaAndDate(
             @Param("cinemaId") String cinemaId,
             @Param("from") LocalDateTime from,
-            @Param("to") LocalDateTime to
+            @Param("to") LocalDateTime to,
+            Pageable pageable
     );
 }
