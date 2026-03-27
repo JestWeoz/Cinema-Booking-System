@@ -1,5 +1,5 @@
 // VNPayCallbackParams.java — map query params từ VNPay redirect/IPN
-package org.example.cinemaBooking.Dto.Request.Payment;
+package org.example.cinemaBooking.DTO.Request.Payment;
 
 public record VNPayCallbackParams(
     String vnp_TmnCode,

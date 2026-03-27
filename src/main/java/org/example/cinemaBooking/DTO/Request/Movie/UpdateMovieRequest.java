@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Movie;
+package org.example.cinemaBooking.DTO.Request.Movie;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

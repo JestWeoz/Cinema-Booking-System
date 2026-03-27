@@ -1,5 +1,5 @@
 // ShowtimeSeatResponse.java
-package org.example.cinemaBooking.Dto.Response.Showtime;
+package org.example.cinemaBooking.DTO.Response.Showtime;
 
 import org.example.cinemaBooking.Shared.enums.SeatStatus;
 import org.example.cinemaBooking.Shared.enums.SeatTypeEnum;

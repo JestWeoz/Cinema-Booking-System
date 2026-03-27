@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Movie;
+package org.example.cinemaBooking.DTO.Request.Movie;
 
 import java.io.Serializable;
 import java.time.LocalDate;

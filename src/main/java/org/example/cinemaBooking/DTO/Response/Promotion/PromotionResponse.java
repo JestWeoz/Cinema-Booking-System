@@ -1,5 +1,5 @@
 
-package org.example.cinemaBooking.Dto.Response.Promotion;
+package org.example.cinemaBooking.DTO.Response.Promotion;
 
 import org.example.cinemaBooking.Shared.enums.DiscountType;
 

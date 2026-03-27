@@ -1,9 +1,9 @@
-package org.example.cinemaBooking.Dto.Response.Auth;
+package org.example.cinemaBooking.DTO.Response.Auth;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Dto.Response.User.UserInfoResponse;
+import org.example.cinemaBooking.DTO.Response.User.UserInfoResponse;
 
 @Data
 @Builder

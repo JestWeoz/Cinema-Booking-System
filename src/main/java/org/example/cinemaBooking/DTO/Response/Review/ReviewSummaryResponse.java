@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Review;
+package org.example.cinemaBooking.DTO.Response.Review;
 
 import java.time.LocalDateTime;
 

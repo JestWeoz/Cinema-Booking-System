@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Response.Payment.PaymentResponse;
+import org.example.cinemaBooking.DTO.Response.Payment.PaymentResponse;
 import org.example.cinemaBooking.Entity.Payment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

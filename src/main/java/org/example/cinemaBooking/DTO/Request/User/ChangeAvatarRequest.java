@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.User;
+package org.example.cinemaBooking.DTO.Request.User;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

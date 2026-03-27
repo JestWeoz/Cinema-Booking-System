@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Response.Seat.SeatTypeResponse;
+import org.example.cinemaBooking.DTO.Response.Seat.SeatTypeResponse;
 import org.example.cinemaBooking.Entity.SeatType;
 
 import org.mapstruct.Mapper;

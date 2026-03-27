@@ -2,7 +2,6 @@ package org.example.cinemaBooking.Repository;
 
 
 
-import org.example.cinemaBooking.Dto.Response.Room.RoomBasicResponse;
 import org.example.cinemaBooking.Entity.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

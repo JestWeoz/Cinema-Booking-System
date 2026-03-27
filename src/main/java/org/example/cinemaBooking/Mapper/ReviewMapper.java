@@ -1,8 +1,8 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.Movie.ReviewRequest;
-import org.example.cinemaBooking.Dto.Response.Review.ReviewResponse;
-import org.example.cinemaBooking.Dto.Response.Review.ReviewSummaryResponse;
+import org.example.cinemaBooking.DTO.Request.Movie.ReviewRequest;
+import org.example.cinemaBooking.DTO.Response.Review.ReviewResponse;
+import org.example.cinemaBooking.DTO.Response.Review.ReviewSummaryResponse;
 
 import org.example.cinemaBooking.Entity.Review;
 import org.mapstruct.*;

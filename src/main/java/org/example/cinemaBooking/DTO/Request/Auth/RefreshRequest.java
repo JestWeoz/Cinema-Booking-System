@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Auth;
+package org.example.cinemaBooking.DTO.Request.Auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

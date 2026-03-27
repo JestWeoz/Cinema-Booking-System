@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Room;
+package org.example.cinemaBooking.DTO.Request.Room;
 
 import org.example.cinemaBooking.Shared.enums.RoomType;
 

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Cinema;
+package org.example.cinemaBooking.DTO.Request.Cinema;
 
 public record UpdateCinemaRequest(
         String name,

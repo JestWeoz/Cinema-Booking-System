@@ -3,7 +3,7 @@ package org.example.cinemaBooking.Controller;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Response.Notification.NotificationResponse;
+import org.example.cinemaBooking.DTO.Response.Notification.NotificationResponse;
 import org.example.cinemaBooking.Service.Notification.NotificationService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;

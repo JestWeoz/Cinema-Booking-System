@@ -4,21 +4,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.Cinema.CreateCinemaRequest;
-import org.example.cinemaBooking.Dto.Request.Cinema.UpdateCinemaRequest;
-import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
-import org.example.cinemaBooking.Dto.Response.Cinema.CinemaResponse;
-import org.example.cinemaBooking.Dto.Response.Room.RoomBasicResponse;
+import org.example.cinemaBooking.DTO.Request.Cinema.CreateCinemaRequest;
+import org.example.cinemaBooking.DTO.Request.Cinema.UpdateCinemaRequest;
+import org.example.cinemaBooking.DTO.Response.Cinema.CinemaMovieResponse;
+import org.example.cinemaBooking.DTO.Response.Cinema.CinemaResponse;
+import org.example.cinemaBooking.DTO.Response.Room.RoomBasicResponse;
 import org.example.cinemaBooking.Service.Cinema.CinemaService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

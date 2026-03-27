@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Combo;
+package org.example.cinemaBooking.DTO.Request.Combo;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

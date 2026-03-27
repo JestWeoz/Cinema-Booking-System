@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Cinema;
+package org.example.cinemaBooking.DTO.Response.Cinema;
 
 import org.example.cinemaBooking.Shared.enums.Language;
 

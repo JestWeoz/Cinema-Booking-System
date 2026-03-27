@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Response.Seat.SeatTypeResponse;
+import org.example.cinemaBooking.DTO.Response.Seat.SeatTypeResponse;
 import org.example.cinemaBooking.Service.Seat.SeatTypeService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.User;
+package org.example.cinemaBooking.DTO.Response.User;
 
 import lombok.Data;
 

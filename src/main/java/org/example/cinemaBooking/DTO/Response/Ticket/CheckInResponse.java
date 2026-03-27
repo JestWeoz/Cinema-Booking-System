@@ -1,5 +1,5 @@
 // CheckInResponse.java
-package org.example.cinemaBooking.Dto.Response.Ticket;
+package org.example.cinemaBooking.DTO.Response.Ticket;
 
 import org.example.cinemaBooking.Shared.enums.TicketStatus;
 

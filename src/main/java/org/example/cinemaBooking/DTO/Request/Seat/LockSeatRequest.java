@@ -1,5 +1,5 @@
 // LockSeatRequest.java
-package org.example.cinemaBooking.Dto.Request.Seat;
+package org.example.cinemaBooking.DTO.Request.Seat;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

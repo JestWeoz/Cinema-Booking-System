@@ -1,7 +1,7 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.Seat.UpdateSeatRequest;
-import org.example.cinemaBooking.Dto.Response.Seat.SeatResponse;
+import org.example.cinemaBooking.DTO.Request.Seat.UpdateSeatRequest;
+import org.example.cinemaBooking.DTO.Response.Seat.SeatResponse;
 import org.example.cinemaBooking.Entity.Seat;
 
 import org.mapstruct.*;

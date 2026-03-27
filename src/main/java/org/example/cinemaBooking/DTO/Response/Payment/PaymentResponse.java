@@ -1,5 +1,5 @@
 // PaymentResponse.java
-package org.example.cinemaBooking.Dto.Response.Payment;
+package org.example.cinemaBooking.DTO.Response.Payment;
 
 import org.example.cinemaBooking.Shared.enums.PaymentMethod;
 import org.example.cinemaBooking.Shared.enums.PaymentStatus;

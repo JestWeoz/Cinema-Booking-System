@@ -3,12 +3,12 @@ package org.example.cinemaBooking.Service.Showtime;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cinemaBooking.Dto.Request.Showtime.CreateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.ShowtimeFilterRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.UpdateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeDetailResponse;
+import org.example.cinemaBooking.DTO.Request.Showtime.CreateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.ShowtimeFilterRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.UpdateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
 
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSummaryResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Entity.*;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;

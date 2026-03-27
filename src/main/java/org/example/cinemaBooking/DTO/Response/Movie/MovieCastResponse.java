@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Movie;
+package org.example.cinemaBooking.DTO.Response.Movie;
 
 import org.example.cinemaBooking.Shared.enums.MovieRole;
 

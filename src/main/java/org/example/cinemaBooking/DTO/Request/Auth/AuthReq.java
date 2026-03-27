@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Auth;
+package org.example.cinemaBooking.DTO.Request.Auth;
 
 public class AuthReq {
 }

@@ -1,10 +1,10 @@
 package org.example.cinemaBooking.Mapper;
 
-import org.example.cinemaBooking.Dto.Request.Showtime.CreateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Request.Showtime.UpdateShowtimeRequest;
-import org.example.cinemaBooking.Dto.Response.Booking.BookingResponse;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeDetailResponse;
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSummaryResponse;
+import org.example.cinemaBooking.DTO.Request.Showtime.CreateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.UpdateShowtimeRequest;
+import org.example.cinemaBooking.DTO.Response.Booking.BookingResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Entity.Showtime;
 
 import org.mapstruct.*;

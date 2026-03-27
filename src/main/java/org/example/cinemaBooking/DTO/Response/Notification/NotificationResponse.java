@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Notification;
+package org.example.cinemaBooking.DTO.Response.Notification;
 
 import org.example.cinemaBooking.Shared.enums.Type;
 

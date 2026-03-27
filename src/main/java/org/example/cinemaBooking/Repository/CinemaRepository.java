@@ -1,6 +1,6 @@
 package org.example.cinemaBooking.Repository;
 
-import org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse;
+import org.example.cinemaBooking.DTO.Response.Cinema.CinemaMovieResponse;
 import org.example.cinemaBooking.Entity.Cinema;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public interface CinemaRepository extends JpaRepository<Cinema, String> {
     Page<Cinema> findAllByDeletedFalse(Pageable pageable);
 
     @Query("""
-        SELECT DISTINCT new org.example.cinemaBooking.Dto.Response.Cinema.CinemaMovieResponse(
+        SELECT DISTINCT new org.example.cinemaBooking.DTO.Response.Cinema.CinemaMovieResponse(
             s.movie.id,
             s.movie.title,
             s.movie.posterUrl,

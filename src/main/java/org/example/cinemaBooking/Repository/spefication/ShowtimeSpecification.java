@@ -1,7 +1,7 @@
 package org.example.cinemaBooking.Repository.spefication;
 
 import jakarta.persistence.criteria.*;
-import org.example.cinemaBooking.Dto.Request.Showtime.ShowtimeFilterRequest;
+import org.example.cinemaBooking.DTO.Request.Showtime.ShowtimeFilterRequest;
 import org.example.cinemaBooking.Entity.*;
 
 import org.springframework.data.jpa.domain.Specification;

@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Showtime;
+package org.example.cinemaBooking.DTO.Request.Showtime;
 
 import jakarta.validation.constraints.*;
 import org.example.cinemaBooking.Shared.enums.Language;

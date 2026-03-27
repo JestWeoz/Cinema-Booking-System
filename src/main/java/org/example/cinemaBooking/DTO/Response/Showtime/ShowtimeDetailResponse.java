@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Showtime;
+package org.example.cinemaBooking.DTO.Response.Showtime;
 
 import org.example.cinemaBooking.Shared.enums.Language;
 import org.example.cinemaBooking.Shared.enums.RoomType;

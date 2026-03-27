@@ -2,7 +2,7 @@
 package org.example.cinemaBooking.Mapper;
 
 
-import org.example.cinemaBooking.Dto.Response.Showtime.ShowtimeSeatResponse;
+import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSeatResponse;
 import org.example.cinemaBooking.Entity.ShowtimeSeat;
 import org.mapstruct.*;
 

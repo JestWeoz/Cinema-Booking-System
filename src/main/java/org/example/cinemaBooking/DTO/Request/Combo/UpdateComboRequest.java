@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Combo;
+package org.example.cinemaBooking.DTO.Request.Combo;
 
 import java.math.BigDecimal;
 import java.util.List;

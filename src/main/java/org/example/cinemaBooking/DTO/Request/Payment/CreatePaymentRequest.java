@@ -1,5 +1,5 @@
 // CreatePaymentRequest.java
-package org.example.cinemaBooking.Dto.Request.Payment;
+package org.example.cinemaBooking.DTO.Request.Payment;
 
 import jakarta.validation.constraints.NotBlank;
 

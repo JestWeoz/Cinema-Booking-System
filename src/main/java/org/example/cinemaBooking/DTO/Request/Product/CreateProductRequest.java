@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Product;
+package org.example.cinemaBooking.DTO.Request.Product;
 
 import jakarta.validation.constraints.*;
 

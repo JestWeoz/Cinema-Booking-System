@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Request.Promotion;
+package org.example.cinemaBooking.DTO.Request.Promotion;
 
 import jakarta.validation.constraints.*;
 import org.example.cinemaBooking.Shared.enums.DiscountType;

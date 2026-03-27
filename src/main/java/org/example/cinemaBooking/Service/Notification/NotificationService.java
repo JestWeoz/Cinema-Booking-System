@@ -3,7 +3,7 @@ package org.example.cinemaBooking.Service.Notification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Dto.Response.Notification.NotificationResponse;
+import org.example.cinemaBooking.DTO.Response.Notification.NotificationResponse;
 import org.example.cinemaBooking.Entity.Booking;
 import org.example.cinemaBooking.Entity.Notification;
 import org.example.cinemaBooking.Entity.UserEntity;

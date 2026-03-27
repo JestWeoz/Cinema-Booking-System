@@ -1,4 +1,4 @@
-package org.example.cinemaBooking.Dto.Response.Booking;
+package org.example.cinemaBooking.DTO.Response.Booking;
 
 import org.example.cinemaBooking.Shared.enums.BookingStatus;
 

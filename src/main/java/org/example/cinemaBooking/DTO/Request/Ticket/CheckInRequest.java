@@ -1,7 +1,5 @@
 // CheckInRequest.java
-package org.example.cinemaBooking.Dto.Request.Ticket;
-
-import jakarta.validation.constraints.NotBlank;
+package org.example.cinemaBooking.DTO.Request.Ticket;
 
 public record CheckInRequest(
         String bookingCode,   // scan QR booking → check-in tất cả ghế

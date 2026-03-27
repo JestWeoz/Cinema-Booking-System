@@ -4,9 +4,9 @@
     import lombok.RequiredArgsConstructor;
     import lombok.experimental.FieldDefaults;
     import lombok.extern.slf4j.Slf4j;
-    import org.example.cinemaBooking.Dto.Request.Product.CreateProductRequest;
-    import org.example.cinemaBooking.Dto.Request.Product.UpdateProductRequest;
-    import org.example.cinemaBooking.Dto.Response.Product.ProductResponse;
+    import org.example.cinemaBooking.DTO.Request.Product.CreateProductRequest;
+    import org.example.cinemaBooking.DTO.Request.Product.UpdateProductRequest;
+    import org.example.cinemaBooking.DTO.Response.Product.ProductResponse;
     import org.example.cinemaBooking.Service.Product.ProductService;
     import org.example.cinemaBooking.Shared.constant.ApiPaths;
     import org.example.cinemaBooking.Shared.response.ApiResponse;
