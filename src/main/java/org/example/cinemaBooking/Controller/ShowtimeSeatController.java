@@ -8,7 +8,7 @@ import org.example.cinemaBooking.DTO.Request.Seat.LockSeatRequest;
 import org.example.cinemaBooking.DTO.Request.Seat.UnlockSeatRequest;
 import org.example.cinemaBooking.DTO.Response.Showtime.SeatMapResponse;
 import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSeatResponse;
-import org.example.cinemaBooking.Service.Showtime.ShowTImeSeatService;
+import org.example.cinemaBooking.Service.Showtime.ShowTimeSeatService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +23,7 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class ShowtimeSeatController {
 
-    ShowTImeSeatService showTImeSeatService;
+    ShowTimeSeatService showTImeSeatService;
 
     @GetMapping
     ApiResponse<SeatMapResponse> getSeatMap(@PathVariable String showtimeId) {

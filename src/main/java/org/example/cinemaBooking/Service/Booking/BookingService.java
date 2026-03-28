@@ -14,7 +14,7 @@ import org.example.cinemaBooking.Mapper.BookingMapper;
 import org.example.cinemaBooking.Repository.*;
 import org.example.cinemaBooking.Service.Notification.NotificationService;
 import org.example.cinemaBooking.Service.Promotion.PromotionService;
-import org.example.cinemaBooking.Service.Showtime.ShowTImeSeatService;
+import org.example.cinemaBooking.Service.Showtime.ShowTimeSeatService;
 import org.example.cinemaBooking.Shared.enums.BookingStatus;
 import org.example.cinemaBooking.Shared.enums.ItemType;
 import org.example.cinemaBooking.Shared.enums.SeatStatus;
@@ -43,7 +43,7 @@ public class BookingService {
     ComboRepository comboRepository;
     BookingMapper bookingMapper;
     UserRepository userRepository;
-    ShowTImeSeatService showtimeSeatService;
+    ShowTimeSeatService showtimeSeatService;
     PromotionService promotionService;
     NotificationService notificationService;
     private static final int BOOKING_EXPIRY_MINUTES = 10;
