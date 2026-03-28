@@ -19,5 +19,5 @@ public record ShowtimeSeatResponse(
         BigDecimal finalPrice,        // basePrice + priceModifier
         SeatStatus status,
         LocalDateTime lockedUntil,    // null nếu không bị lock
-        Long lockedByUser             // null nếu không bị lock
+        String lockedByUser             // null nếu không bị lock
 ) {}
