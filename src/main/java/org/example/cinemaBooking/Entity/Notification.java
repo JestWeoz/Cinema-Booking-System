@@ -24,7 +24,7 @@ public class Notification extends SoftDeletableEntity {
     @Builder.Default
     Type type = Type.BOOKING;
 
-    @Column(nullable = false)
+    @Column(name = "`read`", nullable = false)
     @Builder.Default
     boolean read = false;
 

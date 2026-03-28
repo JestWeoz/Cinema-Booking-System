@@ -44,10 +44,9 @@ public class SecurityConfig {
             "/api/v1/movies/search/**",
             "/api/v1/movies/*",
             // Showtimes
-            "/api/v1/showtimes",
             "/api/v1/showtimes/*",
-            "/api/v1/showtimes/by-movie/*",
-            "/api/v1/showtimes/by-cinema/*",
+            "/api/v1/showtimes/by-movie/**",
+            "/api/v1/showtimes/by-cinema/**",
             // Seat map (public) - exclude the "my-locked-seats" which requires auth
             "/api/v1/showtimes/*/seats",
             // Promotions

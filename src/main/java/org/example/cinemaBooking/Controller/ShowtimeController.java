@@ -11,6 +11,8 @@ import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
 import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
 import org.example.cinemaBooking.Service.Showtime.ShowtimeService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
+import org.example.cinemaBooking.Shared.enums.Language;
+import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -86,12 +88,37 @@ public class ShowtimeController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF')")
     @GetMapping
     public ApiResponse<PageResponse<ShowtimeSummaryResponse>> getShowtimes(
-            @Valid ShowtimeFilterRequest request
-            ) {
-        var response = showtimeService.getShowtime(request);
-        log.info("[SHOWTIME_CONTROLLER] Retrieved showtimes with filters: cinemaId={}, movieId={}, date={}", request.cinemaId(), request.movieId(), request.date());
+            @RequestParam(required = false) String movieId,
+            @RequestParam(required = false) String cinemaId,
+            @RequestParam(required = false) String roomId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) Language language,
+            @RequestParam(required = false) ShowTimeStatus status,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        ShowtimeFilterRequest request = new ShowtimeFilterRequest(
+                movieId,
+                cinemaId,
+                roomId,
+                date,
+                language,
+                status,
+                keyword,
+                page,
+                size
+        );
+
+        PageResponse<ShowtimeSummaryResponse> response = showtimeService.getShowtime(request);
+
+        log.info("Retrieved showtimes - movieId: {}, cinemaId: {}, roomId: {}, date: {}, " +
+                        "language: {}, status: {}, keyword: {}, page: {}, size: {}",
+                movieId, cinemaId, roomId, date, language, status, keyword, page, size);
+
         return ApiResponse.<PageResponse<ShowtimeSummaryResponse>>builder()
                 .success(true)
                 .message("Showtimes retrieved successfully")
@@ -106,7 +133,7 @@ public class ShowtimeController {
     @GetMapping("/by-movie/{movieId}")
     public ApiResponse<List<ShowtimeSummaryResponse>> getShowtimesByMovieAndDate(
             @PathVariable String movieId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         var response = showtimeService.getShowtimeByMovieAndDate(movieId, date);
         log.info("[SHOWTIME_CONTROLLER] Retrieved showtimes for movieId={} on date={}", movieId, date);
         return ApiResponse.<List<ShowtimeSummaryResponse>>builder()
@@ -123,7 +150,7 @@ public class ShowtimeController {
     @GetMapping("/by-cinema/{cinemaId}")
     public ApiResponse<List<ShowtimeSummaryResponse>> getShowtimesByCinemaAndDate(
             @PathVariable String cinemaId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         var response = showtimeService.getShowtimesByCinemaAndDate(cinemaId, date);
         log.info("[SHOWTIME_CONTROLLER] Retrieved showtimes for cinemaId={} on date={}", cinemaId, date);
         return ApiResponse.<List<ShowtimeSummaryResponse>>builder()

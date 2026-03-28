@@ -9,60 +9,92 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * JPA Specification cho dynamic filter suất chiếu.
- * Dùng: showtimeRepository.findAll(ShowtimeSpecification.of(filter), pageable)
- */
 public final class ShowtimeSpecification {
+
+    // Constants for entity field names
+    private static final String FIELD_MOVIE = "movie";
+    private static final String FIELD_ROOM = "room";
+    private static final String FIELD_CINEMA = "cinema";
+    private static final String FIELD_ID = "id";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_DELETED_AT = "deletedAt";
+    private static final String FIELD_START_TIME = "startTime";
+    private static final String FIELD_LANGUAGE = "language";
+    private static final String FIELD_STATUS = "status";
 
     private ShowtimeSpecification() {}
 
     public static Specification<Showtime> of(ShowtimeFilterRequest f) {
         return (root, query, cb) -> {
-
-            // Eager join để tránh N+1 khi fetch list
+            // Setup fetches - always use fetch for relationships
             if (Long.class != query.getResultType()) {
-                root.fetch("movie",  JoinType.LEFT);
-                Fetch<Showtime, Room> roomFetch = root.fetch("room", JoinType.LEFT);
-                roomFetch.fetch("cinema", JoinType.LEFT);
+                Fetch<Showtime, Movie> movieFetch = root.fetch(FIELD_MOVIE, JoinType.LEFT);
+                Fetch<Showtime, Room> roomFetch = root.fetch(FIELD_ROOM, JoinType.LEFT);
+                roomFetch.fetch(FIELD_CINEMA, JoinType.LEFT);
             }
 
             List<Predicate> predicates = new ArrayList<>();
 
             // Chỉ lấy bản ghi chưa soft-delete
-            predicates.add(cb.isNull(root.get("deletedAt")));
+            predicates.add(cb.isNull(root.get(FIELD_DELETED_AT)));
 
-            if (f.movieId() != null) {
-                predicates.add(cb.equal(root.get("movie").get("id"), f.movieId()));
+            // Movie filter
+            if (isNotBlank(f.movieId())) {
+                predicates.add(cb.equal(root.get(FIELD_MOVIE).get(FIELD_ID), f.movieId()));
             }
 
-            if (f.roomId() != null) {
-                predicates.add(cb.equal(root.get("room").get("id"), f.roomId()));
+            // Room filter
+            if (isNotBlank(f.roomId())) {
+                predicates.add(cb.equal(root.get(FIELD_ROOM).get(FIELD_ID), f.roomId()));
             }
 
-            if (f.cinemaId() != null) {
-                Join<Showtime, Room>   roomJoin   = root.join("room",   JoinType.LEFT);
-                Join<Room, Cinema>     cinemaJoin = roomJoin.join("cinema", JoinType.LEFT);
-                predicates.add(cb.equal(cinemaJoin.get("id"), f.cinemaId()));
+            // Cinema filter - use get instead of join since we already fetched
+            if (isNotBlank(f.cinemaId())) {
+                predicates.add(cb.equal(root.get(FIELD_ROOM).get(FIELD_CINEMA).get(FIELD_ID), f.cinemaId()));
             }
 
+            // Date filter
             if (f.date() != null) {
                 LocalDateTime from = f.date().atStartOfDay();
-                LocalDateTime to   = from.plusDays(1);
-                predicates.add(cb.between(root.get("startTime"), from, to));
+                LocalDateTime to = from.plusDays(1);
+                predicates.add(cb.between(root.get(FIELD_START_TIME), from, to));
             }
 
+            // Language filter
             if (f.language() != null) {
-                predicates.add(cb.equal(root.get("language"), f.language()));
+                predicates.add(cb.equal(root.get(FIELD_LANGUAGE), f.language()));
             }
 
+            // Status filter
             if (f.status() != null) {
-                predicates.add(cb.equal(root.get("status"), f.status()));
+                predicates.add(cb.equal(root.get(FIELD_STATUS), f.status()));
             }
 
-            query.orderBy(cb.asc(root.get("startTime")));
+            // Keyword search
+            if (isNotBlank(f.keyword())) {
+                String searchPattern = "%" + f.keyword().toLowerCase() + "%";
+
+                Predicate moviePredicate = cb.like(
+                        cb.lower(root.get(FIELD_MOVIE).get(FIELD_NAME)),
+                        searchPattern
+                );
+
+                Predicate cinemaPredicate = cb.like(
+                        cb.lower(root.get(FIELD_ROOM).get(FIELD_CINEMA).get(FIELD_NAME)),
+                        searchPattern
+                );
+
+                predicates.add(cb.or(moviePredicate, cinemaPredicate));
+            }
+
+            // Order by
+            query.orderBy(cb.asc(root.get(FIELD_START_TIME)));
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private static boolean isNotBlank(String str) {
+        return str != null && !str.isBlank();
     }
 }
