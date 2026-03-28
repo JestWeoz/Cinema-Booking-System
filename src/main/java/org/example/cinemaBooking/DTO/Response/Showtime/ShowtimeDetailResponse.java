@@ -16,33 +16,34 @@ public record ShowtimeDetailResponse(
         String id,
 
         // ── Movie ──────────────────────────────────────────────────
-        String   movieId,
+        String movieId,
         String movieTitle,
         String posterUrl,
-        int    durationMinutes,
-        String genre,
+        int durationMinutes,
+        String category,        // e.g. "Action, Adventure"
         String rating,          // e.g. "PG-13", "T18"
 
         // ── Room ───────────────────────────────────────────────────
-        String    roomId,
-        String   roomName,
+        String roomId,
+        String roomName,
         RoomType roomType,
 
         // ── Cinema ─────────────────────────────────────────────────
-        Long   cinemaId,
+        String cinemaId,
         String cinemaName,
         String cinemaAddress,
 
         // ── Showtime ───────────────────────────────────────────────
-        LocalDateTime  startTime,
-        LocalDateTime  endTime,
-        BigDecimal     basePrice,
-        Language       language,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        BigDecimal basePrice,
+        Language language,
         ShowTimeStatus status,
-        int            availableSeats,
+        int availableSeats,
 
         // ── Computed flags ─────────────────────────────────────────
         boolean bookable,
         boolean ongoing,
         boolean finished
-) {}
+) {
+}

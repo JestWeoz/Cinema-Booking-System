@@ -12,6 +12,7 @@ import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.BookingMapper;
 import org.example.cinemaBooking.Repository.*;
+import org.example.cinemaBooking.Service.Notification.NotificationService;
 import org.example.cinemaBooking.Service.Promotion.PromotionService;
 import org.example.cinemaBooking.Service.Showtime.ShowTImeSeatService;
 import org.example.cinemaBooking.Shared.enums.BookingStatus;
@@ -44,7 +45,7 @@ public class BookingService {
     UserRepository userRepository;
     ShowTImeSeatService showtimeSeatService;
     PromotionService promotionService;
-
+    NotificationService notificationService;
     private static final int BOOKING_EXPIRY_MINUTES = 10;
 
     @Transactional
@@ -188,6 +189,32 @@ public class BookingService {
 
         bookingRepository.save(booking);
         log.info("Booking confirmed: code={}", booking.getBookingCode());
+
+
+        if (booking.getPromotion() != null) {
+            try {
+                promotionService.applyPromotion(
+                        booking.getPromotion().getId(),
+                        booking.getUser().getId()
+                );
+            } catch (AppException e) {
+                if (e.getErrorCode() == ErrorCode.PROMOTION_OUT_OF_STOCK) {
+                    // Promotion hết slot sau khi user đã chờ thanh toán
+                    // → vẫn confirm booking nhưng KHÔNG apply discount
+                    // → hoặc tuỳ business: reject payment
+                    log.warn("Promotion out of stock at confirm time: bookingCode={}",
+                            booking.getBookingCode());
+
+                    // Điều chỉnh lại giá — bỏ discount
+                    booking.setDiscountAmount(BigDecimal.ZERO);
+                    booking.setFinalPrice(booking.getTotalPrice());
+                    booking.setPromotion(null);
+
+                } else {
+                    throw e;
+                }
+            }
+        }
     }
 
 

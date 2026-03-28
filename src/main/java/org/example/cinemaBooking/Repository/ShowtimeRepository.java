@@ -19,8 +19,9 @@ public interface ShowtimeRepository
     @Query("""
             SELECT s FROM Showtime s
               JOIN FETCH s.movie m
+              LEFT JOIN FETCH m.categories c
               JOIN FETCH s.room  r
-              JOIN FETCH r.cinema c
+              JOIN FETCH r.cinema cin
             WHERE s.id = :id
               AND s.deletedAt IS NULL
             """)

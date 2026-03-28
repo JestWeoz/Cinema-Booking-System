@@ -15,23 +15,24 @@ public record ShowtimeSummaryResponse(
         String id,
 
         // ── Movie info ──────────────────────────────────────────────
-        Long   movieId,
+        String movieId,
         String movieTitle,
         String posterUrl,
-        int    durationMinutes,
+        int durationMinutes,
 
         // ── Room / Cinema info ──────────────────────────────────────
-        String   roomId,
+        String roomId,
         String roomName,
-        String   cinemaId,
+        String cinemaId,
         String cinemaName,
 
         // ── Showtime info ───────────────────────────────────────────
         LocalDateTime startTime,
         LocalDateTime endTime,      // computed via mapper expression
-        BigDecimal    basePrice,
-        Language      language,
+        BigDecimal basePrice,
+        Language language,
         ShowTimeStatus status,
-        int           availableSeats,
-        boolean       bookable       // computed
-) {}
+        int availableSeats,
+        boolean bookable       // computed
+) {
+}

@@ -77,7 +77,7 @@ public class Showtime extends SoftDeletableEntity {
 
     public boolean isBookable() {
         return status == ShowTimeStatus.SCHEDULED
-                && LocalDateTime.now().isBefore(startTime.minusMinutes(15));
+                && LocalDateTime.now().isBefore(startTime.minusMinutes(5));
     }
 
     public boolean isCancelled() {

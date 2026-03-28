@@ -1,6 +1,7 @@
 package org.example.cinemaBooking.DTO.Request.Showtime;
 
 import jakarta.validation.constraints.*;
+import org.example.cinemaBooking.Shared.contraints.EnumValidator;
 import org.example.cinemaBooking.Shared.enums.Language;
 import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 
@@ -16,15 +17,17 @@ public record UpdateShowtimeRequest(
         // Cho phép đổi phòng / giờ khi suất vẫn còn SCHEDULED
         String roomId,
 
-        @Future(message = "startTime must be in the future")
+        @Future(message = "START_TIME_MUST_BE_IN_FUTURE")
         LocalDateTime startTime,
 
-        @DecimalMin(value = "0.0", inclusive = false, message = "basePrice must be > 0")
+        @DecimalMin(value = "0.0", inclusive = false, message = "BASE_PRICE_MUST_BE_POSITIVE")
         @Digits(integer = 8, fraction = 2)
         BigDecimal basePrice,
 
-        Language language,
+        @EnumValidator(enumClass = Language.class, message = "LANGUAGE_INVALID")
+        String language,
 
         // Admin có thể chủ động set CANCELLED
-        ShowTimeStatus status
+        @EnumValidator(enumClass = ShowTimeStatus.class, message = "SHOWTIME_STATUS_INVALID")
+        String status
 ) {}

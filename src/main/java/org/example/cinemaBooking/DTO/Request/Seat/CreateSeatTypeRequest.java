@@ -2,7 +2,7 @@ package org.example.cinemaBooking.DTO.Request.Seat;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.cinemaBooking.Shared.utils.SeatTypeEnum;
+import org.example.cinemaBooking.Shared.enums.SeatTypeEnum;
 
 import java.math.BigDecimal;
 

@@ -1,6 +1,7 @@
 package org.example.cinemaBooking.DTO.Request.Showtime;
 
 import jakarta.validation.constraints.*;
+import org.example.cinemaBooking.Shared.contraints.EnumValidator;
 import org.example.cinemaBooking.Shared.enums.Language;
 
 import java.math.BigDecimal;
@@ -28,5 +29,6 @@ public record CreateShowtimeRequest(
         BigDecimal basePrice,
 
         @NotNull(message = "LANGUAGE_REQUIRED")
-        Language language
+        @EnumValidator(enumClass = Language.class, message = "LANGUAGE_INVALID")
+        String language
 ) {}
