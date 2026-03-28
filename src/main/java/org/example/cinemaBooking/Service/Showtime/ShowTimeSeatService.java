@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
-public class ShowTImeSeatService {
+public class ShowTimeSeatService {
     ShowtimeSeatRepository showtimeSeatRepository;
     ShowtimeRepository showtimeRepository;
     UserRepository userRepository;
@@ -90,7 +90,6 @@ public class ShowTImeSeatService {
     public List<ShowtimeSeatResponse> lockSeats(String showtimeId, LockSeatRequest request){
         String userId = getCurrentUserId().getId();
         Showtime showtime = getShowtimeOrThrow(showtimeId);
-
         if(!showtime.isBookable()){
             throw new AppException(ErrorCode.SHOWTIME_STATE_INVALID);
         }
