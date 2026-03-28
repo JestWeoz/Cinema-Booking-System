@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,8 +91,12 @@ public class ShowtimeService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ShowtimeSummaryResponse> getShowtimes(ShowtimeFilterRequest request){
-        Pageable pageable = PageRequest.of(request.page(), request.size());
+    public PageResponse<ShowtimeSummaryResponse> getShowtime(ShowtimeFilterRequest request){
+        int pageNumber = 0;
+        if(request.page() > 0) {
+            pageNumber = request.page() - 1; // client gửi page=1 thì backend sẽ query page=0
+        }
+        Pageable pageable = PageRequest.of(pageNumber, request.size());
 
         Page<Showtime> showtimePage = showtimeRepository.findAll(ShowtimeSpecification.of(request), pageable);
 

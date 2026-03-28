@@ -5,11 +5,14 @@ import org.example.cinemaBooking.DTO.Request.Showtime.UpdateShowtimeRequest;
 import org.example.cinemaBooking.DTO.Response.Booking.BookingResponse;
 import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeDetailResponse;
 import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSummaryResponse;
+import org.example.cinemaBooking.Entity.Category;
 import org.example.cinemaBooking.Entity.Showtime;
 
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(
         componentModel = "spring",
@@ -38,6 +41,8 @@ public interface ShowtimeMapper {
     @Mapping(source = "movie.title",       target = "movieTitle")
     @Mapping(source = "movie.posterUrl",   target = "posterUrl")
     @Mapping(source = "movie.duration",    target = "durationMinutes")
+    @Mapping(source = "movie.categories",       target = "category", qualifiedByName = "categoriesToCommaSeparated")
+    @Mapping(source = "movie.ageRating",       target = "rating")
     @Mapping(source = "room.id",           target = "roomId")
     @Mapping(source = "room.name",         target = "roomName")
     @Mapping(source = "room.roomType",     target = "roomType")
@@ -50,7 +55,6 @@ public interface ShowtimeMapper {
     @Mapping(target = "finished",          expression = "java(showtime.isFinished())")
     ShowtimeDetailResponse toDetailResponse(Showtime showtime);
 
-    // ── CreateRequest → Entity ────────────────────────────────────────
     // movie và room sẽ được set thủ công trong service (cần fetch từ DB)
     @Mapping(target = "movie",         ignore = true)
     @Mapping(target = "room",          ignore = true)
@@ -74,4 +78,15 @@ public interface ShowtimeMapper {
     @Mapping(target = "cinemaName", source = "room.cinema.name")
     @Mapping(target = "startTime", source = "startTime")
     BookingResponse.ShowtimeInfo toShowtimeInfo(Showtime showtime);
+
+
+    @Named("categoriesToCommaSeparated")
+    default String categoriesToCommaSeparated(Set<Category> categories) {  // Đổi từ List thành Set
+        if (categories == null || categories.isEmpty()) {
+            return null;
+        }
+        return categories.stream()
+                .map(Category::getName)
+                .collect(Collectors.joining(", "));
+    }
 }

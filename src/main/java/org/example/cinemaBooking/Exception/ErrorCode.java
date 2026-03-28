@@ -154,7 +154,10 @@ public enum ErrorCode {
     SEAT_ALREADY_EXISTS(1141, "Seat already exists in the same room with the same row and number", HttpStatus.BAD_REQUEST),
     SEAT_TYPE_NOT_FOUND(1142, "Seat type not found", HttpStatus.NOT_FOUND),
     CINEMA_ID_REQUIRED(1143, "Cinema ID is required", HttpStatus.BAD_REQUEST),
-    BOOKING_CANCELLED(1144, "Booking is cancelled", HttpStatus.BAD_REQUEST),;
+    BOOKING_CANCELLED(1144, "Booking is cancelled", HttpStatus.BAD_REQUEST),
+    LANGUAGE_INVALID(1145, "Language must be in ORIGINAL, DUBBED, SUBTITLED", HttpStatus.BAD_REQUEST),
+    SHOWTIME_STATUS_INVALID(1146, "Showtime status must be in SCHEDULED, ONGOING, FINISHED, CANCELLED", HttpStatus.BAD_REQUEST)
+    ;
 
 
      int code;

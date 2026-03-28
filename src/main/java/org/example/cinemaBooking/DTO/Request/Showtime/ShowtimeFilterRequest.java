@@ -22,6 +22,7 @@ public record ShowtimeFilterRequest(
 
         Language language,
         ShowTimeStatus status,
+        String keyword,
 
         @Min(0) int page,
         @Min(1) int size        // mặc định sẽ được set trong service nếu = 0
