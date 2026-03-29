@@ -4,6 +4,7 @@ import org.example.cinemaBooking.Entity.Showtime;
 import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -108,6 +109,16 @@ public interface ShowtimeRepository
             """)
     List<Showtime> findAllOngoing();
 
-    // ── Page với dynamic filter (qua Specification) ───────────────────
-    // Kế thừa từ JpaSpecificationExecutor: findAll(spec, pageable)
+    @Modifying
+    @Query("""
+            UPDATE Showtime s
+            SET s.availableSeats = (
+                SELECT COUNT(ss) FROM ShowtimeSeat ss
+                WHERE ss.showtime.id = :showtimeId
+                  AND ss.status = org.example.cinemaBooking.Shared.enums.SeatStatus.AVAILABLE
+                  AND ss.deletedAt IS NULL
+            )
+            WHERE s.id = :showtimeId
+            """)
+    void syncAvailableSeats(@Param("showtimeId") String showtimeId);
 }

@@ -1,3 +1,6 @@
+// ─────────────────────────────────────────────────────────────────
+// PaymentRepository.java
+// ─────────────────────────────────────────────────────────────────
 package org.example.cinemaBooking.Repository;
 
 import org.example.cinemaBooking.Entity.Payment;
@@ -9,9 +12,32 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-
 public interface PaymentRepository extends JpaRepository<Payment, String> {
-    Optional<Payment> findByBookingId(String bookingId);
+
+    // FIX P7: thêm JOIN FETCH để tránh LazyInitializationException
+    @Query("""
+        SELECT p FROM Payment p
+        JOIN FETCH p.booking b
+        WHERE b.id = :bookingId
+          AND p.deletedAt IS NULL
+        """)
+    Optional<Payment> findByBookingId(@Param("bookingId") String bookingId);
+
+    /**
+     * Dùng cho refund — cần JOIN FETCH đầy đủ để cancel booking + release ghế
+     */
+    @Query("""
+        SELECT p FROM Payment p
+        JOIN FETCH p.booking b
+        JOIN FETCH b.showtime st
+        JOIN FETCH st.movie
+        LEFT JOIN FETCH b.tickets t
+        LEFT JOIN FETCH t.seat s
+        LEFT JOIN FETCH s.seatType
+        WHERE b.id = :bookingId
+          AND p.deletedAt IS NULL
+        """)
+    Optional<Payment> findByBookingIdWithDetails(@Param("bookingId") String bookingId);
 
     Optional<Payment> findByTransactionId(String transactionId);
 

@@ -156,7 +156,8 @@ public enum ErrorCode {
     CINEMA_ID_REQUIRED(1143, "Cinema ID is required", HttpStatus.BAD_REQUEST),
     BOOKING_CANCELLED(1144, "Booking is cancelled", HttpStatus.BAD_REQUEST),
     LANGUAGE_INVALID(1145, "Language must be in ORIGINAL, DUBBED, SUBTITLED", HttpStatus.BAD_REQUEST),
-    SHOWTIME_STATUS_INVALID(1146, "Showtime status must be in SCHEDULED, ONGOING, FINISHED, CANCELLED", HttpStatus.BAD_REQUEST)
+    SHOWTIME_STATUS_INVALID(1146, "Showtime status must be in SCHEDULED, ONGOING, FINISHED, CANCELLED", HttpStatus.BAD_REQUEST),
+    SEAT_LOCK_EXPIRED(1147, "Seat lock expired", HttpStatus.BAD_REQUEST),
     ;
 
 

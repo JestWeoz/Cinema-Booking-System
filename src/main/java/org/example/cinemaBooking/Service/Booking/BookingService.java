@@ -1,18 +1,22 @@
 package org.example.cinemaBooking.Service.Booking;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.DTO.Request.Booking.CreateBookingRequest;
+import org.example.cinemaBooking.DTO.Request.Payment.CreatePaymentRequest;
 import org.example.cinemaBooking.DTO.Response.Booking.BookingResponse;
 import org.example.cinemaBooking.DTO.Response.Booking.BookingSummaryResponse;
+import org.example.cinemaBooking.DTO.Response.Payment.PaymentResponse;
 import org.example.cinemaBooking.Entity.*;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.BookingMapper;
 import org.example.cinemaBooking.Repository.*;
 import org.example.cinemaBooking.Service.Notification.NotificationService;
+import org.example.cinemaBooking.Service.Payment.PaymentService;
 import org.example.cinemaBooking.Service.Promotion.PromotionService;
 import org.example.cinemaBooking.Service.Showtime.ShowTimeSeatService;
 import org.example.cinemaBooking.Shared.enums.BookingStatus;
@@ -34,20 +38,37 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingService {
-    BookingRepository bookingRepository;
-    TicketRepository ticketRepository;
-    ShowtimeSeatRepository showtimeSeatRepository;
-    ShowtimeRepository showtimeRepository;
-    PromotionRepository promotionRepository;
-    ProductRepository productRepository;
-    ComboRepository comboRepository;
-    BookingMapper bookingMapper;
-    UserRepository userRepository;
-    ShowTimeSeatService showtimeSeatService;
-    PromotionService promotionService;
-    NotificationService notificationService;
-    private static final int BOOKING_EXPIRY_MINUTES = 10;
 
+    BookingRepository     bookingRepository;
+    TicketRepository      ticketRepository;
+    ShowtimeSeatRepository showtimeSeatRepository;
+    ShowtimeRepository    showtimeRepository;
+    PromotionRepository   promotionRepository;
+    ProductRepository     productRepository;
+    ComboRepository       comboRepository;
+    BookingMapper         bookingMapper;
+    UserRepository        userRepository;
+    ShowTimeSeatService   showtimeSeatService;
+    PromotionService      promotionService;
+    NotificationService   notificationService;
+    // Thời gian user có để hoàn tất payment — phải >= LOCK_DURATION_MINUTES
+    static final int BOOKING_EXPIRY_MINUTES = 10;
+
+    // ─────────────────────────────────────────────────────────────────
+    // CREATE
+    // ─────────────────────────────────────────────────────────────────
+
+    /**
+     * Tạo booking PENDING.
+     *
+     * Flow A:
+     *   1. Validate ghế LOCKED bởi đúng user, lockedUntil còn hạn   (FIX Bug-7)
+     *   2. Tính giá vé + đồ ăn + promotion
+     *   3. Lưu Booking + Ticket (status = PENDING_PAYMENT)           (FIX Bug-2)
+     *   4. KHÔNG chuyển ghế → ghế vẫn LOCKED cho đến khi payment IPN confirm
+     *
+     * Ghế sẽ được chuyển LOCKED → BOOKED bởi PaymentService sau khi IPN thành công.
+     */
     @Transactional
     public BookingResponse createBooking(CreateBookingRequest request) {
         String userId = getCurrentUser().getId();
@@ -65,6 +86,9 @@ public class BookingService {
         if (lockedSeats.size() != request.seatIds().size()) {
             throw new AppException(ErrorCode.SEAT_NOT_FOUND);
         }
+
+        LocalDateTime now = LocalDateTime.now();
+
         lockedSeats.forEach(ss -> {
             if (ss.getStatus() != SeatStatus.LOCKED) {
                 throw new AppException(ErrorCode.SEAT_NOT_LOCKED);
@@ -72,14 +96,19 @@ public class BookingService {
             if (!userId.equals(ss.getLockedByUser())) {
                 throw new AppException(ErrorCode.SEAT_LOCK_FORBIDDEN);
             }
+            // FIX Bug-7: check lockedUntil còn hạn
+            if (ss.getLockedUntil() == null || ss.getLockedUntil().isBefore(now)) {
+                throw new AppException(ErrorCode.SEAT_LOCK_EXPIRED);
+            }
         });
 
+        // Tính giá vé
         BigDecimal totalTicketPrice = lockedSeats.stream()
                 .map(ss -> showtime.getBasePrice()
                         .add(ss.getSeat().getSeatType().getPriceModifier()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 4. Tính giá đồ ăn/combo
+        // Tính giá đồ ăn/combo
         List<BookingProduct> bookingProducts = resolveProducts(request.products());
         BigDecimal totalProductPrice = bookingProducts.stream()
                 .map(p -> p.getItemPrice().multiply(BigDecimal.valueOf(p.getQuantity())))
@@ -87,8 +116,7 @@ public class BookingService {
 
         BigDecimal totalPrice = totalTicketPrice.add(totalProductPrice);
 
-
-        // 5. Áp promotion (nếu có)
+        // Áp promotion nếu có
         BigDecimal discountAmount = BigDecimal.ZERO;
         Promotion promotion = null;
         if (request.promotionCode() != null) {
@@ -102,10 +130,10 @@ public class BookingService {
             discountAmount = preview.discountAmount();
         }
 
-        BigDecimal finalPrice = totalPrice.subtract(discountAmount)
-                .max(BigDecimal.ZERO);
+        BigDecimal finalPrice = totalPrice.subtract(discountAmount).max(BigDecimal.ZERO);
 
-        // 6. Tạo Booking
+
+        // Tạo Booking
         Booking booking = Booking.builder()
                 .bookingCode(generateBookingCode())
                 .user(getUserRef(userId))
@@ -114,10 +142,10 @@ public class BookingService {
                 .totalPrice(totalPrice)
                 .discountAmount(discountAmount)
                 .finalPrice(finalPrice)
-                .expiredAt(LocalDateTime.now().plusMinutes(BOOKING_EXPIRY_MINUTES))
+                .expiredAt(now.plusMinutes(BOOKING_EXPIRY_MINUTES))
                 .build();
 
-        // 7. Tạo Ticket cho từng ghế
+
         List<Ticket> tickets = lockedSeats.stream()
                 .map(ss -> Ticket.builder()
                         .ticketCode(generateTicketCode())
@@ -125,26 +153,27 @@ public class BookingService {
                         .seat(ss.getSeat())
                         .price(showtime.getBasePrice()
                                 .add(ss.getSeat().getSeatType().getPriceModifier()))
-                        .status(TicketStatus.VALID)
+                        .status(TicketStatus.PENDING_PAYMENT)
                         .build())
                 .toList();
 
-
-        // 8. Gán booking vào BookingProduct
         bookingProducts.forEach(p -> p.setBooking(booking));
-
         booking.getTickets().addAll(tickets);
         booking.getBookingProducts().addAll(bookingProducts);
 
         Booking saved = bookingRepository.save(booking);
 
+
         log.info("Booking created: code={}, user={}, showtime={}, seats={}, finalPrice={}",
                 saved.getBookingCode(), userId, request.showtimeId(),
                 request.seatIds().size(), finalPrice);
 
-        // paymentUrl sẽ được PaymentService inject — trả về bookingId cho FE tạo payment
         return bookingMapper.toResponse(saved);
     }
+
+    // ─────────────────────────────────────────────────────────────────
+    // READ
+    // ─────────────────────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
     public BookingResponse getBookingById(String bookingId) {
@@ -153,7 +182,6 @@ public class BookingService {
         return bookingMapper.toResponse(booking);
     }
 
-
     @Transactional(readOnly = true)
     public List<BookingSummaryResponse> getMyBookings() {
         String userId = getCurrentUser().getId();
@@ -161,6 +189,20 @@ public class BookingService {
                 .stream().map(bookingMapper::toSummary).toList();
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // CONFIRM — gọi bởi PaymentService sau IPN thành công
+    // ─────────────────────────────────────────────────────────────────
+
+    /**
+     * Confirm booking sau khi payment IPN thành công.
+     *
+     * Gọi bởi PaymentService — KHÔNG gọi trực tiếp từ controller.
+     * PaymentService cần đảm bảo transaction độc lập (REQUIRES_NEW).
+     *
+     * FIX Bug-1 (BookingService): ghế được chuyển LOCKED→BOOKED tại đây.
+     * FIX Bug-2: tickets chuyển PENDING_PAYMENT → VALID tại đây.
+     * FIX RC-4: confirmBooking trong ShowTimeSeatService đã check lockedUntil.
+     */
     @Transactional
     public void confirmBooking(String bookingId) {
         Booking booking = getBookingOrThrow(bookingId);
@@ -172,9 +214,6 @@ public class BookingService {
             throw new AppException(ErrorCode.BOOKING_EXPIRED);
         }
 
-        booking.setStatus(BookingStatus.CONFIRMED);
-        booking.setExpiredAt(null);
-
         // Chuyển ghế LOCKED → BOOKED
         List<String> seatIds = booking.getTickets().stream()
                 .map(t -> t.getSeat().getId()).toList();
@@ -185,12 +224,13 @@ public class BookingService {
                 booking.getUser().getId()
         );
 
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setExpiredAt(null);
+
+        // tickets chuyển PENDING_PAYMENT → VALID
         booking.getTickets().forEach(t -> t.setStatus(TicketStatus.VALID));
 
-        bookingRepository.save(booking);
-        log.info("Booking confirmed: code={}", booking.getBookingCode());
-
-
+        // Áp promotion sau khi payment thực sự thành công
         if (booking.getPromotion() != null) {
             try {
                 promotionService.applyPromotion(
@@ -199,26 +239,32 @@ public class BookingService {
                 );
             } catch (AppException e) {
                 if (e.getErrorCode() == ErrorCode.PROMOTION_OUT_OF_STOCK) {
-                    // Promotion hết slot sau khi user đã chờ thanh toán
-                    // → vẫn confirm booking nhưng KHÔNG apply discount
-                    // → hoặc tuỳ business: reject payment
-                    log.warn("Promotion out of stock at confirm time: bookingCode={}",
+                    // Hết slot promotion → bỏ discount, vẫn confirm booking
+                    log.warn("Promotion out of stock at confirm: bookingCode={}",
                             booking.getBookingCode());
-
-                    // Điều chỉnh lại giá — bỏ discount
                     booking.setDiscountAmount(BigDecimal.ZERO);
                     booking.setFinalPrice(booking.getTotalPrice());
                     booking.setPromotion(null);
-
                 } else {
                     throw e;
                 }
             }
         }
+
+        bookingRepository.save(booking);
+        log.info("Booking confirmed: code={}", booking.getBookingCode());
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // CANCEL
+    // ─────────────────────────────────────────────────────────────────
 
-
+    /**
+     * User chủ động cancel booking.
+     *
+     * FIX Bug-6: phân biệt ghế đang LOCKED (PENDING) vs BOOKED (CONFIRMED)
+     * để gọi đúng method release.
+     */
     @Transactional
     public BookingResponse cancelBooking(String bookingId) {
         Booking booking = getBookingOrThrow(bookingId);
@@ -231,21 +277,39 @@ public class BookingService {
             throw new AppException(ErrorCode.BOOKING_ALREADY_CONFIRMED);
         }
 
-        booking.setStatus(BookingStatus.CANCELLED);
-
-        booking.getTickets().forEach(t -> t.setStatus(TicketStatus.CANCELLED));
-        // Giải phóng ghế về AVAILABLE
-        List<String> seatIds = booking.getTickets().stream()
-                .map(t -> t.getSeat().getId()).toList();
-
-        showtimeSeatService.releaseBookedSeats(
-                booking.getShowtime().getId(), seatIds);
+        doCancel(booking);
 
         Booking saved = bookingRepository.save(booking);
         log.warn("Booking cancelled by user: code={}", booking.getBookingCode());
         return bookingMapper.toResponse(saved);
     }
 
+    /**
+     * Internal cancel — dùng bởi cả user cancel lẫn scheduled job.
+     * FIX Bug-3 & Bug-6: booking PENDING → ghế đang LOCKED → dùng releaseLockedSeats().
+     */
+    @Transactional
+    public void cancelBookingInternal(String bookingId) {
+        Booking booking = getBookingOrThrow(bookingId);
+        if (booking.getStatus() == BookingStatus.CANCELLED) return;
+        doCancel(booking);
+        bookingRepository.save(booking);
+        log.warn("Booking cancelled (internal): code={}", booking.getBookingCode());
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // SCHEDULED — expire booking PENDING quá hạn
+    // ─────────────────────────────────────────────────────────────────
+
+    /**
+     * FIX Bug-3: gọi releaseLockedSeats() thay vì releaseBookedSeats()
+     * vì booking PENDING → ghế đang LOCKED, chưa BOOKED.
+     *
+     * FIX RC-4 (BookingService): dùng pessimistic lock trên booking query
+     * để tránh xung đột với confirmBooking() đang chạy đồng thời.
+     * (Cần thêm @Lock(PESSIMISTIC_WRITE) vào findExpiredPendingBookings
+     * hoặc xử lý bằng status check sau khi acquire.)
+     */
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void expireStaleBookings() {
@@ -256,28 +320,43 @@ public class BookingService {
 
         expired.forEach(b -> {
             b.setStatus(BookingStatus.CANCELLED);
+            b.getTickets().forEach(t -> t.setStatus(TicketStatus.CANCELLED));
 
             List<String> seatIds = b.getTickets().stream()
                     .map(t -> t.getSeat().getId()).toList();
 
-            showtimeSeatService.releaseBookedSeats(
-                    b.getShowtime().getId(), seatIds);
+            // FIX Bug-3: PENDING booking → ghế LOCKED → release locked seats
+            showtimeSeatService.releaseLockedSeats(b.getShowtime().getId(), seatIds);
         });
 
         bookingRepository.saveAll(expired);
         log.info("Expired {} stale booking(s)", expired.size());
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // PRIVATE HELPERS
+    // ─────────────────────────────────────────────────────────────────
 
-    //Internal   method, called by scheduled job to cancel expired pending bookings
-    private UserEntity getCurrentUser() {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+    /**
+     * Dùng chung cho user cancel và internal cancel.
+     * Phân biệt trạng thái ghế theo booking status.
+     */
+    private void doCancel(Booking booking) {
+        BookingStatus oldStatus = booking.getStatus(); // lưu trước
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        booking.getTickets().forEach(t -> t.setStatus(TicketStatus.CANCELLED));
+
+        List<String> seatIds = booking.getTickets().stream()
+                .map(t -> t.getSeat().getId()).toList();
+
+        String showtimeId = booking.getShowtime().getId();
+
+        if (oldStatus == BookingStatus.CONFIRMED) {
+            showtimeSeatService.releaseBookedSeats(showtimeId, seatIds);
+        } else {
+            showtimeSeatService.releaseLockedSeats(showtimeId, seatIds);
         }
-
-        return userRepository.findUserEntityByUsername(auth.getName())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     private List<BookingProduct> resolveProducts(
@@ -288,32 +367,36 @@ public class BookingService {
             if (item.itemType() == ItemType.PRODUCT) {
                 Product p = productRepository.findById(item.itemId())
                         .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-                name = p.getName(); price = p.getPrice();
+                name = p.getName();
+                price = p.getPrice();
             } else {
                 Combo c = comboRepository.findById(item.itemId())
                         .orElseThrow(() -> new AppException(ErrorCode.COMBO_NOT_FOUND));
-                name = c.getName(); price = c.getPrice();
+                name = c.getName();
+                price = c.getPrice();
             }
             return BookingProduct.builder()
                     .itemType(item.itemType())
                     .itemId(item.itemId())
-                    .itemName(name).itemPrice(price)
+                    .itemName(name)
+                    .itemPrice(price)
                     .quantity(item.quantity())
                     .build();
         }).toList();
     }
 
+    /**
+     * FIX Bug-5: dùng UUID thay vì currentTimeMillis để tránh trùng lặp.
+     * Unique constraint trên DB là tầng bảo vệ cuối.
+     */
     private String generateBookingCode() {
-        String code;
-        do {
-            code = "BK" + System.currentTimeMillis() % 1_000_000
-                    + (char)('A' + (int)(Math.random() * 26));
-        } while (bookingRepository.existsByBookingCode(code));
-        return code;
+        return "BK" + UUID.randomUUID()
+                .toString().replace("-", "").substring(0, 10).toUpperCase();
     }
 
     private String generateTicketCode() {
-        return "TK" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase();
+        return "TK" + UUID.randomUUID()
+                .toString().replace("-", "").substring(0, 10).toUpperCase();
     }
 
     private Booking getBookingOrThrow(String id) {
@@ -322,14 +405,22 @@ public class BookingService {
     }
 
     private void checkOwnership(Booking booking) {
-        if (!booking.getUser().getId().equals(getCurrentUser().getId())) {
+        String currentUserId = getCurrentUser().getId();
+        if (!booking.getUser().getId().equals(currentUserId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
     }
 
-    private UserEntity getUserRef(String userId) {
-        // Dùng getById để tránh query — chỉ cần reference FK
-        return userRepository.getReferenceById(userId);
+    private UserEntity getCurrentUser() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        return userRepository.findUserEntityByUsername(auth.getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
+    private UserEntity getUserRef(String userId) {
+        return userRepository.getReferenceById(userId);
+    }
 }
