@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// BookingResponse.java
+
 public record BookingResponse(
     String bookingId,
     String bookingCode,

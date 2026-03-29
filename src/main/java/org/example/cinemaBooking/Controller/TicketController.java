@@ -59,20 +59,6 @@ public class TicketController {
                 .build();
     }
 
-    /**
-     * Check-in tại cửa rạp — nhân viên scan QR.
-     * Chỉ STAFF/ADMIN mới được gọi.
-     */
-    @PostMapping("/check-in-ticket")
-    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
-    public ApiResponse<CheckInResponse> checkIn(
-            @Valid @RequestBody CheckInRequest request) {
-        return ApiResponse.<CheckInResponse>builder()
-                .success(true)
-                .message("Check-in successful")
-                .data(ticketService.checkIn(request))
-                .build();
-    }
 
     @PostMapping("/check-in")
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
