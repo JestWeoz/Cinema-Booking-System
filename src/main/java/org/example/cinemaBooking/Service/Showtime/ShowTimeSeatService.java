@@ -7,7 +7,6 @@ import org.example.cinemaBooking.DTO.Request.Seat.LockSeatRequest;
 import org.example.cinemaBooking.DTO.Request.Seat.UnlockSeatRequest;
 import org.example.cinemaBooking.DTO.Response.Showtime.SeatMapResponse;
 import org.example.cinemaBooking.DTO.Response.Showtime.ShowtimeSeatResponse;
-import org.example.cinemaBooking.Entity.Showtime;
 import org.example.cinemaBooking.Entity.ShowtimeSeat;
 import org.example.cinemaBooking.Entity.UserEntity;
 import org.example.cinemaBooking.Exception.AppException;
@@ -17,6 +16,7 @@ import org.example.cinemaBooking.Repository.ShowtimeRepository;
 import org.example.cinemaBooking.Repository.ShowtimeSeatRepository;
 import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.enums.SeatStatus;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,29 +33,33 @@ import java.util.stream.Collectors;
 @Slf4j
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class ShowTimeSeatService {
+
     ShowtimeSeatRepository showtimeSeatRepository;
     ShowtimeRepository showtimeRepository;
     UserRepository userRepository;
     ShowtimeSeatMapper showtimeSeatMapper;
 
-
-    private static final int LOCK_DURATION_MINUTES = 10;
     /**
-     * Lấy danh sách ghế của suất chiếu, trả về theo hàng để client render.
+     * Inject class riêng để gọi @Transactional qua Spring proxy.
+     * Giải quyết SonarQube: "Call transactional methods via an injected dependency instead of this."
      */
+    ShowtimeSeatTransactionalService seatTxService;
+
+    static final int MAX_RETRY = 3;
+
+    // ────────────────────────────────────────────────────────────
+    // PUBLIC API
+    // ────────────────────────────────────────────────────────────
+
     @Transactional(readOnly = true)
-    public SeatMapResponse getSeatMap(String showtimeId){
-        Showtime showtime = getShowtimeOrThrow(showtimeId);
+    public SeatMapResponse getSeatMap(String showtimeId) {
+        List<ShowtimeSeat> showtimeSeats =
+                showtimeSeatRepository.findAllByShowtimeIdWithDetails(showtimeId);
 
-        List<ShowtimeSeat> showtimeSeats = showtimeSeatRepository.
-                findAllByShowtimeIdWithDetails(showtime.getId());
-
-
-        List<ShowtimeSeatResponse> responses = showtimeSeats.stream().
-                map(showtimeSeatMapper::toResponse)
+        List<ShowtimeSeatResponse> responses = showtimeSeats.stream()
+                .map(showtimeSeatMapper::toResponse)
                 .toList();
 
-        // 4. Gom theo hàng: "A" → [A1, A2, ...]
         Map<String, List<ShowtimeSeatResponse>> seatMap = responses.stream()
                 .collect(Collectors.groupingBy(
                         ShowtimeSeatResponse::seatRow,
@@ -66,18 +70,13 @@ public class ShowTimeSeatService {
         int availableSeats = (int) responses.stream()
                 .filter(s -> s.status() == SeatStatus.AVAILABLE)
                 .count();
-        return new SeatMapResponse(
-                showtimeId,
-                responses.size(),
-                availableSeats,
-                seatMap);
+
+        return new SeatMapResponse(showtimeId, responses.size(), availableSeats, seatMap);
     }
 
     @Transactional(readOnly = true)
     public List<ShowtimeSeatResponse> getMyLockedSeats(String showtimeId) {
-        String userId = getCurrentUserId().getId();
-
-
+        String userId = getCurrentUser().getId();
         return showtimeSeatRepository
                 .findLockedByShowtimeAndUser(showtimeId, userId)
                 .stream()
@@ -85,109 +84,63 @@ public class ShowTimeSeatService {
                 .toList();
     }
 
-
-    @Transactional
-    public List<ShowtimeSeatResponse> lockSeats(String showtimeId, LockSeatRequest request){
-        String userId = getCurrentUserId().getId();
-        Showtime showtime = getShowtimeOrThrow(showtimeId);
-        if(!showtime.isBookable()){
-            throw new AppException(ErrorCode.SHOWTIME_STATE_INVALID);
-        }
-
-        List<ShowtimeSeat> targets = showtimeSeatRepository.
-                findByShowtimeIdAndSeatIds(showtimeId, request.seatIds());
-
-        if(targets.size() != request.seatIds().size()) {
-            throw new AppException(ErrorCode.SEAT_NOT_FOUND);
-        }
-        LocalDateTime lockExpiry = LocalDateTime.now()
-                .plusMinutes(LOCK_DURATION_MINUTES);
-
-        for (ShowtimeSeat ss : targets) {
-            switch (ss.getStatus()) {
-                case AVAILABLE -> {
-                    // Ghế trống → lock bình thường
-                    ss.setStatus(SeatStatus.LOCKED);
-                    ss.setLockedByUser(userId);
-                    ss.setLockedUntil(lockExpiry);
+    /**
+     * Lock ghế với retry khi Optimistic Lock conflict.
+     * Gọi seatTxService.doLockSeats() qua injected bean → Spring proxy intercept đúng.
+     */
+    public List<ShowtimeSeatResponse> lockSeats(String showtimeId, LockSeatRequest request) {
+        int attempt = 0;
+        while (true) {
+            try {
+                return seatTxService.doLockSeats(showtimeId, request);
+            } catch (OptimisticLockingFailureException ex) {
+                attempt++;
+                if (attempt >= MAX_RETRY) {
+                    log.warn("lockSeats: conflict after {} attempts — showtimeId={}, seatIds={}",
+                            attempt, showtimeId, request.seatIds());
+                    throw new AppException(ErrorCode.SEAT_ALREADY_LOCKED);
                 }
-                case LOCKED -> {
-                    if (ss.getLockedUntil() != null &&
-                            ss.getLockedUntil().isBefore(LocalDateTime.now())) {
-
-                        // lock hết hạn → release luôn
-                        releaseSeat(ss);
-
-                        ss.setStatus(SeatStatus.LOCKED);
-                        ss.setLockedByUser(userId);
-                        ss.setLockedUntil(lockExpiry);
-                        break;
-                    }
-
-                    // Ghế đang bị lock bởi chính user này → extend thời gian
-                    if (!userId.equals(ss.getLockedByUser())) {
-                        throw new AppException(ErrorCode.SEAT_ALREADY_LOCKED);
-                    }
-                    ss.setLockedUntil(lockExpiry); // extend
-                }
-                case BOOKED -> throw new AppException(ErrorCode.SEAT_ALREADY_BOOKED);
+                log.debug("lockSeats: retry {}/{}", attempt, MAX_RETRY);
             }
         }
-
-        showtimeSeatRepository.saveAll(targets);
-
-        log.info("User {} locked {} seat(s) in showtime {} until {}",
-                userId, targets.size(), showtimeId, lockExpiry);
-
-        return targets.stream().map(showtimeSeatMapper::toResponse).toList();
     }
-
-
-    @Transactional
-    public List<ShowtimeSeatResponse> unlockSeats(String showtimeId, UnlockSeatRequest request){
-        String userId = getCurrentUserId().getId();
-
-        List<ShowtimeSeat> targets = showtimeSeatRepository
-                .findByShowtimeIdAndSeatIds(showtimeId, request.seatIds());
-
-        if (targets.size() != request.seatIds().size()) {
-            throw new AppException(ErrorCode.SEAT_NOT_FOUND);
-        }
-
-        for (ShowtimeSeat ss : targets) {
-            if (ss.getStatus() != SeatStatus.LOCKED) {
-                throw new AppException(ErrorCode.SEAT_NOT_LOCKED);
-            }
-            if (!userId.equals(ss.getLockedByUser())) {
-                throw new AppException(ErrorCode.SEAT_LOCK_FORBIDDEN);
-            }
-            releaseSeat(ss);
-        }
-
-        // Cập nhật cache availableSeats trên Showtime
-        syncAvailableSeats(showtimeId);
-
-        showtimeSeatRepository.saveAll(targets);
-
-        log.info("User {} unlocked {} seat(s) in showtime {}",
-                userId, targets.size(), showtimeId);
-
-        return targets.stream().map(showtimeSeatMapper::toResponse).toList();
-    }
-
-
 
     /**
-     * Confirm booking: chuyển ghế từ LOCKED → BOOKED.
-     * Booking service gọi sau khi payment thành công.
+     * Unlock ghế với retry khi Optimistic Lock conflict.
+     */
+    public List<ShowtimeSeatResponse> unlockSeats(String showtimeId, UnlockSeatRequest request) {
+        int attempt = 0;
+        while (true) {
+            try {
+                return seatTxService.doUnlockSeats(showtimeId, request);
+            } catch (OptimisticLockingFailureException ex) {
+                attempt++;
+                if (attempt >= MAX_RETRY) {
+                    log.warn("unlockSeats: conflict after {} attempts", attempt);
+                    throw new AppException(ErrorCode.SEAT_ALREADY_LOCKED);
+                }
+                log.debug("unlockSeats: retry {}/{}", attempt, MAX_RETRY);
+            }
+        }
+    }
+
+    /**
+     * Confirm booking: chuyển ghế LOCKED → BOOKED sau khi payment thành công.
      */
     @Transactional
     public void confirmBooking(String showtimeId, List<String> seatIds, String userId) {
-        List<ShowtimeSeat> targets = showtimeSeatRepository
-                .findByShowtimeIdAndSeatIds(showtimeId, seatIds);
+        List<ShowtimeSeat> targets =
+                showtimeSeatRepository.findByShowtimeIdAndSeatIds(showtimeId, seatIds);
+
+        LocalDateTime now = LocalDateTime.now();
 
         for (ShowtimeSeat ss : targets) {
-            if (ss.getStatus() != SeatStatus.LOCKED || !userId.equals(ss.getLockedByUser())) {
+            boolean validLock = ss.getStatus() == SeatStatus.LOCKED
+                    && userId.equals(ss.getLockedByUser())
+                    && ss.getLockedUntil() != null
+                    && ss.getLockedUntil().isAfter(now);
+
+            if (!validLock) {
                 throw new AppException(ErrorCode.SEAT_LOCK_MISMATCH);
             }
             ss.setStatus(SeatStatus.BOOKED);
@@ -197,85 +150,78 @@ public class ShowTimeSeatService {
 
         showtimeSeatRepository.saveAll(targets);
 
-        // Cập nhật cache
-        syncAvailableSeats(showtimeId);
-
         log.info("Confirmed booking: {} seat(s) in showtime {} for user {}",
                 targets.size(), showtimeId, userId);
     }
 
     /**
-     * Release ghế khi booking bị cancel / hoàn tiền.
-     * Booking/Refund service gọi.
+     * Release ghế BOOKED → AVAILABLE khi refund / cancel booking đã CONFIRMED.
      */
     @Transactional
     public void releaseBookedSeats(String showtimeId, List<String> seatIds) {
-        List<ShowtimeSeat> targets = showtimeSeatRepository
-                .findByShowtimeIdAndSeatIds(showtimeId, seatIds);
+        List<ShowtimeSeat> targets =
+                showtimeSeatRepository.findByShowtimeIdAndSeatIds(showtimeId, seatIds);
 
-        targets.forEach(this::releaseSeat);
+        targets.forEach(seatTxService::releaseSeat);
         showtimeSeatRepository.saveAll(targets);
+        seatTxService.syncAvailableSeats(showtimeId);
 
-        syncAvailableSeats(showtimeId);
-
-        log.info("Released {} seat(s) in showtime {}", targets.size(), showtimeId);
+        log.info("Released {} booked seat(s) in showtime {}", targets.size(), showtimeId);
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // SCHEDULED JOB
-    // ─────────────────────────────────────────────────────────────────
-
     /**
-     * Dọn lock hết hạn mỗi phút.
-     * Bulk UPDATE 1 câu query → không load entity vào memory.
+     * Release ghế LOCKED → AVAILABLE khi cancel booking PENDING.
+     * Không throw nếu ghế đã AVAILABLE (job expire chạy trước).
      */
+    @Transactional
+    public void releaseLockedSeats(String showtimeId, List<String> seatIds) {
+        List<ShowtimeSeat> targets =
+                showtimeSeatRepository.findByShowtimeIdAndSeatIds(showtimeId, seatIds);
+
+        targets.forEach(ss -> {
+            if (ss.getStatus() == SeatStatus.LOCKED) {
+                seatTxService.releaseSeat(ss);
+            }
+        });
+
+        showtimeSeatRepository.saveAll(targets);
+        seatTxService.syncAvailableSeats(showtimeId);
+
+        log.info("Released {} locked seat(s) in showtime {}", targets.size(), showtimeId);
+    }
+
+    // ────────────────────────────────────────────────────────────
+    // SCHEDULED JOB
+    // ────────────────────────────────────────────────────────────
+
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void releaseExpiredLocks() {
         LocalDateTime now = LocalDateTime.now();
+
+        List<String> affectedShowtimeIds =
+                showtimeSeatRepository.findShowtimeIdsWithExpiredLocks(now);
+
+        if (affectedShowtimeIds.isEmpty()) return;
+
         int count = showtimeSeatRepository.releaseExpiredLocks(now);
-        if (count > 0) {
-            log.info("Released {} expired seat lock(s) at {}", count, now);
-        }
+
+        affectedShowtimeIds.forEach(seatTxService::syncAvailableSeats);
+
+        log.info("Released {} expired seat lock(s) at {} — affected {} showtime(s)",
+                count, now, affectedShowtimeIds.size());
     }
 
+    // ────────────────────────────────────────────────────────────
+    // PRIVATE
+    // ────────────────────────────────────────────────────────────
 
-    private void releaseSeat(ShowtimeSeat ss) {
-        ss.setStatus(SeatStatus.AVAILABLE);
-        ss.setLockedUntil(null);
-        ss.setLockedByUser(null);
-    }
-
-
-
-    /**
-     * Đồng bộ lại cache availableSeats trên Showtime entity.
-     * Gọi sau mỗi thao tác thay đổi trạng thái ghế.
-     */
-    private void syncAvailableSeats(String showtimeId) {
-        int available = showtimeSeatRepository
-                .countByShowtimeIdAndStatus(showtimeId, SeatStatus.AVAILABLE);
-        showtimeRepository.findById(showtimeId).ifPresent(s -> {
-            s.setAvailableSeats(available);
-            showtimeRepository.save(s);
-        });
-    }
-
-
-    //Internal
-    private Showtime getShowtimeOrThrow(String showtimeId){
-        return showtimeRepository.findById(showtimeId)
-                .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_FOUND));
-    }
-
-    private UserEntity getCurrentUserId() {
+    private UserEntity getCurrentUser() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
-
         return userRepository.findUserEntityByUsername(auth.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 }
-

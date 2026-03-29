@@ -55,6 +55,7 @@ public interface ShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, Stri
             WHERE ss.showtime.id = :showtimeId
               AND ss.seat.id IN :seatIds
               AND ss.deletedAt IS NULL
+            ORDER BY s.seatRow, s.seatNumber
             """)
 
     List<ShowtimeSeat> findByShowtimeIdAndSeatIds(
@@ -104,4 +105,16 @@ public interface ShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, Stri
     List<ShowtimeSeat> findLockedByShowtimeAndUser(
             @Param("showtimeId") String showtimeId,
             @Param("userId")     String userId);
+
+    /**
+     * Lấy danh sách showtimeId có ghế lock hết hạn — dùng trước bulk UPDATE
+     * để biết showtime nào cần sync lại cache availableSeats.
+     */
+    @Query("""
+            SELECT DISTINCT ss.showtime.id FROM ShowtimeSeat ss
+            WHERE ss.status      = org.example.cinemaBooking.Shared.enums.SeatStatus.LOCKED
+              AND ss.lockedUntil < :now
+              AND ss.deletedAt IS NULL
+            """)
+    List<String> findShowtimeIdsWithExpiredLocks(@Param("now") LocalDateTime now);
 }
