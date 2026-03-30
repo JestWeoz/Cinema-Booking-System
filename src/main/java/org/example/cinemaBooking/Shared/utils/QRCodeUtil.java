@@ -1,5 +1,5 @@
 // QRCodeUtil.java
-package org.example.cinemaBooking.Shared.untils;
+package org.example.cinemaBooking.Shared.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;

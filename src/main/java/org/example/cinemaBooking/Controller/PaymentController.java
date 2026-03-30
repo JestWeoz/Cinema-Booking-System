@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.DTO.Request.Payment.CreatePaymentRequest;
 import org.example.cinemaBooking.DTO.Response.Payment.PaymentResponse;
 import org.example.cinemaBooking.Service.Payment.PaymentService;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Payment.BASE)
 public class PaymentController {
     PaymentService paymentService;
@@ -46,10 +48,11 @@ public class PaymentController {
                 build();
     }
 
-    @PostMapping("/vnpay/ipn")
+    @GetMapping("/vnpay/ipn")
     public ApiResponse<String> handleIPN(
             @RequestParam Map<String, String> params) {
         String result = paymentService.handleIPN(params);
+        log.info("IPN processed with result: {}", result);
         return ApiResponse.<String>builder().
                 success(true).
                 message("IPN processed successfully").

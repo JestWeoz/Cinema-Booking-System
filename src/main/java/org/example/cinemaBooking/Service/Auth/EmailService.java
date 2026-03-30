@@ -6,18 +6,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Entity.Booking;
 import org.example.cinemaBooking.Service.Ticket.TicketService;
-import org.example.cinemaBooking.Shared.untils.EmailTemplateUtil;
+import org.example.cinemaBooking.Shared.utils.EmailTemplateUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class EmailService {
-
     private final JavaMailSender mailSender;
     private final TicketService ticketService;
 
@@ -86,8 +88,27 @@ public class EmailService {
         String qrBase64 = ticketService.getBookingQR(booking.getBookingCode());
         String to      = booking.getUser().getEmail();
         String subject = "🎬 Đặt vé thành công - " + booking.getBookingCode();
-        String html    = EmailTemplateUtil.buildBookingSuccessEmail(booking, qrBase64);
-        sendHtmlEmail(to, subject, html);
+        // Build HTML (template expects inline CID 'qrImage')
+        String html    = EmailTemplateUtil.buildBookingSuccessEmail(booking);
+
+        try {
+            String cid = "qrImage"; // content id used in the HTML as cid:qrImage
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(html, true);   // true = isHtml
+
+            byte[] imageBytes = Base64.getDecoder().decode(qrBase64);
+            helper.addInline(cid, new ByteArrayResource(imageBytes), "image/png");
+
+            mailSender.send(message);
+            log.info("Booking success email sent to: {}", to);
+        } catch (MessagingException e) {
+            log.error("Failed to send booking success email to {}: {}", to, e.getMessage());
+        }
     }
 
     @Async
@@ -102,6 +123,7 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(html, true);   // true = isHtml

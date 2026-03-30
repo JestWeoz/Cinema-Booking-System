@@ -1,5 +1,5 @@
 // EmailTemplateUtil.java
-package org.example.cinemaBooking.Shared.untils;
+package org.example.cinemaBooking.Shared.utils;
 
 import org.example.cinemaBooking.Entity.Booking;
 import org.example.cinemaBooking.Entity.Ticket;
@@ -7,7 +7,8 @@ import org.example.cinemaBooking.Entity.Ticket;
 public class EmailTemplateUtil {
 
     // EmailTemplateUtil.java
-    public static String buildBookingSuccessEmail(Booking booking, String qrBase64) {
+    // Now uses inline CID 'qrImage' for the QR — EmailService will add the inline part.
+    public static String buildBookingSuccessEmail(Booking booking) {
         // Danh sách ghế — text, không cần QR riêng
         StringBuilder seatRows = new StringBuilder();
         for (Ticket t : booking.getTickets()) {
@@ -87,7 +88,7 @@ public class EmailTemplateUtil {
                 %s
               </p>
               <!-- QR -->
-              <img src="data:image/png;base64,%s"
+              <img src="cid:qrImage"
                    width="180" height="180"
                    alt="QR Code"
                    style="display:block;margin:0 auto;border-radius:8px"/>
@@ -169,7 +170,6 @@ public class EmailTemplateUtil {
                 booking.getShowtime().getRoom().getName(),
                 // Mã vé + QR
                 booking.getBookingCode(),
-                qrBase64,
                 // Suất chiếu
                 booking.getShowtime().getStartTime().toLocalDate(),
                 booking.getShowtime().getStartTime().toLocalTime(),

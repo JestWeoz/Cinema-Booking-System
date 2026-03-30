@@ -18,7 +18,7 @@ import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.enums.BookingStatus;
 import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 import org.example.cinemaBooking.Shared.enums.TicketStatus;
-import org.example.cinemaBooking.Shared.untils.QRCodeUtil;
+import org.example.cinemaBooking.Shared.utils.QRCodeUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -77,8 +77,6 @@ public class TicketService {
     public String getBookingQR(String bookingCode) {
         Booking booking = bookingRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
-
-        checkOwnership(booking);
 
         // FIX T3: chỉ CONFIRMED mới có QR hợp lệ
         if (booking.getStatus() != BookingStatus.CONFIRMED) {

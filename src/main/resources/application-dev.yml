@@ -36,7 +36,7 @@ spring:
           timeout: 5000
           writetimeout: 5000
 jwt:
-  signerKey: "YvaC4YtaTbPJ9kjAPkauqZ1HlkaqvAkz5jVeaxTGUTpm9YoNVGTU2c98XnWsQo6BLQ9h5n4HcySt0UcvmbBXiL0PpCedzXBxAn3+5FD83H4="
+  signerKey: ${JWT_SIGNER_KEY}
   valid-duration: 3600        # 1 giờ (giây)
   refreshable-duration: 86400 # 24 giờ (giây)
 
@@ -46,11 +46,11 @@ app:
   frontend-url: http://localhost:3000
 
 vnpay:
-  tmn-code: YOUR_TMN_CODE
-  hash-secret: YOUR_HASH_SECRET
+  tmn-code: ${TMN_CODE}
+  hash-secret: ${TMN_KEY}
   payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  return-url: https://yourdomain.com/api/payments/vnpay/return
-  ipn-url: https://yourdomain.com/api/payments/vnpay/ipn
+  return-url: https://76d9-103-238-69-9.ngrok-free.app/api/v1/payments/vnpay/return // phai sua duong dan theo ngrok moi moi lan chay
+  ipn-url: https://76d9-103-238-69-9.ngrok-free.app/api/v1/payments/vnpay/ipn
   version: "2.1.0"
   command: pay
   currency-code: VND
