@@ -73,6 +73,7 @@ public class SecurityConfig {
             "/api/v1/reviews/movies/*/average-rating",
             // Payment return (gateway redirect)
             "/api/v1/payments/vnpay/return",
+            "/api/v1/payments/vnpay/ipn",
             //Seat
             "/api/v1/seats/*",
             "/api/v1/seat-types",

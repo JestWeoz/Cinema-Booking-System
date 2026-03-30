@@ -200,7 +200,7 @@ public class PaymentService {
         String bookingCode = params.get("vnp_TxnRef");
         Payment payment = paymentRepository.findByBookingCode(bookingCode)
                 .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
-
+        //tam thoi tra ve nhu nay, sau nay co the hien thi trang thanh toan thanh cong hay that bai dua tren payment status
         return paymentMapper.toResponse(payment);
     }
 
@@ -284,6 +284,8 @@ public class PaymentService {
         params.put("vnp_IpAddr",    clientIp);
         params.put("vnp_CreateDate", VNPayUtil.getCurrentTime());
         params.put("vnp_ExpireDate", VNPayUtil.getExpireTime(15));
+
+        log.info("Client IP used for vnp_IpAddr: {}", clientIp);
 
         return VNPayUtil.buildPaymentUrl(
                 vnPayConfig.getPaymentUrl(), params, vnPayConfig.getHashSecret());
