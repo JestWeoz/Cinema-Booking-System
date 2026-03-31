@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller.Movie;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,10 +26,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Movie.BASE)
+@Tag(name = "Movie", description = "quản lý phim")
 public class MovieController {
     MovieService movieService;
     PeopleService peopleService;
 
+    @Operation(summary = "Tạo phim mới",
+            description = "Tạo một phim mới. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> createMovie(@RequestBody @Valid CreateMovieRequest request) {
@@ -38,6 +45,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật thông tin phim",
+            description = "Cập nhật thông tin phim theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> updateMovie(@PathVariable String id, @RequestBody @Valid UpdateMovieRequest request) {
@@ -49,6 +59,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Xóa phim",
+            description = "Xóa phim theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteMovie(@PathVariable String id) {
@@ -60,6 +73,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật trạng thái phim",
+            description = "Cập nhật trạng thái phim theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<MovieResponse> updateMovieStatus(@PathVariable String id, @RequestBody @Valid UpdateMovieStatusRequest request) {
@@ -71,7 +87,9 @@ public class MovieController {
                 .build();
     }
 
-
+    @Operation(summary = "Lấy danh sách phim",
+            description = "Lấy danh sách phim với các tùy chọn lọc và phân trang. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<PageResponse<MovieResponse>> getMovies(
@@ -104,6 +122,8 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Lấy chi tiết phim theo ID",
+            description = "Lấy chi tiết phim theo ID.")
     @GetMapping("/{id}")
     public ApiResponse<MovieResponse> getMovieDetailById(@PathVariable String id) {
         MovieResponse movieResponse = movieService.getMovieById(id);
@@ -114,6 +134,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Lấy chi tiết phim theo slug",
+            description = "Lấy chi tiết phim theo slug. Không yêu cầu quyền.")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/slug/{slug}")
     public ApiResponse<MovieResponse> getMovieDetailBySlug(@PathVariable String slug) {
         MovieResponse movieResponse = movieService.getMovieBySlug(slug);
@@ -124,6 +147,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách phim đang chiếu",
+            description = "Lấy danh sách phim đang chiếu với phân trang. Không yêu cầu quyền.")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(ApiPaths.Movie.NOW_SHOWING)
     public ApiResponse<PageResponse<MovieResponse>> getNowShowingMovies(
             @RequestParam(defaultValue = "1") int page,
@@ -135,6 +161,9 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách phim sắp chiếu",
+            description = "Lấy danh sách phim sắp chiếu với phân trang. Không yêu cầu quyền.")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(ApiPaths.Movie.COMING_SOON)
     public ApiResponse<PageResponse<MovieResponse>> getComingSoonMovies(
             @RequestParam(defaultValue = "1") int page,
@@ -146,6 +175,9 @@ public class MovieController {
                 .build();
     }
 
+
+    @Operation(summary = "Tìm kiếm phim",
+            description = "Tìm kiếm phim theo từ khóa với phân trang. Không yêu cầu quyền.")
     @GetMapping(ApiPaths.Movie.SEARCH + "/{keyword}")
     public ApiResponse<PageResponse<MovieResponse>> searchMovies(
             @PathVariable String keyword,

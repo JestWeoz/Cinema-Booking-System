@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,10 +21,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Room", description = "quản lý phòng chiếu")
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Room.BASE)
 public class RoomController {
     RoomService roomService;
 
+    @Operation(summary = "Tạo phòng chiếu mới",
+            description = "Tạo một phòng chiếu mới. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<RoomResponse> createRoom(@RequestBody @Valid CreateRoomRequest request) {
@@ -30,6 +37,9 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room created successfully").data(response).build();
     }
 
+    @Operation(summary = "Cập nhật phòng chiếu",
+            description = "Cập nhật thông tin phòng chiếu theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<RoomResponse> updateRoom(@PathVariable String id, @RequestBody @Valid UpdateRoomRequest request) {
@@ -41,6 +51,9 @@ public class RoomController {
                 .data(response).build();
     }
 
+    @Operation(summary = "Xóa phòng chiếu",
+            description = "Xóa phòng chiếu theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteRoom(@PathVariable String id) {
@@ -49,6 +62,8 @@ public class RoomController {
         return ApiResponse.<Void>builder().success(true).message("Room deleted successfully").build();
     }
 
+    @Operation(summary = "Lấy thông tin phòng chiếu",
+            description = "Lấy thông tin phòng chiếu theo ID.")
     @GetMapping("/{id}")
     public ApiResponse<RoomResponse> getRoomById(@PathVariable String id) {
         RoomResponse response = roomService.getRoomByID(id);
@@ -56,6 +71,9 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room retrieved successfully").data(response).build();
     }
 
+    @Operation(summary = "Bật/tắt trạng thái phòng chiếu",
+            description = "Bật hoặc tắt trạng thái hoạt động của phòng chiếu theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/toggle-status")
     public ApiResponse<RoomResponse> toggleRoomStatus(@PathVariable String id) {
@@ -64,6 +82,10 @@ public class RoomController {
         return ApiResponse.<RoomResponse>builder().success(true).message("Room status toggled successfully").data(roomService.getRoomByID(id)).build();
     }
 
+    @Operation(summary = "Lấy danh sách phòng chiếu",
+            description = "Lấy danh sách phân trang các phòng chiếu. Hỗ trợ tìm kiếm theo tên. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "10") int size,

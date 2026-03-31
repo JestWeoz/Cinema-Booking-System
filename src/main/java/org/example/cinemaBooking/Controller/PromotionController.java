@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,11 +25,15 @@ import java.time.LocalDate;
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Promotion.BASE)
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Promotion", description = "quản lý khuyến mãi")
 public class PromotionController {
 
     PromotionService promotionService;
 
-    // CREATE
+    @Operation(summary = "Tạo khuyến mãi mới",
+            description = "Tạo một khuyến mãi mới. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<PromotionResponse> create(@RequestBody @Valid CreatePromotionRequest request) {
         return ApiResponse.<PromotionResponse>builder()
@@ -36,7 +43,10 @@ public class PromotionController {
                 .build();
     }
 
-    // UPDATE
+    @Operation(summary = "Cập nhật khuyến mãi",
+            description = "Cập nhật thông tin khuyến mãi theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<PromotionResponse> update(@PathVariable String id,
                                                  @RequestBody UpdatePromotionRequest request) {
@@ -47,7 +57,10 @@ public class PromotionController {
                 .build();
     }
 
-    // DELETE
+    @Operation(summary = "Xóa khuyến mãi",
+            description = "Xóa khuyến mãi theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> delete(@PathVariable String id) {
         promotionService.deletePromotion(id);
@@ -57,6 +70,9 @@ public class PromotionController {
                 .message("Promotion deleted successfully")
                 .build();
     }
+
+    @Operation(summary = "Lấy khuyến mãi đang hoạt động cho nguoi dung",
+            description = "Lấy danh sách khuyến mãi đang hoạt động. Không yêu cầu xác thực.")
     @GetMapping("/active")
     public ApiResponse<PageResponse<PromotionResponse>> getActivePromotion(
             @RequestParam(defaultValue = "1") int page,
@@ -70,7 +86,8 @@ public class PromotionController {
                 .build();
     }
 
-    // GET BY ID
+    @Operation(summary = "Lấy chi tiết khuyến mãi",
+            description = "Lấy chi tiết khuyến mãi theo ID.")
     @GetMapping("/{id}")
     public ApiResponse<PromotionResponse> getById(@PathVariable String id) {
         return ApiResponse.<PromotionResponse>builder()
@@ -79,6 +96,8 @@ public class PromotionController {
                 .build();
     }
 
+    @Operation(summary = "Lấy chi tiết khuyến mãi theo code",
+            description = "Lấy chi tiết khuyến mãi theo code.")
     @GetMapping("/code/{code}")
     public ApiResponse<PromotionResponse> getByCode(@PathVariable String code) {
         return ApiResponse.<PromotionResponse>builder()
@@ -88,7 +107,9 @@ public class PromotionController {
     }
 
 
-    // FILTER
+    @Operation(summary = "Lấy danh sách khuyến mãi cho ADMIN",
+            description = "Lấy danh sách khuyến mãi, hỗ trợ phân trang, sắp xếp và tìm kiếm theo code, tên, ngày bắt đầu, ngày kết thúc, giá trị đơn hàng tối thiểu và tối đa. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<PageResponse<PromotionResponse>> getPromotions(
@@ -116,7 +137,10 @@ public class PromotionController {
                 .build();
     }
 
-    // PREVIEW
+    @Operation(summary = "Xem trước khuyến mãi",
+            description = "Xem trước kết quả áp dụng khuyến mãi cho một đơn hàng cụ thể. Không yêu cầu xác thực.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/preview")
     public ApiResponse<ValidationResultResponse> preview(
             @RequestParam String code,
@@ -130,6 +154,10 @@ public class PromotionController {
     }
 
     // APPLY
+    @Operation(summary = "Áp dụng khuyến mãi",
+            description = "Áp dụng khuyến mãi cho một đơn hàng cụ thể. Yêu cầu xác thực.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/apply")
     public ApiResponse<Void> apply(
             @RequestParam String promotionId,

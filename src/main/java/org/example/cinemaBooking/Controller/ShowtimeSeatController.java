@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,10 +24,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Showtime.BASE + "/{showtimeId}" + ApiPaths.Seat.BASE)
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
+@Tag(name = "ShowtimeSeat", description = "quản lý ghế cho suất chiếu (sơ đồ, giữ/huỷ giữ)")
 public class ShowtimeSeatController {
 
     ShowTimeSeatService showTImeSeatService;
 
+    @Operation(summary = "Lấy sơ đồ ghế",
+            description = "Lấy sơ đồ ghế cho suất chiếu (bao gồm trạng thái từng ghế).")
     @GetMapping
     ApiResponse<SeatMapResponse> getSeatMap(@PathVariable String showtimeId) {
         SeatMapResponse response = showTImeSeatService.getSeatMap(showtimeId);
@@ -35,6 +41,9 @@ public class ShowtimeSeatController {
                 .build();
     }
 
+    @Operation(summary = "Lấy ghế đang giữ của tôi",
+            description = "Lấy danh sách ghế mà người dùng hiện tại đang giữ cho suất chiếu.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/my-locked-seats")
     @PreAuthorize("isAuthenticated()")
     ApiResponse<List<ShowtimeSeatResponse>> getMyLockedSeats(@PathVariable String showtimeId){
@@ -46,6 +55,9 @@ public class ShowtimeSeatController {
                 .build();
     }
 
+    @Operation(summary = "Giữ ghế",
+            description = "Giữ danh sách ghế cho suất chiếu (tạm thời).",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/lock")
     @PreAuthorize("isAuthenticated()")
     ApiResponse<List<ShowtimeSeatResponse>> lockSeats(@PathVariable String showtimeId,
@@ -58,6 +70,9 @@ public class ShowtimeSeatController {
                 .build();
     }
 
+    @Operation(summary = "Huỷ giữ ghế",
+            description = "Huỷ giữ các ghế đã được giữ trước đó.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/unlock")
     @PreAuthorize("isAuthenticated()")
     ApiResponse<List<ShowtimeSeatResponse>> unlockSeats(@PathVariable String showtimeId,
