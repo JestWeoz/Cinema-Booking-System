@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller.Movie;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,10 +25,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Movie.BASE + "/{movieId}" + ApiPaths.People.BASE)
+@Tag(name = "Movie People", description = "quản lý diễn viên và nhân sự cho phim")
 public class MoviePeopleController {
     PeopleService peopleService;
     MoviePeopleService moviePeopleService;
     //    Them nguoi vao phim
+    @Operation(summary = "Thêm người vào phim",
+            description = "Thêm một hoặc nhiều người (diễn viên, đạo diễn,...) vào một phim cụ thể. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<List<MoviePeopleResponse>> addPeopleToMovie(@PathVariable String movieId,
@@ -38,6 +45,9 @@ public class MoviePeopleController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật thông tin người trong phim",
+            description = "Cập nhật thông tin về vai trò hoặc thứ tự xuất hiện của một hoặc nhiều người trong một phim cụ thể. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<MoviePeopleResponse>> updateMoviePeople(
@@ -57,6 +67,9 @@ public class MoviePeopleController {
      * Xóa 1 người khỏi phim
      * DELETE /api/v1/movies/{movieId}/people/{peopleId}
      */
+    @Operation(summary = "Xóa người khỏi phim",
+            description = "Xóa một người cụ thể khỏi một phim. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{peopleId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> removePeopleFromMovie(
@@ -75,6 +88,9 @@ public class MoviePeopleController {
      * Xóa nhiều người khỏi phim
      * DELETE /api/v1/movies/{movieId}/people/bulk?peopleIds=id1,id2,id3
      */
+    @Operation(summary = "Xóa nhiều người khỏi phim",
+            description = "Xóa nhiều người cụ thể khỏi một phim. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/bulk")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> removeMultiplePeopleFromMovie(
@@ -90,6 +106,8 @@ public class MoviePeopleController {
     }
 
     //    Lay cast cua phim
+    @Operation(summary = "Lấy cast của phim",
+            description = "Lấy danh sách diễn viên và nhân sự liên quan đến một phim cụ thể.")
     @GetMapping
     public ApiResponse<List<MovieCastResponse>> getMovieCast(@PathVariable String movieId){
         var response = moviePeopleService.getPeopleByMovie(movieId);

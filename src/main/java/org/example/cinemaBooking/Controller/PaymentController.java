@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -21,9 +24,13 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Payment.BASE)
+@Tag(name = "Payment", description = "xử lý thanh toán, IPN và trả về từ VNPay")
 public class PaymentController {
     PaymentService paymentService;
 
+    @Operation(summary = "Tạo thanh toán mới",
+            description = "Tạo một thanh toán mới cho một đặt vé. Yêu cầu người dùng đã xác thực.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<PaymentResponse> createPayment(
@@ -38,6 +45,8 @@ public class PaymentController {
                 build();
     }
 
+    @Operation(summary = "Xử lý trả về từ VNPay",
+            description = "Xử lý dữ liệu trả về sau khi người dùng thanh toán trên VNPay. Thường được gọi bởi redirect của VNPay.")
     @GetMapping("/vnpay/return")
     public ApiResponse<PaymentResponse> handleReturn(
             @RequestParam Map<String, String> params) {
@@ -48,6 +57,8 @@ public class PaymentController {
                 build();
     }
 
+    @Operation(summary = "IPN từ VNPay",
+            description = "Endpoint nhận Instant Payment Notification (IPN) từ VNPay để cập nhật trạng thái thanh toán.")
     @GetMapping("/vnpay/ipn")
     public ApiResponse<String> handleIPN(
             @RequestParam Map<String, String> params) {
@@ -63,6 +74,9 @@ public class PaymentController {
     /**
      * Xem payment theo bookingId
      */
+    @Operation(summary = "Lấy thông tin thanh toán theo booking",
+            description = "Lấy chi tiết thanh toán liên quan đến bookingId.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/booking/{bookingId}")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<PaymentResponse> getPaymentByBooking(
@@ -77,6 +91,9 @@ public class PaymentController {
     /**
      * Hoàn tiền — admin only
      */
+    @Operation(summary = "Hoàn tiền cho booking",
+            description = "Thực hiện hoàn tiền cho một booking cụ thể (chỉ ADMIN).",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/booking/{bookingId}/refund")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<PaymentResponse> refund(

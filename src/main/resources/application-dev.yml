@@ -49,9 +49,23 @@ vnpay:
   tmn-code: ${TMN_CODE}
   hash-secret: ${TMN_KEY}
   payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  return-url: https://76d9-103-238-69-9.ngrok-free.app/api/v1/payments/vnpay/return // phai sua duong dan theo ngrok moi moi lan chay
-  ipn-url: https://76d9-103-238-69-9.ngrok-free.app/api/v1/payments/vnpay/ipn
+  return-url: https://5ea7-14-191-56-27.ngrok-free.app/api/v1/payments/vnpay/return
+  ipn-url: https://5ea7-14-191-56-27.ngrok-free.app/api/v1/payments/vnpay/ipn
   version: "2.1.0"
   command: pay
   currency-code: VND
   locale: vn
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    try-it-out-enabled: true
+    persistAuthorization: true
+    filter: true

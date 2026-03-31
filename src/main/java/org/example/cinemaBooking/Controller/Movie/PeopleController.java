@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller.Movie;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +26,13 @@ import java.util.List;
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.People.BASE)
+@Tag(name = "People", description = "quản lý người tham gia (diễn viên, đạo diễn,...)")
 public class PeopleController {
     PeopleService peopleService;
 
+    @Operation(summary = "Tạo người tham gia mới",
+            description = "Tạo một người tham gia mới (diễn viên, đạo diễn,...). Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<PeopleResponse> createPeople(@RequestBody @Valid CreatePeopleRequest request) {
@@ -37,6 +44,9 @@ public class PeopleController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật người tham gia",
+            description = "Cập nhật thông tin người tham gia theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<PeopleResponse> updatePeople(@PathVariable String id, @RequestBody @Valid UpdatePeopleRequest request) {
@@ -48,6 +58,10 @@ public class PeopleController {
                 .build();
 
     }
+
+    @Operation(summary = "Xóa người tham gia",
+            description = "Xóa người tham gia theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deletePeople(@PathVariable String id) {
@@ -58,6 +72,8 @@ public class PeopleController {
                 .build();
     }
 
+    @Operation(summary = "Lấy thông tin người tham gia theo ID",
+            description = "Lấy thông tin chi tiết của người tham gia theo ID.")
     @GetMapping("/{id}")
     public ApiResponse<PeopleResponse> getPeopleById(@PathVariable String id) {
         var response = peopleService.getPeopleById(id);
@@ -69,6 +85,8 @@ public class PeopleController {
     }
 
 
+    @Operation(summary = "Lấy danh sách người tham gia",
+            description = "Lấy danh sách người tham gia với phân trang và tìm kiếm theo tên.")
     @GetMapping
     public ApiResponse<PageResponse<PeopleResponse>> getAllPeople(
             @RequestParam(defaultValue = "0") int page,
@@ -84,10 +102,9 @@ public class PeopleController {
     }
 
 
-
-//    Lay danh sach phim nguoi tham gia
+    //    Lay danh sach phim nguoi tham gia
     @GetMapping("/{peopleId}" + ApiPaths.Movie.BASE)
-    public ApiResponse<List<MoviePeopleResponse>> getMoviesByPeopleId(@PathVariable String peopleId){
+    public ApiResponse<List<MoviePeopleResponse>> getMoviesByPeopleId(@PathVariable String peopleId) {
         var response = peopleService.getMoviesByPeople(peopleId);
         log.info("[PEOPLE_CONTROLLER] - Get movies by people id: {}, total: {}", peopleId, response.size());
         return ApiResponse.<List<MoviePeopleResponse>>builder()
