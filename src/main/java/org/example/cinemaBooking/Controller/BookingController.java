@@ -1,6 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,10 +15,9 @@ import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
 
+@Tag(name = "Booking", description = "quản lý đặt vé")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +25,10 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class BookingController {
     BookingService bookingService;
+
+    @Operation(summary = "Tạo đặt vé mới",
+            description = "Tạo một đặt vé mới cho một suất chiếu phim")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<BookingResponse> createBooking(@Valid @RequestBody CreateBookingRequest request) {
@@ -32,10 +37,13 @@ public class BookingController {
         return ApiResponse.<BookingResponse>builder()
                 .data(response)
                 .success(true)
-                .message("Booking created successfully")
+                .message("Tạo đặt vé thành công")
                 .build();
     }
 
+    @Operation(summary = "Lấy chi tiết đặt vé",
+            description = "Lấy chi tiết của một đặt vé cụ thể theo ID")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{bookingId}")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<BookingResponse> getBookingById(@PathVariable String bookingId) {
@@ -44,10 +52,13 @@ public class BookingController {
         return ApiResponse.<BookingResponse>builder()
                 .data(response)
                 .success(true)
-                .message("Booking retrieved successfully")
+                .message("Lấy đặt vé thành công")
                 .build();
     }
 
+    @Operation(summary = "Lấy đặt vé của tôi",
+            description = "Lấy danh sách các đặt vé do người dùng hiện tại đã thực hiện")
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<List<BookingSummaryResponse>> getMyBookings() {
@@ -56,10 +67,13 @@ public class BookingController {
         return ApiResponse.<List<BookingSummaryResponse>>builder()
                 .data(response)
                 .success(true)
-                .message("My bookings retrieved successfully")
+                .message("Lấy đặt vé của tôi thành công")
                 .build();
     }
 
+    @Operation(summary = "Hủy đặt vé",
+            description = "Hủy một đặt vé hiện có theo ID")
+    @SecurityRequirement(name = "bearerAuth")
     @PatchMapping("/{bookingId}/cancel")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<BookingResponse> cancelBooking(@PathVariable String bookingId) {
@@ -68,7 +82,7 @@ public class BookingController {
         return ApiResponse.<BookingResponse>builder()
                 .success(true)
                 .data(response)
-                .message("Booking canceled successfully")
+                .message("Hủy đặt vé thành công")
                 .build();
     }
 

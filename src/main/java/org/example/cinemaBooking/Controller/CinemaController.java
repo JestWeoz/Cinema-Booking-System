@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,12 +25,15 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Cinema", description = "quản lý rạp chiếu")
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Cinema.BASE)
 public class CinemaController {
 
     CinemaService cinemaService;
 
-    // ✅ CREATE
+    @Operation(summary = "Tạo rạp chiếu mới",
+            description = "Tạo một rạp chiếu mới. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<CinemaResponse> createCinema(@RequestBody @Valid CreateCinemaRequest request){
@@ -39,7 +45,9 @@ public class CinemaController {
                 .build();
     }
 
-    // ✏️ UPDATE
+    @Operation(summary = "Cập nhật rạp chiếu",
+            description = "Cập nhật thông tin rạp chiếu theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<CinemaResponse> updateCinema(
@@ -53,7 +61,9 @@ public class CinemaController {
                 .build();
     }
 
-    // ❌ DELETE
+    @Operation(summary = "Xóa rạp chiếu",
+            description = "Xóa rạp chiếu theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteCinema(@PathVariable String id){
@@ -64,7 +74,8 @@ public class CinemaController {
                 .build();
     }
 
-    // 🔍 GET BY ID
+    @Operation(summary = "Lấy chi tiết rạp chiếu",
+            description = "Lấy chi tiết rạp chiếu theo ID.", security = {})
     @GetMapping("/{id}")
     public ApiResponse<CinemaResponse> getCinema(@PathVariable String id){
         return ApiResponse.<CinemaResponse>builder()
@@ -74,7 +85,9 @@ public class CinemaController {
                 .build();
     }
 
-    // 🔄 TOGGLE STATUS
+    @Operation(summary = "Chuyển trạng thái hoạt động của rạp chiếu",
+            description = "Chuyển trạng thái hoạt động của rạp chiếu (active/inactive) theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/toggle-status")
     public ApiResponse<CinemaResponse> toggleStatus(@PathVariable String id){
@@ -86,7 +99,9 @@ public class CinemaController {
                 .build();
     }
 
-    // 📄 GET ALL
+    @Operation(summary = "Lấy danh sách rạp chiếu",
+            description = "Lấy danh sách phân trang các rạp chiếu. Hỗ trợ tìm kiếm theo tên.",
+            security = {})
     @GetMapping
     public ApiResponse<PageResponse<CinemaResponse>> getAllCinemas(
             @RequestParam(defaultValue = "1") int page,
@@ -102,6 +117,9 @@ public class CinemaController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách phim theo rạp chiếu và ngày chiếu",
+            description = "Lấy danh sách phân trang các phim được chiếu tại một rạp chiếu cụ thể vào một ngày cụ thể.",
+            security = {})
     @GetMapping("/{cinemaId}/movies")
     public ApiResponse<PageResponse<CinemaMovieResponse>> getMoviesByCinemaAndDate(
             @PathVariable String cinemaId,
@@ -124,6 +142,9 @@ public class CinemaController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách phòng chiếu theo rạp chiếu",
+            description = "Lấy danh sách phân trang các phòng chiếu thuộc một rạp chiếu cụ thể.",
+            security = {})
     @GetMapping("/{cinemaId}/rooms")
     public ApiResponse<PageResponse<RoomBasicResponse>> getRoomsByCinemaId(
             @PathVariable String cinemaId,

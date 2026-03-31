@@ -1,5 +1,7 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,8 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.SeatType.BASE)
+@Tag(name = "SeatType", description = "lấy thông tin loại ghế")
 public class SeatTypeController {
     SeatTypeService service;
+
+    @Operation(summary = "Lấy tất cả loại ghế",
+            description = "Lấy danh sách tất cả loại ghế có sẵn trong hệ thống.")
     @GetMapping
     public ApiResponse<List<SeatTypeResponse>> getAll() {
         return ApiResponse.<List<SeatTypeResponse>>builder()
@@ -31,6 +37,8 @@ public class SeatTypeController {
                 .build();
     }
 
+    @Operation(summary = "Lấy loại ghế theo ID",
+            description = "Lấy thông tin chi tiết của một loại ghế cụ thể theo ID.")
     @GetMapping("/{id}")
     public ApiResponse<SeatTypeResponse> getById(@PathVariable String id) {
         return ApiResponse.<SeatTypeResponse>builder()

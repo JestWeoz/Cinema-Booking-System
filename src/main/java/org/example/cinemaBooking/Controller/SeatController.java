@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,10 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Seat.BASE)
+@Tag(name = "Seat", description = "quản lý ghế")
 public class SeatController {
 
     SeatService seatService;
 
+    @Operation(summary = "Tạo ghế mới",
+            description = "Tạo một ghế mới. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<SeatResponse> createSeat(
@@ -38,6 +45,10 @@ public class SeatController {
                 .build();
     }
 
+
+    @Operation(summary = "Tạo nhiều ghế",
+            description = "Tạo nhiều ghế trong một phòng chiếu. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/rooms/{roomId}/bulk")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<SeatResponse>> createSeatBulk(
@@ -52,6 +63,8 @@ public class SeatController {
                 .build();
     }
 
+    @Operation(summary = "Lấy thông tin ghế",
+            description = "Lấy thông tin ghế theo ID.")
     @GetMapping("/{seatId}")
     ApiResponse<SeatResponse> getSeatById(@PathVariable String seatId) {
         var response = seatService.getSeat(seatId);
@@ -62,6 +75,8 @@ public class SeatController {
                 .build();
     }
 
+    @Operation(summary = "Lấy danh sách ghế theo phòng chiếu",
+            description = "Lấy danh sách tất cả ghế trong một phòng chiếu.")
     @GetMapping("/rooms/{roomId}")
     ApiResponse<List<SeatResponse>> getSeatsByRoomId(@PathVariable String roomId) {
         var response = seatService.getSeatsByRoom(roomId);
@@ -72,6 +87,9 @@ public class SeatController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật thông tin ghế",
+            description = "Cập nhật thông tin ghế theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{seatId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<SeatResponse> updateSeat(
@@ -86,6 +104,9 @@ public class SeatController {
                 .build();
     }
 
+    @Operation(summary = "Xóa ghế",
+            description = "Xóa ghế theo ID. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{seatId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteSeat(@PathVariable String seatId) {

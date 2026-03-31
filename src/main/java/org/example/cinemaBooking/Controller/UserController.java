@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +25,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.User.BASE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Người dùng", description = "quản lý người dùng và hồ sơ")
 public class UserController {
     UserService userService;
 
+    @Operation(summary = "Lấy thông tin người dùng hiện tại",
+            description = "Trả về thông tin hồ sơ của người dùng đang đăng nhập.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping(ApiPaths.User.ME)
     public ApiResponse<UserResponse> getCurrentUser() {
         UserResponse userResponse = userService.getMyInfo();
@@ -36,6 +43,9 @@ public class UserController {
 
     }
 
+    @Operation(summary = "Cập nhật hồ sơ",
+            description = "Cập nhật thông tin hồ sơ của người dùng đang đăng nhập.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping(ApiPaths.User.ME)
     public ApiResponse<UserResponse> updateCurrentUser(@RequestBody @Valid UpdateProfileRequest request) {
         UserResponse userResponse = userService.updateMyInfo(request);
@@ -46,6 +56,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Đổi mật khẩu",
+            description = "Cho phép người dùng đang đăng nhập thay đổi mật khẩu của mình.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping(ApiPaths.User.CHANGE_PASSWORD)
     public ApiResponse<Void> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         userService.changePassword(request);
@@ -55,6 +68,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Cập nhật avatar",
+            description = "Cập nhật ảnh đại diện của người dùng.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping(ApiPaths.User.CHANGE_AVATAR)
     public ApiResponse<UserResponse> changeAvatar(@RequestBody @Valid ChangeAvatarRequest request) {
         UserResponse userResponse = userService.changeAvatar(request);
@@ -65,6 +81,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Khóa người dùng (ADMIN)",
+            description = "Khóa tài khoản người dùng theo id (chỉ ADMIN).",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping(ApiPaths.User.LOCK + "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> lockUser(@PathVariable String id) {
@@ -75,6 +94,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Mở khóa người dùng ",
+            description = "Mở khóa tài khoản người dùng theo id.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping(ApiPaths.User.UNLOCK + "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> unlockUser(@PathVariable String id) {
@@ -86,6 +108,9 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Lấy người dùng theo id",
+            description = "Lấy thông tin chi tiết của người dùng theo id.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUserById(@PathVariable String id) {
@@ -97,6 +122,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Lấy người dùng theo username ",
+            description = "Lấy thông tin người dùng theo username.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{username}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUserByUsername(@PathVariable String username) {
@@ -109,6 +137,9 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Lấy danh sách người dùng",
+            description = "Lấy danh sách người dùng theo phân trang và tìm kiếm.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<PageResponse<UserResponse>> getAllUsers(@RequestParam(defaultValue = "0") int page,
@@ -122,6 +153,9 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Tạo người dùng (ADMIN)",
+            description = "Tạo tài khoản người dùng mới (chỉ ADMIN).",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid CreateUserRequest request) {

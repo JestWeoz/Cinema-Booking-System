@@ -1,5 +1,8 @@
 package org.example.cinemaBooking.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +24,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Combo.BASE)
 @RestController
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Combo", description = "quản lý combo (combo thức ăn/đồ uống)")
 public class ComboController {
     ComboService comboService;
 
+    @Operation(summary = "tạo combo",
+            description = "taọ 1 comnbo mới cho ngươi dùng, yêu cầu ADMIN")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<ComboResponse> createCombo(@RequestBody @Valid CreateComboRequest request) {
@@ -35,7 +42,9 @@ public class ComboController {
                 .data(response)
                 .build();
     }
-
+    @Operation(summary = "cập nhật combo",
+            description = "cập nhật 1 comnbo mới cho ngươi dùng, yêu cầu ADMIN")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<ComboResponse> updateCombo(@PathVariable String id, @RequestBody @Valid UpdateComboRequest request) {
@@ -48,6 +57,9 @@ public class ComboController {
                 .build();
     }
 
+    @Operation(summary = "xóa combo",
+            description = "xóa 1 comnbo mới cho ngươi dùng, yêu cầu ADMIN")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteCombo(@PathVariable String id) {
@@ -58,6 +70,9 @@ public class ComboController {
                 .message("combo deleted")
                 .build();
     }
+
+    @Operation(summary = "lấy combo đang hoạt động cho nguoi dùng",
+            description = "lấy tất cả combo đang hoạt động, có phân trang và sắp xếp", security = {})
     @GetMapping("/active")
     public ApiResponse<PageResponse<ComboResponse>> getActiveCombos(
             @RequestParam(defaultValue = "1") int page,
@@ -73,7 +88,8 @@ public class ComboController {
                 .data(response)
                 .build();
     }
-
+    @Operation(summary = "lấy combo theo id",
+            description = "lấy combo theo id")
     @GetMapping("/{id}")
     public ApiResponse<ComboResponse> getComboById(@PathVariable String id) {
         var response = comboService.getComboById(id);
@@ -85,6 +101,8 @@ public class ComboController {
                 .build();
     }
 
+    @Operation(summary = "lấy tất cả combo cho ADMIN",
+            description = "lấy tất cả combo, có phân trang và sắp xếp, hỗ trợ tìm kiếm theo tên. Yêu cầu ADMIN")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<PageResponse<ComboResponse>> getCombos(
@@ -103,7 +121,8 @@ public class ComboController {
 
 
 
-
+    @Operation(summary = "chuyển trạng thái hoạt động của combo",
+            description = "chuyển trạng thái hoạt động của combo (active/inactive) theo ID. Yêu cầu ADMIN")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{comboId}/toggle-active")
     public ApiResponse<Void> toggleActive(@PathVariable String comboId) {

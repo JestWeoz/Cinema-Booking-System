@@ -2,6 +2,9 @@ package org.example.cinemaBooking.Controller;
 
 
 import com.nimbusds.jose.JOSEException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
+@Tag(name = "Authentication", description = "xác thực người dùng và quản lý mật khẩu")
 @RestController
 @RequestMapping( ApiPaths.API_V1 + ApiPaths.Auth.BASE)
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class AuthenticationController {
     AuthService authService;
     PasswordResetService passwordResetService;
     //API Register
+    @Operation(summary = "Đăng ký người dùng mới", description = "Tạo tài khoản người dùng mới với thông tin cung cấp.", security = {})
     @PostMapping(ApiPaths.Auth.REGISTER)
     public ApiResponse<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         return ApiResponse.<RegisterResponse>builder()
@@ -39,6 +44,7 @@ public class AuthenticationController {
                 .build();
     }
     //API Login
+    @Operation(summary = "Đăng nhập", description = "Xác thực người dùng và trả về access token.", security = {})
     @PostMapping(ApiPaths.Auth.LOGIN)
     public ApiResponse<LoginResponse> loginUser(@RequestBody @Valid LoginRequest loginRequest) {
         return ApiResponse.<LoginResponse>builder()
@@ -46,6 +52,8 @@ public class AuthenticationController {
                 .data(authService.loginUser(loginRequest)).build();
     }
 
+    @Operation(summary = "Đăng xuất", description = "Thu hồi refresh token của người dùng để đăng xuất.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping(ApiPaths.Auth.LOGOUT)
     public ApiResponse<Void> logout(@RequestBody @Valid LogoutRequest request)
             throws ParseException, JOSEException {
@@ -55,6 +63,8 @@ public class AuthenticationController {
                 .message("Logged out successfully")
                 .build();
     }
+
+    @Operation(summary = "Cấp lại access token", description = "Lấy access token mới bằng refresh token hợp lệ.", security = {})
     @PostMapping(ApiPaths.Auth.REFRESH)
     public ApiResponse<AuthResponse> refresh(@RequestBody @Valid RefreshRequest request)
             throws ParseException, JOSEException {
@@ -64,6 +74,8 @@ public class AuthenticationController {
                 .build();
     }
 
+    @Operation(summary = "Kiểm tra token", description = "Kiểm tra tính hợp lệ và chi tiết của access token.")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping(ApiPaths.Auth.INTROSPECT)
     public ApiResponse<IntrospectResponse> introspect(@RequestBody @Valid IntrospectReq request) {
         return ApiResponse.<IntrospectResponse>builder()
@@ -77,6 +89,7 @@ public class AuthenticationController {
      * POST /auth/forgot-password
      * Body: { "email": "user@gmail.com" }
      */
+    @Operation(summary = "Quên mật khẩu", description = "Yêu cầu gửi link đặt lại mật khẩu đến email người dùng.", security = {})
     @PostMapping(ApiPaths.Auth.FORGOT_PASSWORD)
     public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         passwordResetService.forgotPassword(request);
@@ -91,6 +104,7 @@ public class AuthenticationController {
      * Bước 1.5: FE kiểm tra token còn hợp lệ không trước khi hiện form
      * GET /auth/reset-password/validate?token=xxx
      */
+    @Operation(summary = "Xác thực token đặt lại mật khẩu", description = "Xác thực token đặt lại mật khẩu trước khi cho phép người dùng đặt mật khẩu mới.", security = {})
     @GetMapping(ApiPaths.Auth.RESET_PASSWORD + "/validate")
     public ApiResponse<Boolean> validateToken(@RequestParam String token) {
         boolean valid = passwordResetService.validateToken(token);
@@ -106,6 +120,7 @@ public class AuthenticationController {
      * POST /auth/reset-password
      * Body: { "token": "xxx", "newPassword": "...", "confirmPassword": "..." }
      */
+    @Operation(summary = "Đặt lại mật khẩu", description = "Đặt lại mật khẩu người dùng bằng token hợp lệ.", security = {})
     @PostMapping(ApiPaths.Auth.RESET_PASSWORD)
     public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         passwordResetService.resetPassword(request);
