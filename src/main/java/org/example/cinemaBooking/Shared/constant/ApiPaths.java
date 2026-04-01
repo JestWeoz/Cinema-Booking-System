@@ -79,4 +79,17 @@ public final class ApiPaths {
     public static final class SeatType {
         public static final String BASE = "/seat-types";
     }
+    public static final class Dashboard {
+         public static final String BASE = "/dashboard";
+         public static final String SUMMARY = "/summary";
+         public static final String REVENUE_CHART = "/revenue-chart";
+    }
+    public static final class Statistic {
+         public static final String BASE = "/statistics";
+         public static final String SUMMARY = "/summary";
+         public static final String TOP_MOVIES = "/top-movies";
+         public static final String REVENUE_CHART = "/revenue-chart";
+         public static final String TICKET_CHART = "/ticket-chart";
+    }
+
 }

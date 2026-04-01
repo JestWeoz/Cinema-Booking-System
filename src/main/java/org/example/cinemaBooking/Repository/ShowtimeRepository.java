@@ -1,6 +1,7 @@
 package org.example.cinemaBooking.Repository;
 
 import org.example.cinemaBooking.Entity.Showtime;
+import org.example.cinemaBooking.Shared.enums.PaymentStatus;
 import org.example.cinemaBooking.Shared.enums.ShowTimeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -121,4 +123,14 @@ public interface ShowtimeRepository
             WHERE s.id = :showtimeId
             """)
     void syncAvailableSeats(@Param("showtimeId") String showtimeId);
+
+
+    @Query("""
+                SELECT COUNT(s)
+                FROM Showtime s
+                WHERE s.startTime >= :start
+                AND s.startTime < :end
+                AND s.deletedAt IS NULL
+            """)
+    int countShowtimes(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

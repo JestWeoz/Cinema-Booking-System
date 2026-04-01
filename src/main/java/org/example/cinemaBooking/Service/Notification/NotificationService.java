@@ -114,6 +114,18 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    @Transactional
+    public NotificationResponse getNotificationById(String notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+            .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
+
+        if (!notification.getUser().getId().equals(getCurrentUserId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return notificationMapper.toResponse(notification);
+    }
+
     // ── Private ──────────────────────────────────────────────────────
 
     private void create(UserEntity user, String title, String body, Type type) {

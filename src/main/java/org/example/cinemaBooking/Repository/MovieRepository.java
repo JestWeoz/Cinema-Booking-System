@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
@@ -43,4 +42,8 @@ AND m.deleted = false
     Optional<Movie> findBySlug(@NotBlank(message = "SLUG_REQUIRED") String slug);
 
     boolean existsBySlug(String slug);
+
+
+
+
 }
