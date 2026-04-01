@@ -77,4 +77,16 @@ public class NotificationController {
                 .message("Notification marked as read successfully")
                 .build();
     }
+    @Operation(summary = "Lấy chi tiết thông báo",
+            description = "Lấy chi tiết một thông báo cụ thể theo ID. Yêu cầu người dùng phải xác thực.")
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<NotificationResponse> getNotificationById(@PathVariable String id) {
+        return ApiResponse.<NotificationResponse>builder()
+                .success(true)
+                .message("Notification retrieved successfully")
+                .data(notificationService.getNotificationById(id))
+                .build();
+    }
 }
