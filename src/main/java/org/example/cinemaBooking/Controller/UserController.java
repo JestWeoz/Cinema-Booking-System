@@ -168,7 +168,9 @@ public class UserController {
                 .build();
     }
 
-
+    @Operation(summary = "Lấy danh sách nhân viên",
+            description = "Lấy danh sách nhân viên theo phân trang và tìm kiếm.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping(ApiPaths.User.STAFF)
     public ApiResponse<PageResponse<UserResponse>> getAllStaffs(@RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "10") int size,
