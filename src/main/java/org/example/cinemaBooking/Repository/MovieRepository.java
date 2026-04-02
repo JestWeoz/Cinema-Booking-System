@@ -44,6 +44,36 @@ AND m.deleted = false
     boolean existsBySlug(String slug);
 
 
-
+//    @Query("""
+//    SELECT new org.example.dto.MovieStats(
+//        m.id,
+//        m.title,
+//        m.posterUrl,
+//
+//        (SELECT COALESCE(SUM(t.price), 0)
+//         FROM Ticket t
+//         JOIN t.booking b
+//         JOIN b.showtime s
+//         WHERE s.movie.id = m.id
+//           AND b.status = 'CONFIRMED'
+//        ),
+//
+//        (SELECT COUNT(t)
+//         FROM Ticket t
+//         JOIN t.booking b
+//         JOIN b.showtime s
+//         WHERE s.movie.id = m.id
+//           AND b.status = 'CONFIRMED'
+//        ),
+//
+//        (SELECT COALESCE(AVG(r.rating), 0)
+//         FROM Review r
+//         WHERE r.movie.id = m.id
+//        )
+//    )
+//    FROM Movie m
+//    WHERE m.status = 'NOW_SHOWING'
+//""")
+//    List<MovieStats> getMovieStats();
 
 }

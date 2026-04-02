@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.User.BASE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Người dùng", description = "quản lý người dùng và hồ sơ")
+@Tag(name = "User", description = "quản lý người dùng và hồ sơ")
 public class UserController {
     UserService userService;
 
@@ -168,4 +169,15 @@ public class UserController {
     }
 
 
+    @GetMapping(ApiPaths.User.STAFF)
+    public ApiResponse<PageResponse<UserResponse>> getAllStaffs(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size,
+                                                               @RequestParam(required = false) String key) {
+        PageResponse<UserResponse> pageResponse = userService.getALlStaff(page, size, key);
+        log.info("[USER CONTROLLER] Get all staffs with page: {}, size: {}, key {}", page, size, key);
+        return ApiResponse.<PageResponse<UserResponse>>builder()
+                .success(true)
+                .data(pageResponse)
+                .build();
+    }
 }
