@@ -37,8 +37,8 @@ public class StatisticsController {
     public ApiResponse<DashboardSummaryResponse> getStatisticsSummary(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(required = false) Long cinemaId,
-            @RequestParam(required = false) Long movieId
+            @RequestParam(required = false) String cinemaId,
+            @RequestParam(required = false) String movieId
     ) {
         log.info("[StatisticsController] getStatisticsSummary called");
         DashboardSummaryResponse response = statisticsService.getSummary(from, to, cinemaId, movieId);
@@ -57,7 +57,7 @@ public class StatisticsController {
     ApiResponse<List<RevenueSeriesItem>> getRevenueChart(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(required = false) Long cinemaId
+            @RequestParam(required = false) String cinemaId
     ){
         var response = statisticsService.getRevenueChart(from, to, cinemaId);
         log.info("[StatisticsController] getRevenueChart called");
@@ -77,8 +77,8 @@ public class StatisticsController {
     ApiResponse<List<TicketSeriesItem>> getTicketsSoldChart(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(required = false) Long cinemaId,
-            @RequestParam(required = false) Long movieId
+            @RequestParam(required = false) String cinemaId,
+            @RequestParam(required = false) String movieId
     ){
         var response = statisticsService.getTicketChart(from, to, cinemaId, movieId);
         log.info("[StatisticsController] getTicketsSoldChart called");
@@ -97,7 +97,7 @@ public class StatisticsController {
     ApiResponse<List<TopMovieResponse>> getTopMovies(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(required = false) Long cinemaId,
+            @RequestParam(required = false) String cinemaId,
             @RequestParam(defaultValue = "10") int limit
     ) {
         var response = statisticsService.getTopMovies(from, to, cinemaId, limit);
