@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.DTO.Request.Movie.CreateMovieRequest;
 import org.example.cinemaBooking.DTO.Request.Movie.UpdateMovieRequest;
 import org.example.cinemaBooking.DTO.Request.Movie.UpdateMovieStatusRequest;
+import org.example.cinemaBooking.DTO.Response.Movie.MovieRecommendResponse;
 import org.example.cinemaBooking.DTO.Response.Movie.MovieResponse;
 import org.example.cinemaBooking.Service.Movie.MovieService;
 import org.example.cinemaBooking.Service.Movie.PeopleService;
@@ -20,6 +21,8 @@ import org.example.cinemaBooking.Shared.enums.AgeRating;
 import org.example.cinemaBooking.Shared.enums.MovieStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -190,6 +193,16 @@ public class MovieController {
                 .build();
     }
 
-
+    @Operation(summary = "Gợi ý phim",
+            description = "Lấy danh sách các bộ phim được đề xuất dựa trên độ hot (doanh thu, số lượng vé, đánh giá). Không yêu cầu quyền.")
+    @GetMapping("/recommend")
+    public ApiResponse<java.util.List<MovieRecommendResponse>> recommendMovies() {
+        List<MovieRecommendResponse> movies = movieService.recommend();
+        return ApiResponse.<java.util.List<MovieRecommendResponse>>builder()
+                .success(true)
+                .message("[MOVIE CONTROLLER] Recommend movies based on hotness")
+                .data(movies)
+                .build();
+    }
 
 }
