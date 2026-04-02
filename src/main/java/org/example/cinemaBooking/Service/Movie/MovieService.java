@@ -3,6 +3,8 @@ package org.example.cinemaBooking.Service.Movie;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.DTO.Response.Movie.MovieRecommendResponse;
+import org.example.cinemaBooking.DTO.Response.Movie.MovieStats;
 import org.example.cinemaBooking.Entity.Category;
 
 import org.example.cinemaBooking.Entity.Movie;
@@ -227,6 +229,36 @@ public class MovieService {
                 .build();
     }
 
+    public List<MovieRecommendResponse> recommend() {
+        List<MovieStats> stats = movieRepository.getMovieStats();
 
+        double currentMaxRev = stats.stream().mapToDouble(MovieStats::revenue).max().orElse(1);
+        double maxRevenue = currentMaxRev > 0 ? currentMaxRev : 1; // Tránh lỗi chia cho 0 tạo ra NaN
+
+        long currentMaxTic = stats.stream().mapToLong(MovieStats::ticketCount).max().orElse(1);
+        double maxTicket = currentMaxTic > 0 ? currentMaxTic : 1; // Tránh lỗi chia cho 0 tạo ra NaN
+
+        return stats.stream()
+                .map(m -> {
+                    double revenueNorm = m.revenue() / maxRevenue;
+                    double ticketNorm = m.ticketCount() / maxTicket;
+                    double ratingNorm = m.rating() / 10.0; // vì bạn dùng 1-10
+
+                    double score =
+                            revenueNorm * 0.5 +
+                            ticketNorm * 0.3 +
+                            ratingNorm * 0.2;
+
+                    return new MovieRecommendResponse(
+                            m.id(),
+                            m.title(),
+                            m.posterUrl(),
+                            score
+                    );
+                })
+                .sorted((a, b) -> Double.compare(b.score(), a.score()))
+                .limit(10)
+                .toList();
+    }
 
 }

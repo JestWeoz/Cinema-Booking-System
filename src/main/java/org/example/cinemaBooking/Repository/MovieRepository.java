@@ -1,6 +1,7 @@
 package org.example.cinemaBooking.Repository;
 
 import jakarta.validation.constraints.NotBlank;
+import org.example.cinemaBooking.DTO.Response.Movie.MovieStats;
 import org.example.cinemaBooking.Entity.Movie;
 import org.example.cinemaBooking.Shared.enums.MovieStatus;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -44,36 +47,23 @@ AND m.deleted = false
     boolean existsBySlug(String slug);
 
 
-//    @Query("""
-//    SELECT new org.example.dto.MovieStats(
-//        m.id,
-//        m.title,
-//        m.posterUrl,
-//
-//        (SELECT COALESCE(SUM(t.price), 0)
-//         FROM Ticket t
-//         JOIN t.booking b
-//         JOIN b.showtime s
-//         WHERE s.movie.id = m.id
-//           AND b.status = 'CONFIRMED'
-//        ),
-//
-//        (SELECT COUNT(t)
-//         FROM Ticket t
-//         JOIN t.booking b
-//         JOIN b.showtime s
-//         WHERE s.movie.id = m.id
-//           AND b.status = 'CONFIRMED'
-//        ),
-//
-//        (SELECT COALESCE(AVG(r.rating), 0)
-//         FROM Review r
-//         WHERE r.movie.id = m.id
-//        )
-//    )
-//    FROM Movie m
-//    WHERE m.status = 'NOW_SHOWING'
-//""")
-//    List<MovieStats> getMovieStats();
+    @Query("""
+    SELECT new org.example.cinemaBooking.DTO.Response.Movie.MovieStats(
+        m.id, 
+        m.title, 
+        m.posterUrl, 
+        CAST(COALESCE(SUM(t.price), 0) AS double), 
+        COUNT(t.id), 
+        (SELECT CAST(COALESCE(AVG(r.rating), 0.0) AS double) FROM Review r WHERE r.movie = m)
+    )
+    FROM Movie m
+    LEFT JOIN Showtime s ON s.movie = m
+    LEFT JOIN Booking b ON b.showtime = s AND b.status = 'CONFIRMED'
+    LEFT JOIN Ticket t ON t.booking = b
+    WHERE m.status = 'NOW_SHOWING'
+    GROUP BY m.id, m.title, m.posterUrl
+""")
+    List<MovieStats> getMovieStats();
+
 
 }
