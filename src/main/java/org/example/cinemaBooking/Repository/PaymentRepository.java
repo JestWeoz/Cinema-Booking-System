@@ -111,7 +111,7 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
             @Param("status") PaymentStatus status,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            @Param("cinemaId") Long cinemaId
+            @Param("cinemaId") String cinemaId
     );
 
     // Revenue theo ngày (time series)
@@ -136,7 +136,7 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
             @Param("status") PaymentStatus status,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            @Param("cinemaId") Long cinemaId
+            @Param("cinemaId") String cinemaId
     );
 
 }

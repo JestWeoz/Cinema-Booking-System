@@ -27,7 +27,7 @@ public class StatisticsService {
     PaymentRepository paymentRepository;
     TicketRepository ticketRepository;
 
-    public DashboardSummaryResponse getSummary(LocalDate from, LocalDate to, Long cinemaId, Long movieId) {
+    public DashboardSummaryResponse getSummary(LocalDate from, LocalDate to, String cinemaId, String movieId) {
         LocalDateTime start = from.atStartOfDay();
         LocalDateTime end = to.plusDays(1).atStartOfDay();
 
@@ -47,7 +47,7 @@ public class StatisticsService {
         return new DashboardSummaryResponse(revenue, tickets, null, null);
     }
 
-    public List<RevenueSeriesItem>getRevenueChart(LocalDate from, LocalDate to, Long cinemaId) {
+    public List<RevenueSeriesItem>getRevenueChart(LocalDate from, LocalDate to, String cinemaId) {
         List<RevenueSeriesItem> raw = paymentRepository.getRevenueSeries(
                 PaymentStatus.SUCCESS,
                 from.atStartOfDay(),
@@ -56,7 +56,7 @@ public class StatisticsService {
         return fillMissingRevenueDates(raw, from, to);
     }
 
-    public List<TicketSeriesItem> getTicketChart(LocalDate from, LocalDate to, Long cinemaId, Long movieId) {
+    public List<TicketSeriesItem> getTicketChart(LocalDate from, LocalDate to, String cinemaId, String movieId) {
         List<TicketSeriesItem> raw = ticketRepository.getTicketSeries(
                 TicketStatus.VALID,
                 from.atStartOfDay(),
@@ -65,7 +65,7 @@ public class StatisticsService {
         return fillMissingTicketDates(raw, from, to);
     }
 
-    public List<TopMovieResponse> getTopMovies(LocalDate from, LocalDate to, Long cinemaId, int limit) {
+    public List<TopMovieResponse> getTopMovies(LocalDate from, LocalDate to, String cinemaId, int limit) {
         limit = Math.min(limit <= 0 ? 10 : limit, 20);
         List<TopMovieResponse> responses = ticketRepository.getTopMovies(
                 PaymentStatus.SUCCESS,
