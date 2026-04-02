@@ -23,6 +23,7 @@ public final class ApiPaths {
         public static final String CHANGE_AVATAR = "/change-avatar" ;
         public static final String LOCK = "/lock";
         public static final String UNLOCK = "/unlock";
+        public static final String STAFF = "/staff";
     }
     public static final class Movie {
         public static final String BASE = "/movies";

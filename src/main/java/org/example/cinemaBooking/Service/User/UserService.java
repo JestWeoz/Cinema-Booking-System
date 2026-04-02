@@ -169,6 +169,26 @@ public class UserService {
                 .build();
     }
 
+    public PageResponse<UserResponse> getALlStaff(int page, int size, String key) {
+        int pageNumber = 0;
+        if(page > 0){
+            pageNumber = page - 1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        Page<UserEntity> userPage  = userRepository.searchUsers(key, pageable);
+        List<UserResponse> userResponses = userPage.getContent().stream()
+                .map(userMapper::toUserResponse)
+                .toList();
+        log.info("[USER SERVICE] Get all staff with key: {}, page: {}, size: {}", key, page, size);
+        return PageResponse.<UserResponse>builder()
+                .items(userResponses)
+                .page(page)
+                .size(size)
+                .totalElements(userPage.getTotalElements())
+                .totalPages(userPage.getTotalPages())
+                .build();
+    }
+
     public UserResponse createUser(CreateUserRequest request){
 
         if(userRepository.existsByUsername(request.getUsername())){
