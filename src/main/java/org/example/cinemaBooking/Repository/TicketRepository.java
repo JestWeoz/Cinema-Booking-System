@@ -146,8 +146,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
             @Param("status") TicketStatus status,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            @Param("cinemaId") Long cinemaId,
-            @Param("movieId") Long movieId
+            @Param("cinemaId") String cinemaId,
+            @Param("movieId") String movieId
     );
 
     // Ticket series (theo ngày)
@@ -174,8 +174,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
             @Param("status") TicketStatus status,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            @Param("cinemaId") Long cinemaId,
-            @Param("movieId") Long movieId
+            @Param("cinemaId") String cinemaId,
+            @Param("movieId") String movieId
     );
 
     // Top movies theo doanh thu
@@ -204,7 +204,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
             @Param("status") PaymentStatus status,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            @Param("cinemaId") Long cinemaId,
+            @Param("cinemaId") String cinemaId,
             Pageable pageable
     );
 }
