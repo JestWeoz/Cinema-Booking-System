@@ -27,13 +27,23 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query("""
 SELECT DISTINCT u FROM UserEntity u
 JOIN u.roles r
-WHERE r.name = 'USER'
+WHERE r.name = 'CUSTOMER'
 AND (:key IS NULL OR
        LOWER(u.username) LIKE LOWER(CONCAT('%', :key, '%')) OR
        LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')))
 """)
     Page<UserEntity> searchUsers(String key, Pageable pageable);
 
+
+    @Query("""
+SELECT DISTINCT u FROM UserEntity u
+JOIN u.roles r
+WHERE r.name = 'STAFF'
+AND (:key IS NULL OR
+       LOWER(u.username) LIKE LOWER(CONCAT('%', :key, '%')) OR
+       LOWER(u.email) LIKE LOWER(CONCAT('%', :key, '%')))
+""")
+    Page<UserEntity> searchStaffs(String key, Pageable pageable);
 
     @Query("""
         SELECT COUNT(u)
