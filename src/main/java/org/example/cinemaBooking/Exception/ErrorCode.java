@@ -158,6 +158,11 @@ public enum ErrorCode {
     LANGUAGE_INVALID(1145, "Language must be in ORIGINAL, DUBBED, SUBTITLED", HttpStatus.BAD_REQUEST),
     SHOWTIME_STATUS_INVALID(1146, "Showtime status must be in SCHEDULED, ONGOING, FINISHED, CANCELLED", HttpStatus.BAD_REQUEST),
     SEAT_LOCK_EXPIRED(1147, "Seat lock expired", HttpStatus.BAD_REQUEST),
+    FILE_EMPTY(1148, "File is empty", HttpStatus.BAD_REQUEST),
+    FILE_TOO_LARGE(1149, "File size must be less than 5MB", HttpStatus.BAD_REQUEST),
+    FILE_TYPE_INVALID(1150, "File type must be image/video", HttpStatus.BAD_REQUEST),
+    FILE_DELETE_FAILED(1151, "Failed to delete file", HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE_UPLOAD_FAILED(1152, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
 
 
