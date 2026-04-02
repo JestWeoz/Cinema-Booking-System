@@ -1,6 +1,10 @@
 spring:
   application:
     name: cinema-booking-system
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
   profiles:
     active: dev
@@ -14,3 +18,8 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+cloudinary:
+  cloud-name: ${CLOUD_NAME}dw9krx7ac
+  api-key: ${API_KEY} 343217657647922
+  api-secret: ${API_SECRET}PITHfB4ErAvx0gVeU55gQGd3dFc

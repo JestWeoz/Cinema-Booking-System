@@ -92,4 +92,11 @@ public final class ApiPaths {
          public static final String TICKET_CHART = "/ticket-chart";
     }
 
+    public static final class Cloudinary {
+         public static final String BASE = "/cloudinary";
+         public static final String UPLOAD_IMAGE = "/upload-image";
+         public static final String UPLOAD_VIDEO = "/upload-video";
+         public static final String DELETE = "/delete";
+    }
+
 }
