@@ -38,12 +38,12 @@ public class ApplicationInitConfig {
         return args -> {
             if (userRepository.findUserEntityByUsername(ADMIN_USER_NAME).isEmpty()) {
 
-
-                roleRepository.save(RoleEntity.builder()
+                log.info("Saving roles...");
+                RoleEntity staff = roleRepository.save(RoleEntity.builder()
                         .name(PredefinedRole.STAFF_ROLE)
                         .description("Staff role")
                         .build());
-
+                log.info("Saved role: {}", staff.getName());
                 roleRepository.save(RoleEntity.builder()
                         .name(PredefinedRole.MANAGER_ROLE)
                         .description("Manager role")

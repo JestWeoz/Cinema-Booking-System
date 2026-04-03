@@ -18,16 +18,16 @@ import java.util.Set;
 public class Cinema extends SoftDeletableEntity {
     @Column(nullable = false)
     String name;
-    @Column(length = 50)
+    @Column(length = 200)
     String address;
 
-    @Column(length = 50)
+    @Column(length = 200)
     String phone;
 
-    @Column(length = 50)
+    @Column(length = 200)
     String hotline;
 
-    @Column(length = 50)
+    @Column(length = 200)
     String logoUrl;
 
     @Enumerated(EnumType.STRING)
