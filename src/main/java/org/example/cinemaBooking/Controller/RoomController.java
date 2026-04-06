@@ -85,9 +85,9 @@ public class RoomController {
             description = "Lấy danh sách phân trang các phòng chiếu theo Cinema. Hỗ trợ tìm kiếm theo tên. Yêu cầu quyền ADMIN.")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/cinema/{cinemaId}")
     public ApiResponse<PageResponse<RoomResponse>> getRoomsByCinema(
-            @RequestParam(required = true) String cinemaId,
+            @PathVariable String cinemaId,
             @RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "10") int size,
                                                                @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -102,7 +102,7 @@ public class RoomController {
             description = "Lấy danh sách phân trang các phòng chiếu. Hỗ trợ tìm kiếm theo tên. Yêu cầu quyền ADMIN.")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping()
     public ApiResponse<PageResponse<RoomResponse>> getAllRooms(@RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "10") int size,
                                                                @RequestParam(defaultValue = "createdAt") String sortBy,
