@@ -81,6 +81,22 @@ public class RoomController {
         log.info("[ROOM_CONTROLLER] Toggled status for room with id: {}", id);
         return ApiResponse.<RoomResponse>builder().success(true).message("Room status toggled successfully").data(roomService.getRoomByID(id)).build();
     }
+    @Operation(summary = "Lấy danh sách phòng chiếu theo Cinema",
+            description = "Lấy danh sách phân trang các phòng chiếu theo Cinema. Hỗ trợ tìm kiếm theo tên. Yêu cầu quyền ADMIN.")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public ApiResponse<PageResponse<RoomResponse>> getRoomsByCinema(
+            @RequestParam(required = true) String cinemaId,
+            @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size,
+                                                               @RequestParam(defaultValue = "createdAt") String sortBy,
+                                                               @RequestParam(defaultValue = "desc") String direction
+                                                               ) {
+        return ApiResponse.<PageResponse<RoomResponse>>builder().
+                success(true).message("Rooms retrieved successfully").
+                data(roomService.getRoomByCinema(cinemaId ,page, size, sortBy, direction)).build();
+    }
 
     @Operation(summary = "Lấy danh sách phòng chiếu",
             description = "Lấy danh sách phân trang các phòng chiếu. Hỗ trợ tìm kiếm theo tên. Yêu cầu quyền ADMIN.")

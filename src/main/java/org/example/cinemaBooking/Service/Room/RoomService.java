@@ -7,6 +7,7 @@ import org.example.cinemaBooking.DTO.Request.Room.CreateRoomRequest;
 import org.example.cinemaBooking.DTO.Request.Room.UpdateRoomRequest;
 import org.example.cinemaBooking.DTO.Response.Room.RoomResponse;
 
+import org.example.cinemaBooking.Entity.Cinema;
 import org.example.cinemaBooking.Entity.Room;
 import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
@@ -51,6 +52,7 @@ public class RoomService {
         }
     }
 
+
     public RoomResponse getRoomByID(String roomId) {
         Optional<Room> exitingRoom = roomRepository.findById(roomId);
         if (exitingRoom.isPresent()) {
@@ -83,6 +85,15 @@ public class RoomService {
         } else {
             roomPage = roomRepository.findAllByDeletedFalse(pageable);
         }
+        return PageResponse.<RoomResponse>builder().page(page).size(size).totalElements(roomPage.getTotalElements()).totalPages(roomPage.getTotalPages()).items(roomPage.getContent().stream().map(roomMapper::toResponse).toList()).build();
+    }
+    public PageResponse<RoomResponse> getRoomByCinema(String cinemaId,int page, int size, String sortBy, String direction) {
+        Cinema cinema = cinemaRepository.findCinemaById(cinemaId);
+        int pageNumber = page > 0 ? page - 1 : 0;
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, size, sort);
+        Page<Room> roomPage;
+        roomPage = roomRepository.findRoomsByCinema(cinema, pageable);
         return PageResponse.<RoomResponse>builder().page(page).size(size).totalElements(roomPage.getTotalElements()).totalPages(roomPage.getTotalPages()).items(roomPage.getContent().stream().map(roomMapper::toResponse).toList()).build();
     }
 

@@ -2,6 +2,7 @@ package org.example.cinemaBooking.Repository;
 
 
 
+import org.example.cinemaBooking.Entity.Cinema;
 import org.example.cinemaBooking.Entity.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,6 @@ public interface RoomRepository extends JpaRepository<Room, String> {
     Optional<Room> findByIdWithSeats(@Param("id") String id);
 
     Page<Room> findByCinemaId(String cinemaId, Pageable pageable);
+
+    Page<Room> findRoomsByCinema(Cinema cinema, Pageable pageable);
 }

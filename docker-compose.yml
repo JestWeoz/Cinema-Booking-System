@@ -20,8 +20,7 @@ services:
 
   app:
 
-    image: tzunpro10x/cinema-be:v1
-    build: .
+    image: tzunpro10x/cinema-be:v2
     container_name: spring-container
     ports:
       - "8081:8081"
