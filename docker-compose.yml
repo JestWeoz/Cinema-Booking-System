@@ -19,9 +19,9 @@ services:
       - "6379:6379"
 
   app:
-#    image: tzunpro10x/cinema-be:v4
-#    container_name: spring-container
-    build: .
+    image: tzunpro10x/cinema-be:v9
+##    container_name: spring-container
+#    build: .
     container_name: cinema-booking
     ports:
       - "8081:8081"
@@ -29,6 +29,8 @@ services:
       - mysql
       - redis
     environment:
+      TZ: Asia/Ho_Chi_Minh
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Asia/Ho_Chi_Minh
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cinema_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
@@ -37,8 +39,8 @@ services:
       CLOUD_NAME: dohgdvnuy
       CLOUD_API_KEY: 629845858442262
       CLOUD_API_SECRET: gB6Ld8Agabga0TuyOH1RD9_2BG0
-
-      EMAIL_PASSWORD: bbmskorltuzemmbf
+      NGROK_URL: https://subjacently-unsuppliable-tobi.ngrok-free.dev
+      EMAIL_PASSWORD: bacojizwybkirmny
       EMAIL_USERNAME: hien1172004@gmail.com
 
       JWT_SIGNER_KEY: YvaC4YtaTbPJ9kjAPkauqZ1HlkaqvAkz5jVeaxTGUTpm9YoNVGTU2c98XnWsQo6BLQ9h5n4HcySt0UcvmbBXiL0PpCedzXBxAn3+5FD83H4=

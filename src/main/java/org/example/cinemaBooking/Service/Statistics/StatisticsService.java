@@ -42,9 +42,21 @@ public class StatisticsService {
                 end,
                 cinemaId,
                 movieId);
+        int bookings = ticketRepository.countBookings(
+                TicketStatus.VALID,
+                start,
+                end,
+                cinemaId,
+                movieId);
+        int movies = ticketRepository.countMovies(
+                TicketStatus.VALID,
+                start,
+                end,
+                cinemaId,
+                movieId);
 
 
-        return new DashboardSummaryResponse(revenue, tickets, null, null);
+        return new DashboardSummaryResponse(revenue, tickets, null, null, bookings, movies);
     }
 
     public List<RevenueSeriesItem>getRevenueChart(LocalDate from, LocalDate to, String cinemaId) {

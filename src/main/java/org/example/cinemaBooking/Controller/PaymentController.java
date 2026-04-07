@@ -14,9 +14,13 @@ import org.example.cinemaBooking.DTO.Response.Payment.PaymentResponse;
 import org.example.cinemaBooking.Service.Payment.PaymentService;
 import org.example.cinemaBooking.Shared.constant.ApiPaths;
 import org.example.cinemaBooking.Shared.response.ApiResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -24,12 +28,12 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping(ApiPaths.API_V1 + ApiPaths.Payment.BASE)
-@Tag(name = "Payment", description = "xử lý thanh toán, IPN và trả về từ VNPay")
+@Tag(name = "Payment", description = "xu ly thanh toan, IPN va tra ve tu VNPay")
 public class PaymentController {
     PaymentService paymentService;
 
-    @Operation(summary = "Tạo thanh toán mới",
-            description = "Tạo một thanh toán mới cho một đặt vé. Yêu cầu người dùng đã xác thực.")
+    @Operation(summary = "Tao thanh toan moi",
+            description = "Tao mot thanh toan moi cho mot dat ve. Yeu cau nguoi dung da xac thuc.")
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -38,72 +42,59 @@ public class PaymentController {
             HttpServletRequest httpRequest
     ) {
         PaymentResponse paymentResponse = paymentService.createPayment(request, httpRequest);
-        return ApiResponse.<PaymentResponse>builder().
-                success(true).
-                message("Payment created successfully").
-                data(paymentResponse).
-                build();
+        return ApiResponse.<PaymentResponse>builder()
+                .success(true)
+                .message("Payment created successfully")
+                .data(paymentResponse)
+                .build();
     }
 
-    @Operation(summary = "Xử lý trả về từ VNPay",
-            description = "Xử lý dữ liệu trả về sau khi người dùng thanh toán trên VNPay. Thường được gọi bởi redirect của VNPay.")
+    @Operation(summary = "Xu ly tra ve tu VNPay",
+            description = "Endpoint backend nhan redirect tu VNPay, verify xong se chuyen thang ve mobile deep link cua app.")
     @GetMapping("/vnpay/return")
-    public ApiResponse<PaymentResponse> handleReturn(
-            @RequestParam Map<String, String> params) {
-        return ApiResponse.<PaymentResponse>builder().
-                success(true).
-                message("Payment processed successfully").
-                data(paymentService.handleReturn(params)).
-                build();
+    public ResponseEntity<Void> handleReturn(@RequestParam Map<String, String> params) {
+        URI redirectUri = paymentService.buildAppReturnUri(params);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, redirectUri.toString())
+                .build();
     }
 
-    @Operation(summary = "IPN từ VNPay",
-            description = "Endpoint nhận Instant Payment Notification (IPN) từ VNPay để cập nhật trạng thái thanh toán.")
+    @Operation(summary = "IPN tu VNPay",
+            description = "Endpoint nhan Instant Payment Notification (IPN) tu VNPay de cap nhat trang thai thanh toan.")
     @GetMapping("/vnpay/ipn")
-    public ApiResponse<String> handleIPN(
-            @RequestParam Map<String, String> params) {
+    public ApiResponse<String> handleIPN(@RequestParam Map<String, String> params) {
         String result = paymentService.handleIPN(params);
         log.info("IPN processed with result: {}", result);
-        return ApiResponse.<String>builder().
-                success(true).
-                message("IPN processed successfully").
-                data(result).
-                build();
+        return ApiResponse.<String>builder()
+                .success(true)
+                .message("IPN processed successfully")
+                .data(result)
+                .build();
     }
 
-    /**
-     * Xem payment theo bookingId
-     */
-    @Operation(summary = "Lấy thông tin thanh toán theo booking",
-            description = "Lấy chi tiết thanh toán liên quan đến bookingId.",
+    @Operation(summary = "Lay thong tin thanh toan theo booking",
+            description = "Lay chi tiet thanh toan lien quan den bookingId.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/booking/{bookingId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<PaymentResponse> getPaymentByBooking(
-            @PathVariable String bookingId) {
-        return ApiResponse.<PaymentResponse>builder().
-                success(true).
-                message("Payment retrieved successfully").
-                data(paymentService.getPaymentByBookingId(bookingId)).
-                build();
+    public ApiResponse<PaymentResponse> getPaymentByBooking(@PathVariable String bookingId) {
+        return ApiResponse.<PaymentResponse>builder()
+                .success(true)
+                .message("Payment retrieved successfully")
+                .data(paymentService.getPaymentByBookingId(bookingId))
+                .build();
     }
 
-    /**
-     * Hoàn tiền — admin only
-     */
-    @Operation(summary = "Hoàn tiền cho booking",
-            description = "Thực hiện hoàn tiền cho một booking cụ thể (chỉ ADMIN).",
+    @Operation(summary = "Hoan tien cho booking",
+            description = "Thuc hien hoan tien cho mot booking cu the (chi ADMIN).",
             security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/booking/{bookingId}/refund")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<PaymentResponse> refund(
-            @PathVariable String bookingId) {
-        return ApiResponse.<PaymentResponse>builder().
-                success(true).
-                message("Refund processed successfully").
-                data(paymentService.refund(bookingId)).
-                build();
+    public ApiResponse<PaymentResponse> refund(@PathVariable String bookingId) {
+        return ApiResponse.<PaymentResponse>builder()
+                .success(true)
+                .message("Refund processed successfully")
+                .data(paymentService.refund(bookingId))
+                .build();
     }
-
-
 }

@@ -4,7 +4,9 @@ import com.cloudinary.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.DTO.Response.Statistics.*;
 import org.example.cinemaBooking.Service.Statistics.StatisticsService;
@@ -20,11 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping(ApiPaths.Dashboard.BASE + ApiPaths.Statistic.BASE)
+@RequestMapping(ApiPaths.API_V1 + ApiPaths.Dashboard.BASE + ApiPaths.Statistic.BASE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name = "Statistics", description = "API cho thống kê doanh thu, vé bán ra, doanh thu, số lượng vé, top phim theo bộ lọc theo")
 public class StatisticsController {
     StatisticsService statisticsService;

@@ -150,6 +150,50 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
             @Param("movieId") String movieId
     );
 
+    @Query("""
+        SELECT COUNT(DISTINCT b.id)
+        FROM Ticket t
+        JOIN t.booking b
+        JOIN b.showtime s
+        JOIN s.movie m
+        JOIN s.room r
+        JOIN r.cinema c
+        WHERE t.status = :status
+          AND t.createdAt >= :start
+          AND t.createdAt < :end
+          AND (:cinemaId IS NULL OR c.id = :cinemaId)
+          AND (:movieId IS NULL OR m.id = :movieId)
+    """)
+    int countBookings(
+            @Param("status") TicketStatus status,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("cinemaId") String cinemaId,
+            @Param("movieId") String movieId
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT m.id)
+        FROM Ticket t
+        JOIN t.booking b
+        JOIN b.showtime s
+        JOIN s.movie m
+        JOIN s.room r
+        JOIN r.cinema c
+        WHERE t.status = :status
+          AND t.createdAt >= :start
+          AND t.createdAt < :end
+          AND (:cinemaId IS NULL OR c.id = :cinemaId)
+          AND (:movieId IS NULL OR m.id = :movieId)
+    """)
+    int countMovies(
+            @Param("status") TicketStatus status,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("cinemaId") String cinemaId,
+            @Param("movieId") String movieId
+    );
+
     // Ticket series (theo ngày)
     @Query("""
         SELECT new org.example.cinemaBooking.DTO.Response.Statistics.TicketSeriesItem(

@@ -24,6 +24,9 @@ public class VNPayConfig {
     @Value("${vnpay.ipn-url}")
     private String ipnUrl;
 
+    @Value("${vnpay.app-return-url:cinema-booking://payment-return}")
+    private String appReturnUrl;
+
     @Value("${vnpay.version:2.1.0}")
     private String version;
 

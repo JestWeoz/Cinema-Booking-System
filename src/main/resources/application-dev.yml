@@ -51,8 +51,9 @@ vnpay:
   tmn-code: ${TMN_CODE}
   hash-secret: ${TMN_KEY}
   payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  return-url: https://5ea7-14-191-56-27.ngrok-free.app/api/v1/payments/vnpay/return
-  ipn-url: https://5ea7-14-191-56-27.ngrok-free.app/api/v1/payments/vnpay/ipn
+  return-url: ${NGROK_URL}/api/v1/payments/vnpay/return
+  ipn-url: ${NGROK_URL}/api/v1/payments/vnpay/ipn
+  app-return-url: cinema-booking://payment-return
   version: "2.1.0"
   command: pay
   currency-code: VND

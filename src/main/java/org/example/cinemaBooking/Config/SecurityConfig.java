@@ -72,6 +72,7 @@ public class SecurityConfig {
             // Rooms
             "/api/v1/rooms",
             "/api/v1/rooms/*",
+            "/api/v1/rooms/cinema/*",
             // Reviews (read-only)
             "/api/v1/reviews/*",
             "/api/v1/reviews/movies/*",

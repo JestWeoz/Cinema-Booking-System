@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -13,6 +14,7 @@ public class VNPayUtil {
 
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final ZoneId VNPAY_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     /** HMAC-SHA512 để tạo và verify secure hash */
     public static String hmacSHA512(String key, String data) {
@@ -96,11 +98,11 @@ public class VNPayUtil {
     }
 
     public static String getCurrentTime() {
-        return LocalDateTime.now().format(FORMATTER);
+        return LocalDateTime.now(VNPAY_ZONE).format(FORMATTER);
     }
 
     public static String getExpireTime(int minutes) {
-        return LocalDateTime.now().plusMinutes(minutes).format(FORMATTER);
+        return LocalDateTime.now(VNPAY_ZONE).plusMinutes(minutes).format(FORMATTER);
     }
 
 }
