@@ -11,6 +11,7 @@ import org.example.cinemaBooking.Exception.AppException;
 import org.example.cinemaBooking.Exception.ErrorCode;
 import org.example.cinemaBooking.Mapper.NotificationMapper;
 import org.example.cinemaBooking.Repository.NotificationRepository;
+import org.example.cinemaBooking.Repository.UserRepository;
 import org.example.cinemaBooking.Shared.response.PageResponse;
 import org.example.cinemaBooking.Shared.enums.Type;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class NotificationService {
 
     NotificationRepository notificationRepository;
     NotificationMapper     notificationMapper;
+    UserRepository         userRepository;
 
     // ── Tạo notification — gọi async từ PaymentService ───────────────
 
@@ -75,7 +77,7 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public PageResponse<NotificationResponse> getMyNotifications(int page, int size) {
-        String userId = getCurrentUserId();
+        String userId = getCurrentUser().getId();
         Page<Notification> notifPage = notificationRepository.findAllByUserId(
             userId,
             PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
@@ -93,12 +95,12 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public int countUnread() {
-        return notificationRepository.countUnreadByUserId(getCurrentUserId());
+        return notificationRepository.countUnreadByUserId(getCurrentUser().getId());
     }
 
     @Transactional
     public void markAllAsRead() {
-        notificationRepository.markAllAsReadByUserId(getCurrentUserId());
+        notificationRepository.markAllAsReadByUserId(getCurrentUser().getId());
     }
 
     @Transactional
@@ -106,7 +108,7 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId)
             .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
 
-        if (!notification.getUser().getId().equals(getCurrentUserId())) {
+        if (!notification.getUser().getId().equals(getCurrentUser().getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -119,7 +121,7 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId)
             .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
 
-        if (!notification.getUser().getId().equals(getCurrentUserId())) {
+        if (!notification.getUser().getId().equals(getCurrentUser().getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -139,7 +141,12 @@ public class NotificationService {
         );
     }
 
-    private String getCurrentUserId() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    private UserEntity getCurrentUser() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        return userRepository.findUserEntityByUsername(auth.getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 }
