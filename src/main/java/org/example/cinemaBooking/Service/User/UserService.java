@@ -176,7 +176,7 @@ public class UserService {
             pageNumber = page - 1;
         }
         Pageable pageable = PageRequest.of(pageNumber, size);
-        Page<UserEntity> userPage  = userRepository.searchUsers(key, pageable);
+        Page<UserEntity> userPage  = userRepository.searchStaffs(key, pageable);
         List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
