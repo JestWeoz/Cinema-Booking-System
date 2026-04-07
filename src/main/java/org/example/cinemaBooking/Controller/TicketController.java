@@ -78,9 +78,9 @@ public class TicketController {
             security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/check-in")
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
-    public ApiResponse<List<CheckInResponse>> checkInMultiple(
+    public ApiResponse<CheckInResponse> checkInMultiple(
             @Valid @RequestBody CheckInRequest requests) {
-        return ApiResponse.<List<CheckInResponse>>builder()
+        return ApiResponse.<CheckInResponse>builder()
                 .success(true)
                 .message("Check-in thành công")
                 .data(ticketService.checkInByBookingCode(requests.bookingCode()))

@@ -3,7 +3,9 @@ package org.example.cinemaBooking.Service.Ticket;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cinemaBooking.DTO.Response.Ticket.BookingProductInfo;
 import org.example.cinemaBooking.DTO.Response.Ticket.CheckInResponse;
+import org.example.cinemaBooking.DTO.Response.Ticket.TicketInfo;
 import org.example.cinemaBooking.DTO.Response.Ticket.TicketResponse;
 import org.example.cinemaBooking.Entity.Booking;
 import org.example.cinemaBooking.Entity.Showtime;
@@ -97,33 +99,39 @@ public class TicketService {
      * FIX T2: không dùng peek() để save — collect xong rồi saveAll().
      */
     @Transactional
-    public List<CheckInResponse> checkInByBookingCode(String bookingCode) {
+    public CheckInResponse checkInByBookingCode(String bookingCode) {
         List<Ticket> tickets = ticketRepository.findAllByBookingCode(bookingCode);
-
         var showtime = getShowtime(tickets);
-
         LocalDateTime now = LocalDateTime.now();
 
-        // FIX T2: collect trước, saveAll sau — không dùng peek() có side-effect
+        // Products — chỉ lấy 1 lần từ booking
+        List<BookingProductInfo> products = tickets.isEmpty()
+                ? List.of()
+                : tickets.get(0).getBooking().getBookingProducts()
+                .stream()
+                .map(bp -> new BookingProductInfo(
+                        bp.getItemName(),
+                        bp.getItemType().name(),
+                        bp.getQuantity()
+                ))
+                .toList();
+
+        // Check-in từng ghế hợp lệ
         List<Ticket> toCheckIn = new ArrayList<>();
-        List<CheckInResponse> responses = new ArrayList<>();
+        List<TicketInfo> ticketInfos = new ArrayList<>();
 
         for (Ticket t : tickets) {
             if (t.getStatus() != TicketStatus.VALID) continue;
-
             t.setStatus(TicketStatus.USED);
             t.setCheckedInAt(now);
             toCheckIn.add(t);
-
-            responses.add(new CheckInResponse(
+            ticketInfos.add(new TicketInfo(
                     t.getTicketCode(),
-                    showtime.getMovie().getTitle(),
-                    showtime.getRoom().getName(),
                     t.getSeat().getSeatRow(),
                     t.getSeat().getSeatNumber(),
+                    t.getSeat().getSeatType().getName(),
                     t.getStatus(),
-                    t.getCheckedInAt(),
-                    "Check-in thành công!"
+                    t.getCheckedInAt()
             ));
         }
 
@@ -132,7 +140,15 @@ public class TicketService {
         }
 
         log.info("Checked in {} ticket(s) for bookingCode={}", toCheckIn.size(), bookingCode);
-        return responses;
+
+        return new CheckInResponse(
+                bookingCode,
+                showtime.getMovie().getTitle(),
+                showtime.getRoom().getName(),
+                showtime.getStartTime(),
+                ticketInfos,
+                products
+        );
     }
 
     private static Showtime getShowtime(List<Ticket> tickets) {

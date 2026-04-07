@@ -1,17 +1,17 @@
 // CheckInResponse.java
 package org.example.cinemaBooking.DTO.Response.Ticket;
 
-import org.example.cinemaBooking.Shared.enums.TicketStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+// CheckInResponse.java
 public record CheckInResponse(
-    String        ticketCode,
-    String        movieTitle,
-    String        roomName,
-    String        seatRow,
-    Integer       seatNumber,
-    TicketStatus  status,
-    LocalDateTime checkedInAt,
-    String        message
-) {}
+        String bookingCode,
+        String movieTitle,
+        String roomName,
+        LocalDateTime showtimeAt,
+        List<TicketInfo> tickets,     // danh sách ghế
+        List<BookingProductInfo> products     // sản phẩm — chỉ 1 lần
+) {
+}
