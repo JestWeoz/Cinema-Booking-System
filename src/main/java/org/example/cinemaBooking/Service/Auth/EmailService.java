@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cinemaBooking.Entity.Booking;
+import org.example.cinemaBooking.Repository.BookingRepository;
 import org.example.cinemaBooking.Service.Ticket.TicketService;
 import org.example.cinemaBooking.Shared.utils.EmailTemplateUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 
@@ -22,7 +24,7 @@ import java.util.Base64;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final TicketService ticketService;
-
+    private final BookingRepository bookingRepository;
     @Value("${app.frontend-url}")
     private String frontendUrl;
 
@@ -83,26 +85,33 @@ public class EmailService {
                 </div>
                 """.formatted(resetLink, expiryMinutes);
     }
+
     @Async
-    public void sendBookingSuccessEmail(Booking booking) {
-        String qrBase64 = ticketService.getBookingQR(booking.getBookingCode());
-        String to      = booking.getUser().getEmail();
-        String subject = "🎬 Đặt vé thành công - " + booking.getBookingCode();
-        // Build HTML (template expects inline CID 'qrImage')
-        String html    = EmailTemplateUtil.buildBookingSuccessEmail(booking);
+    @Transactional(readOnly = true)
+    public void sendBookingSuccessEmail(String bookingCode) {
+        // Query 1: lấy booking đầy đủ tickets + showtime + user
+        Booking booking = bookingRepository.findWithTicketsByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found: " + bookingCode));
+
+        // Query 2: merge bookingProducts vào — Hibernate tự merge vào persistent context
+        bookingRepository.findWithProductsByBookingCode(bookingCode)
+                .ifPresent(b -> booking.getBookingProducts().addAll(b.getBookingProducts()));
+
+        String qrBase64 = ticketService.getBookingQR(bookingCode);
+        String to       = booking.getUser().getEmail();
+        String subject  = "🎬 Đặt vé thành công - " + bookingCode;
+        String html     = EmailTemplateUtil.buildBookingSuccessEmail(booking);
 
         try {
-            String cid = "qrImage"; // content id used in the HTML as cid:qrImage
-
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(fromEmail);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(html, true);   // true = isHtml
+            helper.setText(html, true);
 
             byte[] imageBytes = Base64.getDecoder().decode(qrBase64);
-            helper.addInline(cid, new ByteArrayResource(imageBytes), "image/png");
+            helper.addInline("qrImage", new ByteArrayResource(imageBytes), "image/png");
 
             mailSender.send(message);
             log.info("Booking success email sent to: {}", to);

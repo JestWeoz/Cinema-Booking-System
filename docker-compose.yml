@@ -40,6 +40,7 @@ services:
       CLOUD_API_KEY: 629845858442262
       CLOUD_API_SECRET: gB6Ld8Agabga0TuyOH1RD9_2BG0
       NGROK_URL: https://subjacently-unsuppliable-tobi.ngrok-free.dev
+#      https://2a15-116-101-91-81.ngrok-free.app
       EMAIL_PASSWORD: bacojizwybkirmny
       EMAIL_USERNAME: hien1172004@gmail.com
 

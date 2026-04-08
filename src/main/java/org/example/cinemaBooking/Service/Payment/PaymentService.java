@@ -135,7 +135,7 @@ public class PaymentService {
             if (booking != null) {
                 notificationService.notifyPaymentSuccess(booking);
                 notificationService.notifyBookingSuccess(booking);
-                emailService.sendBookingSuccessEmail(booking);
+                emailService.sendBookingSuccessEmail(booking.getBookingCode());
             }
         } else {
             savePaymentStatus(payment.getId(), PaymentStatus.FAILED, transactionNo);

@@ -48,4 +48,28 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
 
     Optional<Booking> findByBookingCode(String bookingCode);
+
+
+    @Query("""
+    SELECT b FROM Booking b
+    LEFT JOIN FETCH b.tickets t
+    LEFT JOIN FETCH t.seat s
+    LEFT JOIN FETCH s.seatType
+    LEFT JOIN FETCH b.showtime st
+    LEFT JOIN FETCH st.movie
+    LEFT JOIN FETCH st.room r
+    LEFT JOIN FETCH r.cinema
+    LEFT JOIN FETCH b.promotion
+    LEFT JOIN FETCH b.user
+    WHERE b.bookingCode = :bookingCode
+    """)
+    Optional<Booking> findWithTicketsByBookingCode(@Param("bookingCode") String bookingCode);
+
+    // Query 2: fetch booking + bookingProducts (riêng)
+    @Query("""
+    SELECT b FROM Booking b
+    LEFT JOIN FETCH b.bookingProducts
+    WHERE b.bookingCode = :bookingCode
+    """)
+    Optional<Booking> findWithProductsByBookingCode(@Param("bookingCode") String bookingCode);
 }
