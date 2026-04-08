@@ -19,9 +19,9 @@ services:
       - "6379:6379"
 
   app:
-    image: tzunpro10x/cinema-be:v11
+#    image: tzunpro10x/cinema-be:v11
 ##    container_name: spring-container
-#    build: .
+    build: .
     container_name: cinema-booking
     ports:
       - "8081:8081"

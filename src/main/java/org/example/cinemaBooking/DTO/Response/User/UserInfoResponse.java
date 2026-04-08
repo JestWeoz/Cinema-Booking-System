@@ -8,4 +8,6 @@ public class UserInfoResponse {
     String fullName;
     String email;
     String phone;
+    boolean staus;
+
 }

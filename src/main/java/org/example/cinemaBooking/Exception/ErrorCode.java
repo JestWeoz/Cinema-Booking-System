@@ -162,7 +162,8 @@ public enum ErrorCode {
     FILE_TOO_LARGE(1149, "File size must be less than 5MB", HttpStatus.BAD_REQUEST),
     FILE_TYPE_INVALID(1150, "File type must be image/video", HttpStatus.BAD_REQUEST),
     FILE_DELETE_FAILED(1151, "Failed to delete file", HttpStatus.INTERNAL_SERVER_ERROR),
-    FILE_UPLOAD_FAILED(1152, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR)
+    FILE_UPLOAD_FAILED(1152, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR),
+    USER_BANNED(1153, "User is banned", HttpStatus.FORBIDDEN)
     ;
 
 

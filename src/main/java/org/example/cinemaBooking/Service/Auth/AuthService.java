@@ -88,7 +88,9 @@ public class AuthService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             throw new AppException(ErrorCode.PASSWORD_INVALID);
         }
-
+        if(!userEntity.isStatus()) {
+            throw new AppException(ErrorCode.USER_BANNED);
+        }
         return LoginResponse.builder()
                 .success(true)
                 .AccessToken(generateToken(userEntity))
