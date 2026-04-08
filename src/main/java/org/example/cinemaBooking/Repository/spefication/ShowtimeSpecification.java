@@ -16,7 +16,8 @@ public final class ShowtimeSpecification {
     private static final String FIELD_ROOM = "room";
     private static final String FIELD_CINEMA = "cinema";
     private static final String FIELD_ID = "id";
-    private static final String FIELD_NAME = "name";
+    private static final String FIELD_MOVIE_TITLE = "title";
+    private static final String FIELD_CINEMA_NAME = "name";
     private static final String FIELD_DELETED_AT = "deletedAt";
     private static final String FIELD_START_TIME = "startTime";
     private static final String FIELD_LANGUAGE = "language";
@@ -75,12 +76,12 @@ public final class ShowtimeSpecification {
                 String searchPattern = "%" + f.keyword().toLowerCase() + "%";
 
                 Predicate moviePredicate = cb.like(
-                        cb.lower(root.get(FIELD_MOVIE).get(FIELD_NAME)),
+                        cb.lower(root.get(FIELD_MOVIE).get(FIELD_MOVIE_TITLE)),
                         searchPattern
                 );
 
                 Predicate cinemaPredicate = cb.like(
-                        cb.lower(root.get(FIELD_ROOM).get(FIELD_CINEMA).get(FIELD_NAME)),
+                        cb.lower(root.get(FIELD_ROOM).get(FIELD_CINEMA).get(FIELD_CINEMA_NAME)),
                         searchPattern
                 );
 
