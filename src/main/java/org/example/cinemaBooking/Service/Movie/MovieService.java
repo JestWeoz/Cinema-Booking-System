@@ -26,8 +26,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -259,6 +261,21 @@ public class MovieService {
                 .sorted((a, b) -> Double.compare(b.score(), a.score()))
                 .limit(10)
                 .toList();
+    }
+
+    // chạy mỗi ngày lúc 00:00
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void updateMovieStatus() {
+
+        LocalDate today = LocalDate.now();
+
+        int updated = movieRepository.updateStatusToNowShowing(
+                MovieStatus.NOW_SHOWING,
+                MovieStatus.COMING_SOON,
+                today
+        );
+
+        log.info("[SCHEDULER] Updated {} movies to NOW_SHOWING", updated);
     }
 
 }
